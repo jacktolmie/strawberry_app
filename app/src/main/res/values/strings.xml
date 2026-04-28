@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">strawberry_app</string>
+
+    <string name="settings_title">Settings</string>
+    <string name="settings_ip">IP Address</string>
+    <string name="settings_ip_info">IPv4 or IPv6</string>
+    <string name="settings_ip_error">Valid IP address required</string>
+
+    <string name="settings_port">Port Number</string>
+    <string name="settings_port_range">1000 – 65535</string>
+    <string name="settings_port_required_error">Port required</string>
+    <string name="settings_port_number_error">Port must be a number</string>
+    <string name="settings_port_range_error">Port range is 1000–65535</string>
+
+    <string name="settings_password">Server Password</string>
+
+    <string name="settings_save">Save</string>
+    <string name="settings_cancel">Cancel</string>
+</resources>
