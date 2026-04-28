@@ -1,2 +1,2 @@
-# strawberry_app
+# Strawberry Music Remote
 Strawberry Music Player Remote Controller
