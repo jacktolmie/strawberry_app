@@ -1,17 +1,18 @@
 package com.example.strawberry_app
 
 import android.app.Application
-import com.example.strawberry_app.network.NetworkManager
 import dagger.hilt.android.HiltAndroidApp
-import javax.inject.Inject
 
 @HiltAndroidApp
 class Main: Application() {
-    @Inject lateinit var networkManager: NetworkManager
+//    @Inject
+//    lateinit var serverRepository: ServerRepository
+//    val serverInfo = ServerInfo()
+//    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+
 
     override fun onCreate() {
         super.onCreate()
-
-        networkManager.start()
     }
+
 }

@@ -11,5 +11,5 @@ data class SettingsUiState(
     val isIpValid: Boolean = false,
     val isPortValid: Boolean = false,
     val hasChanged: Boolean = false,
-    val enableSaveButton: Boolean = false
+    val enableSaveButton: Boolean = false,
 )

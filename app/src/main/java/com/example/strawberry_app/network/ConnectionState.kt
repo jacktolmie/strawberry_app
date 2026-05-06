@@ -1,8 +1,9 @@
 package com.example.strawberry_app.network
 
 sealed class ConnectionState {
-    object Disconnected : ConnectionState()
-    object Connecting : ConnectionState()
     object Connected : ConnectionState()
-    data class Error(val message: String) : ConnectionState()
+    object Connecting : ConnectionState()
+    object Disconnected : ConnectionState()
+    data class Error(val message: String, val canRetry: Boolean = true) : ConnectionState()
+    data class Reconnecting(val attempt: Int): ConnectionState()
 }

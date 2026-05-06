@@ -36,7 +36,6 @@ class ServerViewModel @Inject constructor(
     private var savedServerInfo = ServerInfo()
 
     init {
-        // 1. Load saved data
         viewModelScope.launch {
             serverInfo
                 .drop(1)
@@ -50,7 +49,6 @@ class ServerViewModel @Inject constructor(
                 }
         }
 
-        // 2. Debounced validation
         viewModelScope.launch {
             uiState
                 .debounce(300)
@@ -61,6 +59,27 @@ class ServerViewModel @Inject constructor(
         }
     }
 
+    fun cancel(){
+        _uiState.update {
+            it.copy(
+                ip = savedServerInfo.ip,
+                port = savedServerInfo.port.toString(),
+                password = savedServerInfo.password,
+                ipError = null,
+                portError = null,
+                isIpValid = true,
+                isPortValid = true,
+                hasChanged = false,
+            )
+        }
+    }
+
+//    fun connect(serverInfo: ServerInfo) {
+//        repository.connect(serverInfo)
+//    }
+    private fun isValidIP(address: String): Boolean{
+        return InetAddresses.isNumericAddress(address)
+    }
     fun onIpChanged(newIp: String) {
         println("New address: $newIp")
         _uiState.update {
@@ -68,13 +87,12 @@ class ServerViewModel @Inject constructor(
         }
     }
 
+    fun onPasswordChanged(newPassword: String) = _uiState.update { it.copy(password = newPassword, hasChanged = true) }
     fun onPortChanged(newPort: String) {
         if (newPort.length <= 5 && newPort.all { it.isDigit() }) {
             _uiState.update { it.copy(port = newPort, hasChanged = true) }
         }
     }
-
-    fun onPasswordChanged(newPassword: String) = _uiState.update { it.copy(password = newPassword, hasChanged = true) }
 
     fun save() {
         _uiState.update { it.copy(hasChanged = false) }
@@ -94,20 +112,8 @@ class ServerViewModel @Inject constructor(
             savedServerInfo = serverInfo
         }
     }
-
-    fun cancel(){
-        _uiState.update {
-            it.copy(
-                ip = savedServerInfo.ip,
-                port = savedServerInfo.port.toString(),
-                password = savedServerInfo.password,
-                ipError = null,
-                portError = null,
-                isIpValid = true,
-                isPortValid = true,
-                hasChanged = false
-            )
-        }
+    private fun showSaveButton() {
+        _uiState.update { it.copy( enableSaveButton = _uiState.value.isPortValid && _uiState.value.hasChanged)}
     }
 
     private fun validate() {
@@ -140,13 +146,5 @@ class ServerViewModel @Inject constructor(
                 )
             }
         }
-    }
-
-    private fun showSaveButton() {
-        _uiState.update { it.copy( enableSaveButton = _uiState.value.isPortValid && _uiState.value.hasChanged)}
-    }
-
-    private fun isValidIP(address: String): Boolean{
-        return InetAddresses.isNumericAddress(address)
     }
 }

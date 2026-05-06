@@ -1,97 +1,120 @@
 package com.example.strawberry_app.network
 
 import android.util.Log
+import com.example.strawberry_app.network.protocol.IncomingMessage
 import com.example.strawberry_app.server.ServerInfo
-import com.example.strawberry_app.server.ServerRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.json.Json
 import java.io.DataInputStream
 import java.io.DataOutputStream
 import java.net.Socket
 import javax.inject.Inject
 import javax.inject.Singleton
 
-private const val MAX_MESSAGE_SIZE = 10 * 1024 * 1024
-
 @Singleton
-class NetworkManager @Inject constructor(private val serverRepository: ServerRepository){
+class NetworkManager @Inject constructor() {
 
     private var socket: Socket? = null
     private var dataOutputStream: DataOutputStream? = null
     private var listenerJob: Job? = null
 
-    // A flow to broadcast received server messages to any listeners (like your ViewModel).
-    private val _serverMessages = MutableSharedFlow<String>(replay = 0, extraBufferCapacity = 64)
+    private val _serverMessages =
+        MutableSharedFlow<IncomingMessage>(replay = 0, extraBufferCapacity = 64)
 
     val serverMessages = _serverMessages.asSharedFlow()
 
-    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+//    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private val _connectionState = MutableStateFlow<ConnectionState>(ConnectionState.Disconnected)
-    val connectionState: StateFlow<ConnectionState> = _connectionState
+    val connectionStateFlow: StateFlow<ConnectionState> = _connectionState
 
-    fun start(){
-        scope.launch {
-            serverRepository.serverInfoFlow
-                .distinctUntilChanged()
-                .collect { serverInfo ->
-                    connect(serverInfo)
-                }
+    companion object {
+        private const val MAX_MESSAGE_SIZE = 10000
+    }
+
+    private fun bytesToHex(bytes: ByteArray): String {
+        return bytes.joinToString("") { "%02x".format(it) }
+    }
+
+    suspend fun connect(serverInfo: ServerInfo) {
+
+        if (_connectionState.value is ConnectionState.Connecting ||
+            _connectionState.value is ConnectionState.Connected
+        ) return
+
+        if (socket?.isConnected == true && socket?.isClosed == false) {
+            disconnect(updateStatus = false)
+        }
+
+        _connectionState.value = ConnectionState.Connecting
+
+        try {
+            Log.i("NetworkManager", "Connecting to server")
+            val connectedSocket = withContext(Dispatchers.IO){
+                Socket(serverInfo.ip, serverInfo.port)
+            }
+
+            socket = connectedSocket
+
+            val inputStream = withContext(Dispatchers.IO){ DataInputStream(connectedSocket.getInputStream()) }
+            val outputStream = withContext(Dispatchers.IO){ DataOutputStream(connectedSocket.getOutputStream()) }
+
+            val isAuthenticated = authenticate(serverInfo, inputStream, connectedSocket)
+
+            if (isAuthenticated) {
+                dataOutputStream = outputStream
+                _connectionState.value = ConnectionState.Connected
+                startListening(inputStream)
+            } else {
+                Log.i("NetworkManager", "Failed connecting to server")
+                _connectionState.value = ConnectionState.Error("Auth failed")
+                closeResources()
+            }
+
+        } catch (e: Exception) {
+            Log.i("NetworkManager", "Error: $e")
+            _connectionState.value = ConnectionState.Error(e.message ?: "Unknown error")
+            closeResources()
         }
     }
 
-    fun connect(serverInfo: ServerInfo) {
-        scope.launch {
-            _connectionState.value = ConnectionState.Connecting
-
-            if (socket?.isConnected == true && socket?.isClosed == false) {
-                disconnect()
+    suspend fun closeResources() {
+        try {
+            listenerJob?.cancelAndJoin()
+            listenerJob = null
+            withContext(Dispatchers.IO) {
+                runCatching { dataOutputStream?.close() }
+                runCatching { socket?.close() }
             }
 
-            try {
-                Log.i("NetworkManager", "Connecting to server")
-                val connectedSocket = Socket(serverInfo.ip, serverInfo.port)
-                socket = connectedSocket
-
-                val inputStream = DataInputStream(connectedSocket.getInputStream())
-                val outputStream = DataOutputStream(connectedSocket.getOutputStream())
-
-                val isAuthenticated = authenticate(serverInfo, inputStream, connectedSocket)
-
-                if (isAuthenticated) {
-                    dataOutputStream = outputStream
-                    _connectionState.value = ConnectionState.Connected
-                    startListening(inputStream)
-                } else {
-                    Log.i("NetworkManager", "Failed connecting to server")
-                    _connectionState.value = ConnectionState.Error("Auth failed")
-                    disconnect()
-                }
-
-            } catch (e: Exception) {
-                Log.i("NetworkManager", "Error: $e")
-                _connectionState.value = ConnectionState.Error(e.message ?: "Unknown error")
-                disconnect()
-            }
+        } catch (e: Exception) {
+            Log.e("NetworkManager", "Error while closing resources: ${e.message}")
+        } finally {
+            socket = null
+            dataOutputStream = null
         }
     }
 
-    private fun startListening(dataInputStream: DataInputStream){
+    suspend fun disconnect(updateStatus: Boolean = true) {
+        closeResources()
+        if (updateStatus) _connectionState.value = ConnectionState.Disconnected
+    }
+
+    private fun startListening(dataInputStream: DataInputStream) {
         listenerJob?.cancel()
 
-        listenerJob = scope.launch {
+        listenerJob = CoroutineScope(Dispatchers.IO).launch {
             try {
-                while (isActive && socket?.isConnected == true) {
+                while (isActive && socket?.isClosed == false) {
                     val length = dataInputStream.readInt()
 
                     if (length in 1..<MAX_MESSAGE_SIZE) {
@@ -100,26 +123,29 @@ class NetworkManager @Inject constructor(private val serverRepository: ServerRep
                         val jsonString = String(messageBytes, Charsets.UTF_8)
                         println("Server is sending: $jsonString") // Delete later
 
-                        _serverMessages.emit(jsonString)
+                        val parsedMessage = Json.decodeFromString<IncomingMessage>(jsonString)
+                        _serverMessages.tryEmit(parsedMessage)
 
                     } else {
-                        Log.e("NetworkManager", "Error: Invalid message length received: $length. Resetting connection.")
+                        Log.e(
+                            "NetworkManager",
+                            "Error: Invalid message length received: $length. Resetting connection."
+                        )
                         break
                     }
                 }
             } catch (e: Exception) {
                 // This will catch read errors, like the server closing the connection
-                Log.e("NetworkManager",  "Listener error: ${e.message}")
+                Log.e("NetworkManager", "Listener error: ${e.message}")
             } finally {
-                // This runs when the loop breaks or an exception occurs
-                disconnect()
+                closeResources()
+                _connectionState.value = ConnectionState.Disconnected
             }
         }
     }
 
-    // --- 4. Function to Send Commands ---
     suspend fun sendCommand(jsonCommand: String) {
-        // Use withContext for the I/O operation of writing to the socket
+
         withContext(Dispatchers.IO) {
             if (dataOutputStream != null && socket?.isConnected == true) {
                 try {
@@ -136,33 +162,4 @@ class NetworkManager @Inject constructor(private val serverRepository: ServerRep
             }
         }
     }
-
-    // --- 5. Disconnect and Cleanup ---
-    fun disconnect() {
-        scope.launch {
-            listenerJob?.cancelAndJoin()
-            listenerJob = null
-
-            try {
-                dataOutputStream?.close()
-                socket?.close()
-            } catch (e: Exception) {
-                Log.e("NetworkManager", "Error while disconnecting: ${e.message}")
-            } finally {
-                socket = null
-                dataOutputStream = null
-
-                _connectionState.value = ConnectionState.Disconnected
-            }
-        }
-    }
-
-    private fun bytesToHex(bytes: ByteArray): String {
-        return bytes.joinToString("") { "%02x".format(it) }
-    }
-
-    // Probably not needed. Delete if that is the case.
-//    fun shutdown(){
-//        coroutineScope.cancel()
-//    }
 }

@@ -81,6 +81,23 @@ fun SettingsScreen(){
 
         Row(modifier = Modifier
             .fillMaxWidth()
+            .padding(10.dp)
+
+        )
+        {
+            TextBox(R.string.settings_connection_status, MaterialTheme.typography.bodyLarge)
+            Spacer(modifier = Modifier.width(5.dp))
+            // Add colour to the connection status depending on if connected etc.!!!!!!!!!!!!!!!!!!
+            TextBox(
+                R.string.settings_connected,
+                MaterialTheme.typography.bodyLarge
+            )
+        }
+
+        Spacer(modifier = Modifier.height(10.dp))
+
+        Row(modifier = Modifier
+            .fillMaxWidth()
             .padding(10.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
@@ -88,7 +105,6 @@ fun SettingsScreen(){
         {
             Button(
                 onClick = { viewModel.save() },
-//                enabled = uiState.isValid && uiState.hasChanged
                 enabled = uiState.enableSaveButton
             )
             {

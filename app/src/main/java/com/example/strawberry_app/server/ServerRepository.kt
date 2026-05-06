@@ -13,7 +13,8 @@ import javax.inject.Inject
 val Context.serverDataStore by preferencesDataStore("server_prefs")
 
 class ServerRepository @Inject constructor(
-    @ApplicationContext private val context: Context
+    @ApplicationContext private val context: Context,
+//    private val networkManager: NetworkManager
 )
 {
     private val datastore = context.serverDataStore
