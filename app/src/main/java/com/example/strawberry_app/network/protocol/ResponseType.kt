@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-@SerialName("response")
+//@SerialName("response")
 sealed  class ResponseType: IncomingMessage() {
 
     @Serializable

@@ -74,12 +74,10 @@ class ServerViewModel @Inject constructor(
         }
     }
 
-//    fun connect(serverInfo: ServerInfo) {
-//        repository.connect(serverInfo)
-//    }
     private fun isValidIP(address: String): Boolean{
         return InetAddresses.isNumericAddress(address)
     }
+
     fun onIpChanged(newIp: String) {
         println("New address: $newIp")
         _uiState.update {
@@ -88,6 +86,7 @@ class ServerViewModel @Inject constructor(
     }
 
     fun onPasswordChanged(newPassword: String) = _uiState.update { it.copy(password = newPassword, hasChanged = true) }
+
     fun onPortChanged(newPort: String) {
         if (newPort.length <= 5 && newPort.all { it.isDigit() }) {
             _uiState.update { it.copy(port = newPort, hasChanged = true) }

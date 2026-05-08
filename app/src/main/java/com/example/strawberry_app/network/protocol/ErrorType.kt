@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-@SerialName("error")
+//@SerialName("error")
 sealed class ErrorType: IncomingMessage() {
 
     @Serializable
@@ -17,9 +17,9 @@ sealed class ErrorType: IncomingMessage() {
 
     @Serializable
     @SerialName("playlist_not_found")
-    data class PlaylistNotFound(val required: Int): ErrorType()
+    data class PlaylistNotFound(val name: String): ErrorType()
 
     @Serializable
     @SerialName("wrong_argument_sent")
-    data class WrongArgumentSent(val required: String): ErrorType()
+    data class WrongArgumentSent(val argument: String): ErrorType()
 }

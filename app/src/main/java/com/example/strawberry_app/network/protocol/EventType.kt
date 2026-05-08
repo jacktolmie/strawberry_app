@@ -5,7 +5,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-@SerialName("event")
+//@SerialName("event")
 sealed class EventType: IncomingMessage() {
     @Serializable
     @SerialName("active_playlist")

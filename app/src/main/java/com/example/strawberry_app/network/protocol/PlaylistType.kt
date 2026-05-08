@@ -5,7 +5,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-@SerialName("playlist")
+//@SerialName("playlist")
 sealed class PlaylistType {
 
     @Serializable
