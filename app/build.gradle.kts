@@ -3,17 +3,17 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
-
+    alias(libs.plugins.stability.analyzer) // Delete later
 }
 
 android {
     namespace = "com.example.strawberry_app"
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "com.example.strawberry_app"
         minSdk = 29
-        targetSdk = 36
+        targetSdk = 37
         versionCode = 1
         versionName = "1.0"
 
@@ -49,8 +49,11 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
 
+    implementation(libs.navigation.compose)
+
     // Add fonts
     implementation(libs.androidx.compose.ui.text.google.fonts)
+    implementation(libs.androidx.material3)
 
     // Hilt dependencies
     implementation(libs.hilt.android)

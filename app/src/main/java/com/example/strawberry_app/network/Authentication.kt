@@ -37,10 +37,12 @@ sealed class AuthMessage {
 }
 
 private fun parseAuthMessage(message: String?): AuthMessage {
-    return when {
-        message == null -> AuthMessage.Error("No response")
-        message.startsWith("AUTH_SUCCESS") -> AuthMessage.Success
-        message.startsWith("CHALLENGE") ->
+    val trimmedMessage = message?.trim()
+
+    return when{
+        trimmedMessage == null -> AuthMessage.Error("No response")
+        trimmedMessage.startsWith("AUTH_SUCCESS") -> AuthMessage.Success
+        trimmedMessage.startsWith("CHALLENGE") ->
             AuthMessage.Challenge(message.substringAfter("CHALLENGE "))
         else -> AuthMessage.Error(message)
     }
@@ -48,14 +50,20 @@ private fun parseAuthMessage(message: String?): AuthMessage {
 
 suspend fun authenticate(
     serverInfo: ServerInfo,
-    inputStream: DataInputStream,
+//    inputStream: DataInputStream,
     socket: Socket
 ): Boolean {
 
-    val reader = BufferedReader(InputStreamReader(inputStream))
+    val reader = BufferedReader(InputStreamReader(withContext(Dispatchers.IO) {
+        socket.getInputStream()
+    }))
     val writer = withContext(Dispatchers.IO) {
         socket.getOutputStream()
     }
+//    val reader = BufferedReader(InputStreamReader(inputStream))
+//    val writer = withContext(Dispatchers.IO) {
+//        socket.getOutputStream()
+//    }
 
     return when (val message = parseAuthMessage(withContext(Dispatchers.IO) {
         reader.readLine()

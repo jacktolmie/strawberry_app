@@ -9,12 +9,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.strawberry_app.network.ConnectionViewModel
-import com.example.strawberry_app.network.NetworkManager
-import com.example.strawberry_app.screens.Player
-import com.example.strawberry_app.screens.SettingsScreen
-import com.example.strawberry_app.server.ServerInfo
 import com.example.strawberry_app.ui.theme.Strawberry_appTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -28,9 +23,9 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             Strawberry_appTheme {
-                SettingsScreen()
-//                Main()
                 connectionViewModel
+                Main()
+                Nav()
             }
         }
     }

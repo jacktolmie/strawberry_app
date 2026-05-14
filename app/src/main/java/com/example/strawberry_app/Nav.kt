@@ -1,0 +1,31 @@
+package com.example.strawberry_app
+
+import androidx.compose.runtime.Composable
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.strawberry_app.screens.ScreenList
+import com.example.strawberry_app.screens.SettingsRoute
+
+@Composable
+fun Nav(){
+    val navController = rememberNavController()
+
+    NavHost(
+        navController = navController,
+        startDestination = ScreenList.Settings.route
+    ){
+//        composable(ScreenList.Player.route){
+//            PlayerRoute()
+//        }
+
+//        composable(ScreenList.Playlist.route){
+//            PlaylistRoute()
+//        }
+
+        composable(ScreenList.Settings.route){
+            SettingsRoute()
+        }
+    }
+
+}

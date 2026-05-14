@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.strawberry_app.server.ServerRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
@@ -18,36 +19,20 @@ class ConnectionViewModel @Inject constructor(
 {
     val connectionState = networkManager.connectionStateFlow
 
-//    private val _incomingMessages = MutableSharedFlow<IncomingMessage>(replay = 0, extraBufferCapacity = 64)
-//    val incomingMessage = _incomingMessages.asSharedFlow()
-
     init {
         viewModelScope.launch {
             serverRepository.serverInfoFlow
                 .debounce(300)
                 .distinctUntilChanged()
                 .collect { info ->
-
-                    if (info.ip.isBlank()) return@collect
-
-                    Log.d("ConnectionVM", "Server changed → reconnecting")
-
-                    Log.d("ConnectionVM", "FLOW EMITTED: $info")
-
-                    networkManager.disconnect()
-
-                    Log.d("ConnectionVM", "DISCONNECT CALLED")
-
-                    networkManager.connect(info)
-
-                    Log.d("ConnectionVM", "CONNECT CALLED")
+                    if (info?.ip?.isBlank() == true) return@collect
                 }
         }
     }
 
-    fun disconnect() {
+    fun manualDisconnect(disconnectPressed: Boolean) {
         viewModelScope.launch {
-            networkManager.disconnect()
+            networkManager.manualDisconnect(disconnectPressed)
         }
     }
 
@@ -57,3 +42,22 @@ class ConnectionViewModel @Inject constructor(
         }
     }
 }
+
+
+//    val connectionUiState = when (val state = connectionState.value) {
+//
+//        ConnectionState.Connected ->
+//            "Connected"
+//
+//        ConnectionState.Connecting ->
+//            "Connecting"
+//
+//        ConnectionState.Disconnected ->
+//            "Disconnected"
+//
+//        is ConnectionState.Error ->
+//            "Error: ${state.message}"
+//
+//        is ConnectionState.Reconnecting ->
+//            "Reconnecting in ${connectionState.time}\nAttempt: ${connectionState.attempt}"
+//    }

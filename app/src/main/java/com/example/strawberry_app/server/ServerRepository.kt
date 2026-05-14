@@ -7,25 +7,30 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 val Context.serverDataStore by preferencesDataStore("server_prefs")
 
 class ServerRepository @Inject constructor(
-    @ApplicationContext private val context: Context,
-//    private val networkManager: NetworkManager
+    @ApplicationContext private val context: Context
 )
 {
     private val datastore = context.serverDataStore
 
-    val serverInfoFlow: Flow<ServerInfo> = datastore.data.map {
-        ServerInfo(
-            ip = it[KEY_IP] ?: "",
-            port = it[KEY_PORT] ?: 5000,
-            password = it[KEY_PASSWORD] ?: ""
-        )
-    }
+    val serverInfoFlow: Flow<ServerInfo?> = datastore.data.map {
+        val ip = it[KEY_IP]
+        if(ip.isNullOrBlank()){
+            null
+        }else{
+            ServerInfo(
+                ip = ip,
+                port = it[KEY_PORT] ?: 5000,
+                password = it[KEY_PASSWORD] ?: ""
+            )
+        }
+    }.distinctUntilChanged()
 
     companion object{
         val KEY_IP = stringPreferencesKey("server_ip")

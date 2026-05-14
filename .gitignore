@@ -1,6 +1,11 @@
 # Created by https://www.toptal.com/developers/gitignore/api/kotlin,androidstudio
 # Edit at https://www.toptal.com/developers/gitignore?templates=kotlin,androidstudio
 
+# My changes:
+todo.txt
+
+# End of my changes.
+
 ### Kotlin ###
 # Compiled class file
 *.class
