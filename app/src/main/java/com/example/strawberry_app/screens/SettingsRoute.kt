@@ -7,6 +7,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.strawberry_app.network.ConnectionViewModel
 import com.example.strawberry_app.server.ServerViewModel
 
+@Suppress("ParamsComparedByRef")
 @Composable
 fun SettingsRoute(
     serverViewModel: ServerViewModel = hiltViewModel(),
