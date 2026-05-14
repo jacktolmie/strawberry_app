@@ -3,11 +3,15 @@ package com.example.strawberry_app.network
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.strawberry_app.server.ServerInfo
 import com.example.strawberry_app.server.ServerRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -18,6 +22,13 @@ class ConnectionViewModel @Inject constructor(
 ) : ViewModel()
 {
     val connectionState = networkManager.connectionStateFlow
+
+    private val _serverInfo: StateFlow<ServerInfo?> =
+        serverRepository.serverInfoFlow.stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5000),
+            null
+        )
 
     init {
         viewModelScope.launch {
@@ -36,28 +47,14 @@ class ConnectionViewModel @Inject constructor(
         }
     }
 
+    fun reconnectAfterSave(){
+            val serverInfo = _serverInfo.value ?: return
+            viewModelScope.launch { serverRepository.saveServerInfo(serverInfo) }
+    }
+
     fun sendCommand(command: String) {
         viewModelScope.launch {
             networkManager.sendCommand("""{"command":"$command"}""") //Replace with enums???
         }
     }
 }
-
-
-//    val connectionUiState = when (val state = connectionState.value) {
-//
-//        ConnectionState.Connected ->
-//            "Connected"
-//
-//        ConnectionState.Connecting ->
-//            "Connecting"
-//
-//        ConnectionState.Disconnected ->
-//            "Disconnected"
-//
-//        is ConnectionState.Error ->
-//            "Error: ${state.message}"
-//
-//        is ConnectionState.Reconnecting ->
-//            "Reconnecting in ${connectionState.time}\nAttempt: ${connectionState.attempt}"
-//    }

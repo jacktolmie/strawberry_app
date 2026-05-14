@@ -125,7 +125,6 @@ fun SettingsScreen(
         Button(
             onClick ={
                 onDisconnectClicked(isConnected)
-//                isConnected = !isConnected
             }
         )
         {

@@ -1,20 +1,17 @@
 package com.example.strawberry_app.server
 
 import android.net.InetAddresses
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.strawberry_app.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -23,14 +20,14 @@ import javax.inject.Inject
 @OptIn(FlowPreview::class)
 @HiltViewModel
 class ServerViewModel @Inject constructor(
-    private val repository: ServerRepository
+    private val serverRepository: ServerRepository
 ): ViewModel()
 {
     private val _uiState = MutableStateFlow(SettingsUiState())
     val uiState: StateFlow<SettingsUiState> = _uiState.asStateFlow()
 
     val serverInfo: StateFlow<ServerInfo?> =
-        repository.serverInfoFlow.stateIn(
+        serverRepository.serverInfoFlow.stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5000),
             null
@@ -40,7 +37,7 @@ class ServerViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            repository.serverInfoFlow.collectLatest { info ->
+            serverRepository.serverInfoFlow.collectLatest { info ->
 
                 if(info != null && !_uiState.value.hasChanged) {
                     _uiState.update {
@@ -112,7 +109,7 @@ class ServerViewModel @Inject constructor(
         )
 
         viewModelScope.launch {
-            repository.saveServerInfo(serverInfo)
+            serverRepository.saveServerInfo(serverInfo)
         }
     }
     private fun showSaveButton() {
@@ -151,29 +148,3 @@ class ServerViewModel @Inject constructor(
         }
     }
 }
-
-//    var serverInfo: StateFlow<ServerInfo?> = repository.serverInfoFlow
-//        .stateIn(
-//            scope = viewModelScope,
-//            started = SharingStarted.Eagerly,
-//            initialValue = ServerInfo(
-//                _uiState.value.ip,
-//                _uiState.value.port.toInt(),
-//                _uiState.value.password
-//            )
-//        )
-
-//        viewModelScope.launch {
-//            serverInfo
-//                .collect { info ->
-//                    Log.e("ServerVM", "Collected server info: $info")
-//                    _uiState.value = SettingsUiState(
-//                        ip = info?.ip ?: "",
-//                        port = info?.port.toString(),
-//                        password = info?.password.toString()
-//                    )
-//                    if (info != null) {
-//                        savedServerInfo = info
-//                    }
-//                }
-//        }

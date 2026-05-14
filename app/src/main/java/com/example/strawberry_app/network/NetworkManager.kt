@@ -26,7 +26,6 @@ import kotlinx.serialization.json.jsonObject
 import java.io.DataInputStream
 import java.io.DataOutputStream
 import java.net.Socket
-import java.security.MessageDigest
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -64,9 +63,10 @@ class NetworkManager @Inject constructor(
                 .collectLatest { info ->
                 if (info == null) {
                     disconnect()
-                } else {
-                    connect(info)
+                    return@collectLatest
                 }
+                    disconnect(false)
+                    connect(info)
             }
             // Delete when done testing connection status
             connectionStateFlow.collect { state ->
@@ -92,9 +92,7 @@ class NetworkManager @Inject constructor(
 
         connectionMutex.withLock {
 
-            if (_connectionState.value == ConnectionState.Connecting ||
-                _connectionState.value == ConnectionState.Connected
-            ) return
+            if (_connectionState.value == ConnectionState.Connecting) return
 
             currentServerInfo = serverInfo
 
@@ -108,8 +106,7 @@ class NetworkManager @Inject constructor(
         }
 
         try {
-            // Change to Log.i!!!!!!!!!!!!!!
-            Log.e("NetworkManager", "Connecting to server ${serverInfo.ip} on port ${serverInfo.port}")
+            Log.i("NetworkManager", "Connecting to server ${serverInfo.ip} on port ${serverInfo.port}")
             val connectedSocket = withContext(Dispatchers.IO){
                 Socket(serverInfo.ip, serverInfo.port)
             }
@@ -119,7 +116,7 @@ class NetworkManager @Inject constructor(
             val inputStream = withContext(Dispatchers.IO){ DataInputStream(connectedSocket.getInputStream()) }
             val outputStream = withContext(Dispatchers.IO){ DataOutputStream(connectedSocket.getOutputStream()) }
 
-            val isAuthenticated = authenticate(serverInfo, inputStream, connectedSocket)
+            val isAuthenticated = authenticate(serverInfo, connectedSocket)
 
             if (isAuthenticated) {
                 dataOutputStream = outputStream
@@ -295,18 +292,3 @@ class NetworkManager @Inject constructor(
         delayTime.value = 3000
     }
 }
-
-
-//    private fun hashPasswordWithNonce(
-//        password: String,
-//        nonce: String
-//    ): String {
-//
-//        val combined = password + nonce
-//
-//        val hashBytes = MessageDigest
-//            .getInstance("SHA-256")
-//            .digest(combined.toByteArray())
-//
-//        return hashBytes.joinToString("") { "%02x".format(it) }
-//    }
