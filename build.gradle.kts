@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose) apply false
     alias(libs.plugins.hilt) apply false
     alias(libs.plugins.ksp) apply false
-    alias(libs.plugins.stability.analyzer) apply false // Delete later
+    kotlin("plugin.serialization") version "2.1.21" apply false
 
+    alias(libs.plugins.stability.analyzer) apply false // Delete later
 }

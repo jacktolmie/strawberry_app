@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
+    kotlin("plugin.serialization")
     alias(libs.plugins.stability.analyzer) // Delete later
 }
 
@@ -71,6 +72,11 @@ dependencies {
 
     // KotlinX
     implementation(libs.kotlinx.serialization.json)
+
+    // Serialization
+    implementation(libs.kotlinx.serialization.json.v181)
+//    implementation(libs.kotlinx.serialization.json.v1100)
+
 
 
     testImplementation(libs.junit)

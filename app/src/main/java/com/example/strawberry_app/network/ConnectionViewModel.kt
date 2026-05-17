@@ -1,20 +1,16 @@
 package com.example.strawberry_app.network
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.strawberry_app.server.ServerInfo
 import com.example.strawberry_app.server.ServerRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@OptIn(FlowPreview::class)
 @HiltViewModel
 class ConnectionViewModel @Inject constructor(
     private val networkManager:     NetworkManager,
@@ -22,13 +18,6 @@ class ConnectionViewModel @Inject constructor(
 ) : ViewModel()
 {
     val connectionState = networkManager.connectionStateFlow
-
-    private val _serverInfo: StateFlow<ServerInfo?> =
-        serverRepository.serverInfoFlow.stateIn(
-            viewModelScope,
-            SharingStarted.WhileSubscribed(5000),
-            null
-        )
 
     init {
         viewModelScope.launch {
@@ -45,11 +34,6 @@ class ConnectionViewModel @Inject constructor(
         viewModelScope.launch {
             networkManager.manualDisconnect(disconnectPressed)
         }
-    }
-
-    fun reconnectAfterSave(){
-            val serverInfo = _serverInfo.value ?: return
-            viewModelScope.launch { serverRepository.saveServerInfo(serverInfo) }
     }
 
     fun sendCommand(command: String) {

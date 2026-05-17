@@ -107,16 +107,14 @@ class NetworkManager @Inject constructor(
 
         try {
             Log.i("NetworkManager", "Connecting to server ${serverInfo.ip} on port ${serverInfo.port}")
-            val connectedSocket = withContext(Dispatchers.IO){
-                Socket(serverInfo.ip, serverInfo.port)
-            }
+            val connectedSocket = withContext(Dispatchers.IO){ Socket(serverInfo.ip, serverInfo.port) }
 
             socket = connectedSocket
 
             val inputStream = withContext(Dispatchers.IO){ DataInputStream(connectedSocket.getInputStream()) }
             val outputStream = withContext(Dispatchers.IO){ DataOutputStream(connectedSocket.getOutputStream()) }
 
-            val isAuthenticated = authenticate(serverInfo, connectedSocket)
+            val isAuthenticated = withContext(Dispatchers.IO){ authenticate(serverInfo, connectedSocket, inputStream, outputStream) }
 
             if (isAuthenticated) {
                 dataOutputStream = outputStream
