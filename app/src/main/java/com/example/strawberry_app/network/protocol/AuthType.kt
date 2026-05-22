@@ -2,25 +2,27 @@ package com.example.strawberry_app.network.protocol
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonClassDiscriminator
 
 @Serializable
-sealed class AuthType {
+@JsonClassDiscriminator("auth")
+sealed class AuthType: IncomingMessage() {
     @Serializable
-    @SerialName("AUTH_FAILED")
-    data object Failure : AuthType()
+    @SerialName("auth_failed")
+    data object AuthFailed : AuthType()
 
     @Serializable
-    @SerialName("AUTH_SUCCESS")
-    data object Success : AuthType()
+    @SerialName("auth_success")
+    data object AuthSuccess : AuthType()
 
     @Serializable
-    @SerialName("CHALLENGE")
+    @SerialName("challenge")
     data class Challenge(
         val nonce: String = ""
     ) : AuthType()
 
     @Serializable
-    @SerialName("ERROR")
+    @SerialName("error")
     data class Error(
         val message: String
     ) : AuthType()

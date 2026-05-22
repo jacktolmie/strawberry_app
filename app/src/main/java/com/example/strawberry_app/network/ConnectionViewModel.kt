@@ -2,11 +2,11 @@ package com.example.strawberry_app.network
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.strawberry_app.network.protocol.OutgoingMessage
 import com.example.strawberry_app.server.ServerRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -23,9 +23,9 @@ class ConnectionViewModel @Inject constructor(
         viewModelScope.launch {
             serverRepository.serverInfoFlow
                 .debounce(300)
-                .distinctUntilChanged()
                 .collect { info ->
-                    if (info?.ip?.isBlank() == true) return@collect
+                    if (info != null) networkManager.connect(info)
+                    else networkManager.disconnect()
                 }
         }
     }
@@ -36,9 +36,10 @@ class ConnectionViewModel @Inject constructor(
         }
     }
 
-    fun sendCommand(command: String) {
+
+    fun sendCommand(command: OutgoingMessage) {
         viewModelScope.launch {
-            networkManager.sendCommand("""{"command":"$command"}""") //Replace with enums???
+            networkManager.sendCommand(command)
         }
     }
 }

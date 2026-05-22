@@ -2,6 +2,7 @@ package com.example.strawberry_app.network
 
 import android.util.Log
 import com.example.strawberry_app.network.protocol.IncomingMessage
+import com.example.strawberry_app.network.protocol.OutgoingMessage
 import com.example.strawberry_app.server.ServerInfo
 import com.example.strawberry_app.server.ServerRepository
 import kotlinx.coroutines.CancellationException
@@ -21,6 +22,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
 import java.io.DataInputStream
@@ -42,7 +44,7 @@ class NetworkManager @Inject constructor(
     private val connectionMutex = Mutex()
     private var dataOutputStream: DataOutputStream? = null
 
-    private val json = Json{ ignoreUnknownKeys = true; classDiscriminator = "type"}
+    private val json = Json{ ignoreUnknownKeys = true}
     private var listenerJob: Job? = null
     private var reconnectJob: Job? = null
     var shouldReconnect = MutableStateFlow(true)
@@ -119,6 +121,7 @@ class NetworkManager @Inject constructor(
             if (isAuthenticated) {
                 dataOutputStream = outputStream
                 _connectionState.value = ConnectionState.Connected
+                sendCommand(OutgoingMessage.Play) // Delete when done testing!!!!!!!!!!!
                 startListening(inputStream)
                 resetReconnects()
             } else {
@@ -191,10 +194,15 @@ class NetworkManager @Inject constructor(
                         dataInputStream.readFully(messageBytes)
                         val jsonString = String(messageBytes, Charsets.UTF_8)
                         val obj = json.parseToJsonElement(jsonString).jsonObject
-                        println("Server is sending: $obj") // Delete later
+                        Log.i("NetworkManager", "Server sent: $obj")// Delete later
 
-                        val parsedMessage = json.decodeFromString<IncomingMessage>(jsonString)
-                        _serverMessages.tryEmit(parsedMessage)
+                        try {
+                            val parsedMessage = json.decodeFromString<IncomingMessage>(jsonString)
+                            _serverMessages.tryEmit(parsedMessage)
+                        } catch (e: SerializationException) {
+                            Log.e("NetworkManager", "Failed to parse message: $jsonString — ${e.message}")
+                            // connection stays alive, just skip the bad message
+                        }
 
                     } else {
                         Log.e(
@@ -222,11 +230,12 @@ class NetworkManager @Inject constructor(
         }
     }
 
-    suspend fun sendCommand(jsonCommand: String) {
+    suspend fun sendCommand(command: OutgoingMessage) {
 
         withContext(Dispatchers.IO) {
             if (dataOutputStream != null && socket?.isConnected == true) {
                 try {
+                    val jsonCommand = Json.encodeToString(OutgoingMessage.serializer(), command)
                     val messageBytes = jsonCommand.toByteArray(Charsets.UTF_8)
                     dataOutputStream?.writeInt(messageBytes.size)
                     dataOutputStream?.write(messageBytes)
