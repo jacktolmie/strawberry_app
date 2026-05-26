@@ -44,13 +44,13 @@ class NetworkManager @Inject constructor(
     private val connectionMutex = Mutex()
     private var dataOutputStream: DataOutputStream? = null
 
-    private val json = Json{ ignoreUnknownKeys = true}
+    private val json = Json{ ignoreUnknownKeys = false} // Change to true after testing
     private var listenerJob: Job? = null
     private var reconnectJob: Job? = null
     var shouldReconnect = MutableStateFlow(true)
     private var socket: Socket? = null
     private val _serverMessages =
-        MutableSharedFlow<IncomingMessage>(replay = 0, extraBufferCapacity = 64)
+        MutableSharedFlow<IncomingMessage>(replay = 1, extraBufferCapacity = 64)
 
     val serverMessages = _serverMessages.asSharedFlow()
     private val reconnectCount = MutableStateFlow(0)
@@ -70,14 +70,10 @@ class NetworkManager @Inject constructor(
                     disconnect(false)
                     connect(info)
             }
-            // Delete when done testing connection status
-            connectionStateFlow.collect { state ->
-                Log.d("ConnectionTest", "Connection state changed: $state")
-            }
         }
     }
     companion object {
-        private const val MAX_MESSAGE_SIZE = 10000
+        private const val MAX_MESSAGE_SIZE = 1_048_576
     }
 
     suspend fun connect(serverInfo: ServerInfo?) {
@@ -121,7 +117,6 @@ class NetworkManager @Inject constructor(
             if (isAuthenticated) {
                 dataOutputStream = outputStream
                 _connectionState.value = ConnectionState.Connected
-                sendCommand(OutgoingMessage.Play) // Delete when done testing!!!!!!!!!!!
                 startListening(inputStream)
                 resetReconnects()
             } else {
@@ -201,7 +196,6 @@ class NetworkManager @Inject constructor(
                             _serverMessages.tryEmit(parsedMessage)
                         } catch (e: SerializationException) {
                             Log.e("NetworkManager", "Failed to parse message: $jsonString — ${e.message}")
-                            // connection stays alive, just skip the bad message
                         }
 
                     } else {

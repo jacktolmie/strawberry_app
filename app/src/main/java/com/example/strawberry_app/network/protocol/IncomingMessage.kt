@@ -46,4 +46,3 @@ sealed class IncomingMessage{
         val response: String
     ): IncomingMessage()
 }
-// ErrorType, EventType, ResponseType are defined in files by those names.

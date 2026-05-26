@@ -9,14 +9,20 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.strawberry_app.music.MusicRepository
 import com.example.strawberry_app.network.ConnectionViewModel
 import com.example.strawberry_app.ui.theme.Strawberry_appTheme
 import dagger.hilt.android.AndroidEntryPoint
+import jakarta.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     private val connectionViewModel: ConnectionViewModel by viewModels()
+
+    // Testing music repository. Delete when done.
+    @Inject
+    lateinit var musicRepository: MusicRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

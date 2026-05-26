@@ -1,4 +1,4 @@
-package com.example.strawberry_app.screens
+package com.example.strawberry_app.screens.playerScreen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

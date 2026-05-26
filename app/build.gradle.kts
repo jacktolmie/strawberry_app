@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
     kotlin("plugin.serialization")
+
     alias(libs.plugins.stability.analyzer) // Delete later
 }
 
@@ -54,7 +55,7 @@ dependencies {
 
     // Add fonts
     implementation(libs.androidx.compose.ui.text.google.fonts)
-    implementation(libs.androidx.material3)
+    implementation(libs.androidx.compose.material3)
 
     // Hilt dependencies
     implementation(libs.hilt.android)
@@ -70,14 +71,16 @@ dependencies {
     implementation(libs.ktor.client.content.negotiation)
     implementation(libs.ktor.serialization.kotlinx.json)
 
-    // KotlinX
+    // KotlinX Serialization
     implementation(libs.kotlinx.serialization.json)
 
-    // Serialization
-    implementation(libs.kotlinx.serialization.json.v181)
-//    implementation(libs.kotlinx.serialization.json.v1100)
+    // Room Database
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
+    ksp(libs.room.compiler)
 
-
+    // For vertical sliders. Delete later when not experimental
+    implementation(libs.androidx.compose.material3.v150alpha19)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

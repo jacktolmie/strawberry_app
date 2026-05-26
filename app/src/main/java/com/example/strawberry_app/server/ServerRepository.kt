@@ -44,8 +44,6 @@ class ServerRepository @Inject constructor(
         }
     }.distinctUntilChanged()
 
-
-
     suspend fun saveServerInfo(info: ServerInfo){
         datastore.edit {
             it[KEY_IP] = info.ip

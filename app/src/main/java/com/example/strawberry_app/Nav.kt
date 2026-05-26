@@ -5,7 +5,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.strawberry_app.screens.ScreenList
-import com.example.strawberry_app.screens.SettingsRoute
+import com.example.strawberry_app.screens.settingsScreen.SettingsRoute
 
 @Composable
 fun Nav(){

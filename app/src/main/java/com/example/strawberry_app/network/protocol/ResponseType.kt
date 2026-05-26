@@ -1,11 +1,43 @@
 package com.example.strawberry_app.network.protocol
 
+import com.example.strawberry_app.music.Song
+import kotlinx.serialization.DeserializationStrategy
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.JsonClassDiscriminator
+import kotlinx.serialization.json.JsonContentPolymorphicSerializer
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonIgnoreUnknownKeys
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 
-@Serializable
-@JsonClassDiscriminator("response")
+object ResponseTypeSerializer : JsonContentPolymorphicSerializer<ResponseType>(ResponseType::class) {
+    override fun selectDeserializer(element: JsonElement): DeserializationStrategy<ResponseType> {
+        return when (element.jsonObject["response"]?.jsonPrimitive?.content) {
+            "cleared_playlist" -> ResponseType.ClearedPlaylist.serializer()
+            "closed_playlist_with_id" -> ResponseType.ClosedPlaylistWithId.serializer()
+            "deleted_playlist_with_id" -> ResponseType.DeletedPlaylistWithId.serializer()
+            "is_playlist_a_favourite" -> ResponseType.IsPlaylistAFavourite.serializer()
+            "playlist_closed" -> ResponseType.PlaylistClosed.serializer()
+            "removed_duplicates_from_playlist" -> ResponseType.RemovedDuplicatesFromPlaylist.serializer()
+            "rename_playlist" -> ResponseType.RenamePlaylist.serializer()
+            "removed_song_from_playlist" -> ResponseType.RemovedSongFromPlaylist.serializer()
+            "running_command" -> ResponseType.RunningCommand.serializer()
+            "sent_active_playlist" -> ResponseType.SentActivePlaylist.serializer()
+            "set_current_playlist_to" -> ResponseType.SetActivePlaylistTo.serializer()
+            "shuffled_playlist" -> ResponseType.ShuffledPlaylist.serializer()
+            "shuffled_all_playlists" -> ResponseType.ShuffledALlPlaylists.serializer()
+            "song_info" -> ResponseType.SongInfo.serializer()
+            "songs" -> ResponseType.Songs.serializer()
+            else -> throw SerializationException("Unknown response type: $element")
+        }
+    }
+}
+
+@OptIn(ExperimentalSerializationApi::class)
+@Serializable(with = ResponseTypeSerializer::class)
 sealed  class ResponseType: IncomingMessage() {
 
     @Serializable
@@ -62,6 +94,7 @@ sealed  class ResponseType: IncomingMessage() {
     object ShuffledALlPlaylists: ResponseType()
 
     @Serializable
+    @JsonIgnoreUnknownKeys
     @SerialName("song_info")
     data class SongInfo(
         val id: Int = 0,
@@ -70,5 +103,11 @@ sealed  class ResponseType: IncomingMessage() {
         val title: String = "",
         val length: Long = 0
         //val coverImage // Unknown for now.
+    ): ResponseType()
+
+    @Serializable
+    @SerialName("songs")
+    data class Songs(
+        val songs: List<Song>
     ): ResponseType()
 }

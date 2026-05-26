@@ -1,4 +1,4 @@
-package com.example.strawberry_app.screens
+package com.example.strawberry_app.screens.settingsScreen
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
