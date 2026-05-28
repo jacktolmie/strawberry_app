@@ -2,7 +2,6 @@ package com.example.strawberry_app.network
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.strawberry_app.network.protocol.OutgoingMessage
 import com.example.strawberry_app.server.ServerRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
@@ -33,13 +32,6 @@ class ConnectionViewModel @Inject constructor(
     fun manualDisconnect(disconnectPressed: Boolean) {
         viewModelScope.launch {
             networkManager.manualDisconnect(disconnectPressed)
-        }
-    }
-
-
-    fun sendCommand(command: OutgoingMessage) {
-        viewModelScope.launch {
-            networkManager.sendCommand(command)
         }
     }
 }

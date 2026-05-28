@@ -9,7 +9,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.strawberry_app.music.MusicRepository
+import com.example.strawberry_app.music.PlaylistRepository
 import com.example.strawberry_app.network.ConnectionViewModel
 import com.example.strawberry_app.ui.theme.Strawberry_appTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -22,7 +22,7 @@ class MainActivity : ComponentActivity() {
 
     // Testing music repository. Delete when done.
     @Inject
-    lateinit var musicRepository: MusicRepository
+    lateinit var playlistRepository: PlaylistRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

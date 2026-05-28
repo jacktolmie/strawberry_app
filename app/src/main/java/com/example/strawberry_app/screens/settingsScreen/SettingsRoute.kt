@@ -2,10 +2,20 @@ package com.example.strawberry_app.screens.settingsScreen
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.strawberry_app.network.ConnectionViewModel
 import com.example.strawberry_app.server.ServerViewModel
+
+class SettingsCallbacks(
+    val onIpChanged: (String) -> Unit,
+    val onPortChanged: (String) -> Unit,
+    val onPasswordChanged: (String) -> Unit,
+    val onSaveClicked: () -> Unit,
+    val onCancelClicked: () -> Unit,
+    val onDisconnectClicked: (Boolean) -> Unit
+)
 
 @Suppress("ParamsComparedByRef")
 @Composable
@@ -18,16 +28,20 @@ fun SettingsRoute(
         .connectionState
         .collectAsStateWithLifecycle()
 
+    val callbacks = remember {
+        SettingsCallbacks(
+            onIpChanged = serverViewModel::onIpChanged,
+            onPortChanged = serverViewModel::onPortChanged,
+            onPasswordChanged = serverViewModel::onPasswordChanged,
+            onSaveClicked = serverViewModel::save,
+            onCancelClicked = serverViewModel::cancel,
+            onDisconnectClicked = connectionViewModel::manualDisconnect
+        )
+    }
+
     SettingsScreen(
         serverUiState = uiState,
         connectionState = connectionState,
-
-        onDisconnectClicked = connectionViewModel::manualDisconnect,
-
-        onIpChanged = serverViewModel::onIpChanged,
-        onPortChanged = serverViewModel::onPortChanged,
-        onPasswordChanged = serverViewModel::onPasswordChanged,
-        onSaveClicked = serverViewModel::save,
-        onCancelClicked = serverViewModel::cancel
+        callbacks = callbacks
     )
 }

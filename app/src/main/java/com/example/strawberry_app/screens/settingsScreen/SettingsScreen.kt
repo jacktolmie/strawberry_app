@@ -40,13 +40,7 @@ import com.skydoves.compose.stability.runtime.TraceRecomposition
 fun SettingsScreen(
     serverUiState: SettingsUiState,
     connectionState: ConnectionState,
-
-    onIpChanged: (String) -> Unit,
-    onPortChanged: (String) -> Unit,
-    onPasswordChanged: (String) -> Unit,
-    onSaveClicked: () -> Unit,
-    onCancelClicked: () -> Unit,
-    onDisconnectClicked: (Boolean) -> Unit
+    callbacks: SettingsCallbacks
 ) {
 
     val isConnected = connectionState == ConnectionState.Connected
@@ -69,7 +63,7 @@ fun SettingsScreen(
 
         TextFieldBox(
             serverUiState.ip,
-            onIpChanged,
+            callbacks.onIpChanged,
             R.string.settings_ip_info,
             error = serverUiState.ipError
         )
@@ -80,7 +74,7 @@ fun SettingsScreen(
 
         TextFieldBox(
             serverUiState.port,
-            onPortChanged,
+            callbacks.onPortChanged,
             R.string.settings_port_range,
             KeyboardType.Number,
             error = serverUiState.portError
@@ -90,7 +84,7 @@ fun SettingsScreen(
 
         TextBox(R.string.settings_password, MaterialTheme.typography.bodyLarge)
 
-        TextFieldBox(serverUiState.password, onPasswordChanged )
+        TextFieldBox(serverUiState.password, callbacks.onPasswordChanged )
 
         Spacer(modifier = Modifier.height(10.dp))
 
@@ -102,7 +96,7 @@ fun SettingsScreen(
         )
         {
             Button(
-                onClick = { onSaveClicked() },
+                onClick = { callbacks.onSaveClicked() },
                 enabled = serverUiState.enableSaveButton
             )
             {
@@ -112,7 +106,7 @@ fun SettingsScreen(
             Spacer(modifier = Modifier.width(8.dp))
 
             Button(
-                onClick = { onCancelClicked() }
+                onClick = { callbacks.onCancelClicked() }
             )
             {
                 TextBox(R.string.settings_cancel, MaterialTheme.typography.bodySmall)
@@ -124,7 +118,7 @@ fun SettingsScreen(
 
         Button(
             onClick ={
-                onDisconnectClicked(isConnected)
+                callbacks.onDisconnectClicked(isConnected)
             }
         )
         {
@@ -235,11 +229,13 @@ fun SettingsPreview(){
         ),
 
         connectionState = ConnectionState.Connected,
-
-        onIpChanged = {},
-        onPortChanged = {},
-        onPasswordChanged = {},
-        onSaveClicked = {},
-        onCancelClicked = {}
-    ) {}
+        callbacks = SettingsCallbacks(
+            onIpChanged = {},
+            onPortChanged = {},
+            onPasswordChanged = {},
+            onSaveClicked = {},
+            onCancelClicked = {},
+            onDisconnectClicked = {}
+        )
+    )
 }

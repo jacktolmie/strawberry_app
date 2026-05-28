@@ -50,7 +50,7 @@ class NetworkManager @Inject constructor(
     var shouldReconnect = MutableStateFlow(true)
     private var socket: Socket? = null
     private val _serverMessages =
-        MutableSharedFlow<IncomingMessage>(replay = 1, extraBufferCapacity = 64)
+        MutableSharedFlow<IncomingMessage>(replay = 0, extraBufferCapacity = 64)
 
     val serverMessages = _serverMessages.asSharedFlow()
     private val reconnectCount = MutableStateFlow(0)
@@ -189,10 +189,10 @@ class NetworkManager @Inject constructor(
                         dataInputStream.readFully(messageBytes)
                         val jsonString = String(messageBytes, Charsets.UTF_8)
                         val obj = json.parseToJsonElement(jsonString).jsonObject
-                        Log.i("NetworkManager", "Server sent: $obj")// Delete later
 
                         try {
                             val parsedMessage = json.decodeFromString<IncomingMessage>(jsonString)
+                            Log.e("NetworkManager", "Server sent: $parsedMessage")
                             _serverMessages.tryEmit(parsedMessage)
                         } catch (e: SerializationException) {
                             Log.e("NetworkManager", "Failed to parse message: $jsonString — ${e.message}")
@@ -280,8 +280,7 @@ class NetworkManager @Inject constructor(
             if(disconnectPressed){
                 disconnect()
             } else{
-                if(currentServerInfo != null)
-                connect(currentServerInfo)
+                if(currentServerInfo != null) connect(currentServerInfo)
             }
 
         }

@@ -30,6 +30,7 @@ object EventTypeSerializer : JsonContentPolymorphicSerializer<EventType>(EventTy
             "seek_to" -> EventType.SeekTo.serializer()
             "song_changed" -> EventType.SongChanged.serializer()
             "stop" -> EventType.Stop.serializer()
+            "time" -> EventType.Time.serializer()
             "volume" -> EventType.Volume.serializer()
             "volume_changed" -> EventType.VolumeChanged.serializer()
             else -> throw SerializationException("Unknown event type: $element")
@@ -39,14 +40,23 @@ object EventTypeSerializer : JsonContentPolymorphicSerializer<EventType>(EventTy
 
 @OptIn(ExperimentalSerializationApi::class)
 @Serializable(with = EventTypeSerializer::class)
+//@JsonIgnoreUnknownKeys
 sealed class EventType: IncomingMessage() {
     @Serializable
+    @JsonIgnoreUnknownKeys
     @SerialName("active_playlist")
-    data class ActivePlaylist(val id: Int, val row: Int? = null) : EventType()
+    data class ActivePlaylist(
+        val id: Int,
+        val row: Int? = null
+    ) : EventType()
 
     @Serializable
+    @JsonIgnoreUnknownKeys
     @SerialName("favourite_playlist")
-    data class FavouritePlaylist(val id: Int, val favourite: Boolean) : EventType()
+    data class FavouritePlaylist(
+        val id: Int,
+        val favourite: Boolean
+    ) : EventType()
 
 
     @Serializable
@@ -57,7 +67,7 @@ sealed class EventType: IncomingMessage() {
         val current_playlist: Int,
         val current_song: Int,
         val current_time: Long = 0,
-        val playing: Boolean = false,
+        val playing: String = "",
         val volume: Int = 0,
         val playlists: MakeAllPlaylists? = null
     ) : EventType()
@@ -81,7 +91,10 @@ sealed class EventType: IncomingMessage() {
 
     @Serializable
     @SerialName("play")
-    data class Play(val time: Long, val row: Int? = null) : EventType()
+    data class Play(
+        val time: Long,
+        val row: Int? = null
+    ) : EventType()
 
     @Serializable
     @SerialName("previous")
@@ -111,6 +124,9 @@ sealed class EventType: IncomingMessage() {
     @SerialName("stop")
     object Stop : EventType()
 
+    @Serializable
+    @SerialName("time")
+    data class Time(val time: Long): EventType()
     @Serializable
     @SerialName("volume")
     data class Volume(val volume: Int = 0): EventType()
