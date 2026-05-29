@@ -8,6 +8,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.strawberry_app.network.ConnectionViewModel
 import com.example.strawberry_app.server.ServerViewModel
 
+
 class SettingsCallbacks(
     val onIpChanged: (String) -> Unit,
     val onPortChanged: (String) -> Unit,
@@ -39,9 +40,12 @@ fun SettingsRoute(
         )
     }
 
+    val routeData by connectionViewModel.routeData.collectAsStateWithLifecycle()
+
     SettingsScreen(
         serverUiState = uiState,
         connectionState = connectionState,
-        callbacks = callbacks
+        callbacks = callbacks,
+        routeData
     )
 }

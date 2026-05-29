@@ -1,5 +1,6 @@
 package com.example.strawberry_app.screens.playerScreen
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,17 +11,22 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import com.example.strawberry_app.screens.playlistScreen.PlaylistViewModel
+import com.example.strawberry_app.ui.theme.icons.play_pause
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun PlayerScreen(callbacks: PlayerCallbacks) {
+fun PlayerScreen(
+    callbacks: PlayerCallbacks,
+    playerValues: PlayerValues,
+    playerRouteData: PlayerRouteData)
+{
     Column(modifier = Modifier
         .fillMaxSize()
         .statusBarsPadding()
-        .navigationBarsPadding(),
+        .navigationBarsPadding()
+        .background(Color.White),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     )
@@ -52,6 +58,8 @@ fun PlayerScreenPreview(){
             setVolume =  {},
             sendVolumeDown =  {},
             sendVolumeUp =  {}
-        )
+        ),
+        playerValues = PlayerValues(),
+        playerRouteData = PlayerRouteData(play_pause)
     )
 }

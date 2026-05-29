@@ -4,8 +4,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import com.example.strawberry_app.music.PlaylistRepository
+import com.example.strawberry_app.ui.theme.icons.pause
+import com.example.strawberry_app.ui.theme.icons.play_arrow
+import com.example.strawberry_app.ui.theme.icons.play_pause
+
+class PlayerRouteData(
+    val playStateIcon: ImageVector
+)
 
 class PlayerCallbacks(
     val isConnected: () -> Unit,
@@ -28,13 +35,10 @@ class PlayerCallbacks(
 @Suppress("ParamsComparedByRef")
 @Composable
 fun PlayerRoute(
+    playerValues: PlayerValues,
     viewModel: PlayerViewModel = hiltViewModel()
+
 ){
-
-    val volume by viewModel.volume.collectAsState()
-    val currentTime by viewModel.currentTime.collectAsState()
-    val playState by viewModel.playState.collectAsState()
-
     val callbacks = remember {
         PlayerCallbacks(
             isConnected = viewModel::isConnected,
@@ -55,5 +59,17 @@ fun PlayerRoute(
         )
     }
 
-    PlayerScreen(callbacks)
+    val playPause by viewModel.playerState.collectAsState()
+    val playPauseState = when(playPause.playState){
+        PlayState.PLAYING -> pause
+        PlayState.PAUSED -> play_arrow
+        else -> play_pause
+    }
+
+    val routeData = PlayerRouteData(
+        playStateIcon = playPauseState
+    )
+
+
+    PlayerScreen(callbacks, playerValues, routeData)
 }

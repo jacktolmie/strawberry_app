@@ -22,7 +22,6 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -32,6 +31,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.strawberry_app.R
 import com.example.strawberry_app.network.ConnectionState
+import com.example.strawberry_app.network.SettingsRouteData
 import com.example.strawberry_app.server.SettingsUiState
 import com.skydoves.compose.stability.runtime.TraceRecomposition
 
@@ -40,7 +40,8 @@ import com.skydoves.compose.stability.runtime.TraceRecomposition
 fun SettingsScreen(
     serverUiState: SettingsUiState,
     connectionState: ConnectionState,
-    callbacks: SettingsCallbacks
+    callbacks: SettingsCallbacks,
+    settingsRouteData: SettingsRouteData
 ) {
 
     val isConnected = connectionState == ConnectionState.Connected
@@ -144,34 +145,13 @@ fun SettingsScreen(
                 modifier = Modifier.size(18.dp),
                 painter = painterResource(R.drawable.circle_24dp_e3e3e3_fill1_wght400_grad0_opsz24),
                 contentDescription = null,
-                tint = when(connectionState){
-                    ConnectionState.Connected -> Color.Green
-                    ConnectionState.Connecting -> Color.Yellow
-                    ConnectionState.Disconnected -> Color.Red
-                    is ConnectionState.Error -> Color.Red
-                    is ConnectionState.Reconnecting -> Color.Yellow
-                }
+                tint = settingsRouteData.connectionColour
             )
 
             Spacer(modifier = Modifier.width(5.dp))
 
             TextBox(
-                text = when (connectionState) {
-                    ConnectionState.Connected ->
-                        "Connected"
-
-                    ConnectionState.Connecting ->
-                        "Connecting"
-
-                    ConnectionState.Disconnected ->
-                        "Disconnected"
-
-                    is ConnectionState.Error ->
-                        connectionState.message
-
-                    is ConnectionState.Reconnecting ->
-                        "Reconnecting in ${connectionState.time}\nAttempt: ${connectionState.attempt}"
-                },
+                text = settingsRouteData.connectionState,
                 textStyle = MaterialTheme.typography.bodyLarge
             )
         }
@@ -236,6 +216,7 @@ fun SettingsPreview(){
             onSaveClicked = {},
             onCancelClicked = {},
             onDisconnectClicked = {}
-        )
+        ),
+        SettingsRouteData()
     )
 }
