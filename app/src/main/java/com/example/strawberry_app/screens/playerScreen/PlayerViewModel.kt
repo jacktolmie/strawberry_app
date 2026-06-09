@@ -10,15 +10,12 @@ import com.example.strawberry_app.network.protocol.OutgoingMessage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 enum class PlayState{
-    PLAYING,
-    PAUSED,
-    STOPPED
+    PLAYING, PAUSED, STOPPED
 }
 
 data class PlayerValues(
@@ -40,11 +37,20 @@ class PlayerViewModel @Inject constructor(
     private val _playerState = MutableStateFlow(PlayerValues())
     val playerState = _playerState.asStateFlow()
 
-    val playlistState = playlistRepository.playlistState
-
     init {
-        observeNetworkMessages()
+        viewModelScope.launch {
+            networkManager.connectionStateFlow.collect { state ->
+                if (state is ConnectionState.Disconnected){
+                    _playerState.update { PlayerValues() }
+                }
+                if (state is ConnectionState.Connected) {
+                    observeNetworkMessages()
+                }
+            }
+        }
+        viewModelScope.launch { observeNetworkMessages() }
     }
+
 
     private fun observeNetworkMessages() {
         viewModelScope.launch {
@@ -55,7 +61,7 @@ class PlayerViewModel @Inject constructor(
                             PlayerValues(
                                 activePlaylist = message.active_playlist,
                                 currentSong = message.current_song,
-                                currentTime = message.current_time,
+                                currentTime = message.time,
                                 playState = when(message.playing){
                                     "paused" -> PlayState.PAUSED
                                     "playing" -> PlayState.PLAYING

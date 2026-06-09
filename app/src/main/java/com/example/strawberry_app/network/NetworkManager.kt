@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.isActive
@@ -38,7 +39,7 @@ class NetworkManager @Inject constructor(
 ) {
 
     private val _connectionState = MutableStateFlow<ConnectionState>(ConnectionState.Disconnected)
-    val connectionStateFlow: StateFlow<ConnectionState> = _connectionState
+    val connectionStateFlow: StateFlow<ConnectionState> = _connectionState.asStateFlow()
 
     private var currentServerInfo: ServerInfo? = null
     private val connectionMutex = Mutex()

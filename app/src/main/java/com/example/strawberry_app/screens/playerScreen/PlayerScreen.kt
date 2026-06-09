@@ -1,26 +1,60 @@
 package com.example.strawberry_app.screens.playerScreen
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.MarqueeSpacing
 import androidx.compose.foundation.background
+import androidx.compose.foundation.basicMarquee
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.progressSemantics
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.VerticalSlider
+import androidx.compose.material3.rememberSliderState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.strawberry_app.ui.theme.icons.play_pause
+import androidx.compose.ui.unit.dp
+import com.example.strawberry_app.R
+import com.example.strawberry_app.ui.theme.icons.fast_forward
+import com.example.strawberry_app.ui.theme.icons.fast_rewind
+import com.example.strawberry_app.ui.theme.icons.pause
+import com.example.strawberry_app.ui.theme.icons.play_arrow
+import com.example.strawberry_app.ui.theme.icons.skip_next
+import com.example.strawberry_app.ui.theme.icons.skip_previous
+import com.example.strawberry_app.ui.theme.icons.stop
+import com.example.strawberry_app.ui.theme.icons.volume_down
+import com.example.strawberry_app.ui.theme.icons.volume_off
+import com.example.strawberry_app.ui.theme.icons.volume_up
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun PlayerScreen(
     callbacks: PlayerCallbacks,
-    playerValues: PlayerValues,
-    playerRouteData: PlayerRouteData)
+    playerValues: PlayerValues)
 {
     Column(modifier = Modifier
         .fillMaxSize()
@@ -28,13 +62,122 @@ fun PlayerScreen(
         .navigationBarsPadding()
         .background(Color.White),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top
+        verticalArrangement = Arrangement.Center
     )
     {
-        // Add a active playlist name?
-        // Add current song, current time, volume fields.
-        Text(text = "Test")
-//        VerticalSlider()
+        Column(modifier = Modifier
+            .fillMaxWidth(.75f)
+        )
+        {
+            // Song text for the song playing
+            Text(
+                text = "This is the song area. It is a very long song and needs to scroll",
+                modifier = Modifier.basicMarquee(
+                    iterations = Int.MAX_VALUE,
+                    repeatDelayMillis = 10000,
+                    spacing = MarqueeSpacing.fractionOfContainer(0.1f)
+                ),
+                maxLines = 1
+            )
+
+            // Album/Artist text.
+            Text(
+                text = "This will be the album/group, It is a very long song and needs to scroll",
+                modifier = Modifier.basicMarquee(
+                    iterations = Int.MAX_VALUE,
+                    repeatDelayMillis = 10000,
+                    spacing = MarqueeSpacing.fractionOfContainer(0.1f)
+                ),
+                maxLines = 1
+            )
+        }
+
+        Spacer(modifier = Modifier.height(10.dp))
+
+        // Row for cover image and volume controls
+        Row(modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight(.70f)
+            .padding(10.dp),
+            horizontalArrangement = Arrangement.Absolute.Center,
+            verticalAlignment = Alignment.CenterVertically
+        )
+        {
+            Image(modifier = Modifier
+                .fillMaxHeight()
+                .fillMaxWidth(.75f)
+                .aspectRatio(1f)
+                .padding(10.dp),
+                // Find the current image url or default strawberry image
+                painter = painterResource(
+                    R.drawable.strawberry),
+                contentDescription = "Test Image",
+                contentScale = ContentScale.Crop
+            )
+
+            Spacer(modifier = Modifier.width(10.dp).border(2.dp, Color.Blue))
+
+                val sliderState = rememberSliderState(valueRange = 0f..100f)
+                LaunchedEffect(playerValues.volume) {sliderState.value = playerValues.volume.toFloat()}
+
+                sliderState.onValueChangeFinished = { callbacks.setVolume(sliderState.value.toInt())}
+
+                Column(
+                    modifier = Modifier.fillMaxHeight(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.SpaceEvenly  //spacedBy(5.dp)
+                ) {
+                    CreateButton(volume_up, "Volume up", callbacks.sendVolumeUp)
+
+                    VerticalSlider(
+                        state = sliderState,
+                        modifier = Modifier
+                            .fillMaxHeight(.75f)
+                            .progressSemantics(sliderState.value, 0f..100f),
+                        reverseDirection = true
+                    )
+
+                    CreateButton(volume_down, "Volume down", callbacks.sendVolumeDown)
+                    CreateButton(volume_off, "Volume off", callbacks.sendMute)
+                }
+        }
+
+        Spacer(modifier = Modifier.height(10.dp))
+
+        // Player control buttons
+        Row(modifier = Modifier
+            .widthIn(max = 400.dp),
+            horizontalArrangement = Arrangement.spacedBy(5.dp),
+            verticalAlignment = Alignment.CenterVertically
+        )
+        {
+            CreateButton(skip_previous, "Previous", callbacks.sendPrevious)
+            CreateButton(fast_rewind, "Fast Rewind", callbacks.sendSeekBackward)
+            // Show proper play or pause button, and the proper callback
+            CreateButton(
+                if(playerValues.playState == PlayState.PLAYING) pause else play_arrow,
+                "Play / Pause",
+                if(playerValues.playState == PlayState.PLAYING) callbacks.sendPause else callbacks.sendPlay
+            )
+            CreateButton(stop, "Stop", callbacks.sendStop)
+            CreateButton(fast_forward, "Fast Forward", callbacks.sendSeekForward)
+            CreateButton(skip_next, "Next", callbacks.sendNext)
+            }
+    }
+}
+
+@Composable
+fun CreateButton(image: ImageVector, description: String, control: () -> Unit) {
+    IconButton(
+        modifier = Modifier.size(48.dp),
+        onClick = { control() }
+    ) {
+        Icon(
+            imageVector = image,
+            contentDescription = description,
+            tint = MaterialTheme.colorScheme.onSurface,
+            modifier = Modifier.size(24.dp)
+        )
     }
 }
 
@@ -59,7 +202,6 @@ fun PlayerScreenPreview(){
             sendVolumeDown =  {},
             sendVolumeUp =  {}
         ),
-        playerValues = PlayerValues(),
-        playerRouteData = PlayerRouteData(play_pause)
+        playerValues = PlayerValues()
     )
 }

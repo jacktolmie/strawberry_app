@@ -1,27 +1,29 @@
 package com.example.strawberry_app.network.protocol
 
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonClassDiscriminator
 
+@OptIn(ExperimentalSerializationApi::class)
 @Serializable
 @JsonClassDiscriminator("command")
 sealed class OutgoingMessage {
 
     @Serializable
-    @SerialName("clear-music")
+    @SerialName("clear-playlist")
     data class ClearPlaylist(val id: Int): OutgoingMessage()
 
     @Serializable
-    @SerialName("close-music")
+    @SerialName("close-playlist")
     data class CloseCurrent(val id: Int) : OutgoingMessage()
 
     @Serializable
-    @SerialName("delete-current-music")
+    @SerialName("delete-current-playlist")
     data class DeleteCurrentPlaylist(val id: Int): OutgoingMessage()
 
     @Serializable
-    @SerialName("favourite-music")
+    @SerialName("favourite-playlist")
     data class FavouritePlaylist(val favourite: Boolean): OutgoingMessage()
 
     @Serializable
@@ -49,15 +51,15 @@ sealed class OutgoingMessage {
     data object Previous: OutgoingMessage()
 
     @Serializable
-    @SerialName("remove-current-song-music")
+    @SerialName("remove-current-song-playlist")
     data class RemoveCurrentSongFromPlaylist(val id: Int): OutgoingMessage()
 
     @Serializable
-    @SerialName("remove-duplicates-music")
+    @SerialName("remove-duplicates-playlist")
     data object RemoveDuplicatesFromPlaylist: OutgoingMessage()
 
     @Serializable
-    @SerialName("rename-music")
+    @SerialName("rename-playlist")
     data class RenamePlaylist(val id: Int, val name: String): OutgoingMessage()
 
     @Serializable
@@ -77,7 +79,7 @@ sealed class OutgoingMessage {
     data class SeekTo(val seekTo: Int): OutgoingMessage()
 
     @Serializable
-    @SerialName("send-active-music")
+    @SerialName("send-active-playlist")
     data class SendActivePlaylist(val id: Int): OutgoingMessage()
 
     @Serializable
@@ -85,11 +87,11 @@ sealed class OutgoingMessage {
     data object SendAllPlaylists: OutgoingMessage()
 
     @Serializable
-    @SerialName("send-music")
-    data object SendPlaylist: OutgoingMessage()
+    @SerialName("send-current-playlist")
+    data class SendPlaylist(val id: Int): OutgoingMessage()
 
     @Serializable
-    @SerialName("set-current-music")
+    @SerialName("set-current-playlist")
     data class SetCurrentPlaylist(val id: Int): OutgoingMessage()
 
     @Serializable
@@ -97,7 +99,7 @@ sealed class OutgoingMessage {
     data object ShuffleAllPlaylists: OutgoingMessage()
 
     @Serializable
-    @SerialName("shuffle-music")
+    @SerialName("shuffle-playlist")
     data object ShufflePlaylist: OutgoingMessage()
 
     @Serializable

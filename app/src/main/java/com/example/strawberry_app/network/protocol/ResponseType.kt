@@ -1,12 +1,12 @@
 package com.example.strawberry_app.network.protocol
 
+import com.example.strawberry_app.music.Playlist
 import com.example.strawberry_app.music.Song
 import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerializationException
-import kotlinx.serialization.json.JsonClassDiscriminator
 import kotlinx.serialization.json.JsonContentPolymorphicSerializer
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonIgnoreUnknownKeys
@@ -26,6 +26,7 @@ object ResponseTypeSerializer : JsonContentPolymorphicSerializer<ResponseType>(R
             "removed_song_from_playlist" -> ResponseType.RemovedSongFromPlaylist.serializer()
             "running_command" -> ResponseType.RunningCommand.serializer()
             "sent_active_playlist" -> ResponseType.SentActivePlaylist.serializer()
+            "sent_requested_playlist" -> ResponseType.SendRequestedPlaylist.serializer()
             "set_current_playlist_to" -> ResponseType.SetActivePlaylistTo.serializer()
             "shuffled_playlist" -> ResponseType.ShuffledPlaylist.serializer()
             "shuffled_all_playlists" -> ResponseType.ShuffledALlPlaylists.serializer()
@@ -81,6 +82,9 @@ sealed  class ResponseType: IncomingMessage() {
     @SerialName("sent_active_playlist")
     data class SentActivePlaylist(val id: Int = 0): ResponseType()
 
+    @Serializable
+    @SerialName("send_requested_playlist")
+    data class SendRequestedPlaylist(val playlist: Playlist): ResponseType()
     @Serializable
     @SerialName("set_current_playlist_to")
     data class SetActivePlaylistTo(val name: String = ""): ResponseType()

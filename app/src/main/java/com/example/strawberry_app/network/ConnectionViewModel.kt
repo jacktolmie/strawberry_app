@@ -1,8 +1,8 @@
 package com.example.strawberry_app.network
 
-import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.strawberry_app.network.ConnectionState.*
 import com.example.strawberry_app.server.ServerRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
@@ -14,9 +14,13 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-data class SettingsRouteData(
+enum class ConnectionColour{
+    GREEN, RED, YELLOW
+}
+
+data class SettingsGuiData(
     val connectBtnText: String = "Disconnected",
-    val connectionColour: Color = Color.Red,
+    val connectionColour: ConnectionColour = ConnectionColour.RED,
     val connectionState: String = "Disconnected"
 )
 
@@ -29,32 +33,32 @@ class ConnectionViewModel @Inject constructor(
 {
     val connectionState = networkManager.connectionStateFlow
 
-    val routeData: StateFlow<SettingsRouteData> = connectionState
+    val routeData: StateFlow<SettingsGuiData> = connectionState
         .map{ state ->
-            SettingsRouteData(
-                connectBtnText = if (state == ConnectionState.Connected)
+            SettingsGuiData(
+                connectBtnText = if (state == Connected)
                     "Disconnect" else "Connect",
                 connectionColour = when (state) {
-                    is ConnectionState.Connected    -> Color.Green
-                    is ConnectionState.Connecting   -> Color.Yellow
-                    is ConnectionState.Disconnected -> Color.Red
-                    is ConnectionState.Error        -> Color.Red
-                    is ConnectionState.Reconnecting -> Color.Yellow
+                    Connected    -> ConnectionColour.GREEN
+                    Connecting   -> ConnectionColour.YELLOW
+                    Disconnected -> ConnectionColour.RED
+                    is Error        -> ConnectionColour.RED
+                    is Reconnecting -> ConnectionColour.YELLOW
                 },
-                connectionState = when (val s = state) {
-                    ConnectionState.Connected    -> "Connected"
-                    ConnectionState.Connecting   -> "Connecting"
-                    ConnectionState.Disconnected -> "Disconnected"
-                    is ConnectionState.Error        -> s.message
-                    is ConnectionState.Reconnecting ->
-                        "Reconnecting in ${s.time}\nAttempt: ${s.attempt}"
+                connectionState = when (state) {
+                    Connected    -> "Connected"
+                    Connecting   -> "Connecting"
+                    Disconnected -> "Disconnected"
+                    is Error        -> state.message
+                    is Reconnecting ->
+                        "Reconnecting in ${state.time}\nAttempt: ${state.attempt}"
                 }
             )
         }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
-            initialValue = SettingsRouteData()
+            initialValue = SettingsGuiData()
         )
 
     init {

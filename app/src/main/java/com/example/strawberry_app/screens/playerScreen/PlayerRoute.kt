@@ -1,18 +1,11 @@
 package com.example.strawberry_app.screens.playerScreen
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import com.example.strawberry_app.ui.theme.icons.pause
-import com.example.strawberry_app.ui.theme.icons.play_arrow
-import com.example.strawberry_app.ui.theme.icons.play_pause
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
-class PlayerRouteData(
-    val playStateIcon: ImageVector
-)
 
 class PlayerCallbacks(
     val isConnected: () -> Unit,
@@ -35,41 +28,29 @@ class PlayerCallbacks(
 @Suppress("ParamsComparedByRef")
 @Composable
 fun PlayerRoute(
-    playerValues: PlayerValues,
-    viewModel: PlayerViewModel = hiltViewModel()
-
+    playerViewModel: PlayerViewModel = hiltViewModel()
 ){
+    val playerValues by playerViewModel.playerState.collectAsStateWithLifecycle()
+
     val callbacks = remember {
         PlayerCallbacks(
-            isConnected = viewModel::isConnected,
-            sendMute = viewModel::sendMute,
-            sendNext = viewModel::sendNext,
-            sendPause = viewModel::sendPause,
-            sendPlayPause = viewModel::sendPlayPause,
-            sendPlay = viewModel::sendPlay,
-            sendPrevious = viewModel::sendPrevious,
-            sendSeekBackward = viewModel::sendSeekBackward,
-            sendSeekForward = viewModel::sendSeekForward,
-            sendSeekTo = viewModel::sendSeekTo,
-            sendStop = viewModel::sendStop,
-            sendStopAfterCurrent = viewModel::sendStopAfterCurrent,
-            setVolume = viewModel::setVolume,
-            sendVolumeDown = viewModel::sendVolumeDown,
-            sendVolumeUp = viewModel::sendVolumeUp
+            isConnected = playerViewModel::isConnected,
+            sendMute = playerViewModel::sendMute,
+            sendNext = playerViewModel::sendNext,
+            sendPause = playerViewModel::sendPause,
+            sendPlayPause = playerViewModel::sendPlayPause,
+            sendPlay = playerViewModel::sendPlay,
+            sendPrevious = playerViewModel::sendPrevious,
+            sendSeekBackward = playerViewModel::sendSeekBackward,
+            sendSeekForward = playerViewModel::sendSeekForward,
+            sendSeekTo = playerViewModel::sendSeekTo,
+            sendStop = playerViewModel::sendStop,
+            sendStopAfterCurrent = playerViewModel::sendStopAfterCurrent,
+            setVolume = playerViewModel::setVolume,
+            sendVolumeDown = playerViewModel::sendVolumeDown,
+            sendVolumeUp = playerViewModel::sendVolumeUp
         )
     }
 
-    val playPause by viewModel.playerState.collectAsState()
-    val playPauseState = when(playPause.playState){
-        PlayState.PLAYING -> pause
-        PlayState.PAUSED -> play_arrow
-        else -> play_pause
-    }
-
-    val routeData = PlayerRouteData(
-        playStateIcon = playPauseState
-    )
-
-
-    PlayerScreen(callbacks, playerValues, routeData)
+    PlayerScreen(callbacks, playerValues)
 }

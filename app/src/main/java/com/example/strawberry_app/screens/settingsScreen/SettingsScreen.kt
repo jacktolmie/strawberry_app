@@ -22,6 +22,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -30,8 +31,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.strawberry_app.R
+import com.example.strawberry_app.network.ConnectionColour.GREEN
+import com.example.strawberry_app.network.ConnectionColour.RED
+import com.example.strawberry_app.network.ConnectionColour.YELLOW
 import com.example.strawberry_app.network.ConnectionState
-import com.example.strawberry_app.network.SettingsRouteData
+import com.example.strawberry_app.network.ConnectionState.Connected
+import com.example.strawberry_app.network.SettingsGuiData
 import com.example.strawberry_app.server.SettingsUiState
 import com.skydoves.compose.stability.runtime.TraceRecomposition
 
@@ -41,10 +46,10 @@ fun SettingsScreen(
     serverUiState: SettingsUiState,
     connectionState: ConnectionState,
     callbacks: SettingsCallbacks,
-    settingsRouteData: SettingsRouteData
+    settingsGuiData: SettingsGuiData
 ) {
 
-    val isConnected = connectionState == ConnectionState.Connected
+    val isConnected = connectionState == Connected
 
     Column(modifier = Modifier
         .statusBarsPadding()
@@ -145,13 +150,17 @@ fun SettingsScreen(
                 modifier = Modifier.size(18.dp),
                 painter = painterResource(R.drawable.circle_24dp_e3e3e3_fill1_wght400_grad0_opsz24),
                 contentDescription = null,
-                tint = settingsRouteData.connectionColour
+                tint = when(settingsGuiData.connectionColour){
+                    RED -> Color.Red
+                    GREEN -> Color.Green
+                    YELLOW -> Color.Yellow
+                }
             )
 
             Spacer(modifier = Modifier.width(5.dp))
 
             TextBox(
-                text = settingsRouteData.connectionState,
+                text = settingsGuiData.connectionState,
                 textStyle = MaterialTheme.typography.bodyLarge
             )
         }
@@ -208,7 +217,7 @@ fun SettingsPreview(){
             isPortValid = true
         ),
 
-        connectionState = ConnectionState.Connected,
+        connectionState = Connected,
         callbacks = SettingsCallbacks(
             onIpChanged = {},
             onPortChanged = {},
@@ -217,6 +226,6 @@ fun SettingsPreview(){
             onCancelClicked = {},
             onDisconnectClicked = {}
         ),
-        SettingsRouteData()
+        SettingsGuiData()
     )
 }

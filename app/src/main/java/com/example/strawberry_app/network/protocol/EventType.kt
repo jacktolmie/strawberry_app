@@ -40,7 +40,6 @@ object EventTypeSerializer : JsonContentPolymorphicSerializer<EventType>(EventTy
 
 @OptIn(ExperimentalSerializationApi::class)
 @Serializable(with = EventTypeSerializer::class)
-//@JsonIgnoreUnknownKeys
 sealed class EventType: IncomingMessage() {
     @Serializable
     @JsonIgnoreUnknownKeys
@@ -66,7 +65,7 @@ sealed class EventType: IncomingMessage() {
         val active_playlist: Int,
         val current_playlist: Int,
         val current_song: Int,
-        val current_time: Long = 0,
+        val time: Long = 0,
         val playing: String = "",
         val volume: Int = 0,
         val playlists: MakeAllPlaylists? = null
@@ -78,60 +77,75 @@ sealed class EventType: IncomingMessage() {
     data class MakeAllPlaylists(val playlists: List<Playlist>) : EventType()
 
     @Serializable
+    @JsonIgnoreUnknownKeys
     @SerialName("make_current_playlist")
     data class MakeCurrentPlaylist(val playlist: Playlist) : EventType()
 
     @Serializable
+    @JsonIgnoreUnknownKeys
     @SerialName("next")
     data object Next: EventType()
 
     @Serializable
+    @JsonIgnoreUnknownKeys
     @SerialName("pause")
     data class Pause(val time: Long) : EventType()
 
     @Serializable
+    @JsonIgnoreUnknownKeys
     @SerialName("play")
     data class Play(
         val time: Long,
+        val active_playlist: Int = 0,
         val row: Int? = null
     ) : EventType()
 
     @Serializable
+    @JsonIgnoreUnknownKeys
     @SerialName("previous")
     data object Previous: EventType()
 
     @Serializable
+    @JsonIgnoreUnknownKeys
     @SerialName("rename_playlist")
     data class RenamePlaylist(val id: Int, val name: String) : EventType()
 
     @Serializable
+    @JsonIgnoreUnknownKeys
     @SerialName("seek_backward")
     data class SeekBackward(val time: Long) : EventType()
 
     @Serializable
+    @JsonIgnoreUnknownKeys
     @SerialName("seek_forward")
     data class SeekForward(val time: Long) : EventType()
 
     @Serializable
+    @JsonIgnoreUnknownKeys
     @SerialName("seek_to")
     data class SeekTo(val time: Long) : EventType()
 
     @Serializable
+    @JsonIgnoreUnknownKeys
     @SerialName("song_changed")
     data class SongChanged(val track_id: Int = 0) : EventType()
 
     @Serializable
+    @JsonIgnoreUnknownKeys
     @SerialName("stop")
-    object Stop : EventType()
+    data object Stop : EventType()
 
     @Serializable
+    @JsonIgnoreUnknownKeys
     @SerialName("time")
     data class Time(val time: Long): EventType()
     @Serializable
+    @JsonIgnoreUnknownKeys
     @SerialName("volume")
     data class Volume(val volume: Int = 0): EventType()
 
     @Serializable
+    @JsonIgnoreUnknownKeys
     @SerialName("volume_changed")
     data class VolumeChanged(val volume: Int = 0) : EventType()
 }
