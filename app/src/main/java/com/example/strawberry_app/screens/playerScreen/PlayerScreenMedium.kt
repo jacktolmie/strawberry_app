@@ -146,10 +146,13 @@ fun PlayerScreen(
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        val timeSliderState = rememberSliderState(valueRange = 0f..playerValues.songLength.toFloat())
+        val range = if (playerValues.songLength > 0) 0f..playerValues.songLength.toFloat() else 0f..1f
+        val timeSliderState = rememberSliderState(valueRange = range)
         LaunchedEffect(playerValues.currentTime) { timeSliderState.value = playerValues.currentTime.toFloat()}
 
-        Slider(modifier = Modifier.border(2.dp, Color.Blue),
+        Slider(modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 20.dp, end = 20.dp),
             state = timeSliderState
         )
 
