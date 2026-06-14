@@ -46,7 +46,7 @@ fun PlayerRoute(
             sendSeekTo = playerViewModel::sendSeekTo,
             sendStop = playerViewModel::sendStop,
             sendStopAfterCurrent = playerViewModel::sendStopAfterCurrent,
-            setVolume = playerViewModel::setVolume,
+            setVolume = playerViewModel::sendVolume,
             sendVolumeDown = playerViewModel::sendVolumeDown,
             sendVolumeUp = playerViewModel::sendVolumeUp
         )

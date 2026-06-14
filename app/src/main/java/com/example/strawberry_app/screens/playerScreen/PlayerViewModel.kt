@@ -1,6 +1,7 @@
 package com.example.strawberry_app.screens.playerScreen
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.viewModelScope
 import com.example.strawberry_app.music.PlaylistRepository
 import com.example.strawberry_app.network.ConnectionState
@@ -23,6 +24,7 @@ data class PlayerValues(
     val currentSong: Int = -1,
     val currentTime: Long = -1L,
     val playState: PlayState = PlayState.STOPPED,
+    val songLength: Long = -1L,
     val volume: Int = 0
 )
 
@@ -33,6 +35,7 @@ class PlayerViewModel @Inject constructor(
 ): ViewModel(){
 
     private val _networkStatus = networkManager.connectionStateFlow
+    private val _playlistRepo = playlistRepository.playlistState.flowWithLifecycle()
 
     private val _playerState = MutableStateFlow(PlayerValues())
     val playerState = _playerState.asStateFlow()
@@ -67,16 +70,23 @@ class PlayerViewModel @Inject constructor(
                                     "playing" -> PlayState.PLAYING
                                     else -> PlayState.STOPPED
                                 },
+                                songLength = playlistRepository.playlistState.value.currentSongData
                                 volume = message.volume
                             )
                         }
                     }
+
+                    is EventType.VolumeChanged -> _playerState.update { it.copy(volume = message.volume) }
+                    is EventType.Time -> _playerState.update { it.copy(currentTime = message.time) }
+                    is EventType.SongChanged -> _playerState.update { it.copy(currentSong = message.track_id) }
+
                     else -> Unit
                 }
             }
         }
     }
 
+    fun getTime() = _playerState.value.currentTime
     fun isConnected() = _networkStatus.value == ConnectionState.Connected
     fun sendMute() = sendCommand(OutgoingMessage.Mute)
     fun sendNext() = sendCommand(OutgoingMessage.Next)
@@ -89,7 +99,7 @@ class PlayerViewModel @Inject constructor(
     fun sendSeekTo(seekTo: Int) = sendCommand(OutgoingMessage.SeekTo(seekTo))
     fun sendStop() = sendCommand(OutgoingMessage.Stop)
     fun sendStopAfterCurrent() = sendCommand(OutgoingMessage.StopAfterCurrent)
-    fun setVolume(volume: Int) = sendCommand(OutgoingMessage.Volume(volume))
+    fun sendVolume(volume: Int) = sendCommand(OutgoingMessage.Volume(volume))
     fun sendVolumeDown() = sendCommand(OutgoingMessage.VolumeDown)
     fun sendVolumeUp() = sendCommand(OutgoingMessage.VolumeUp)
 

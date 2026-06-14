@@ -1,4 +1,4 @@
-package com.example.strawberry_app.server
+    package com.example.strawberry_app.server
 
 import android.content.Context
 import androidx.datastore.preferences.core.edit

@@ -8,7 +8,7 @@ import com.example.strawberry_app.data.entity.PlaylistSongEntity
 import kotlinx.coroutines.flow.Flow
 
 data class SongWithPosition(
-    val id: Long,
+    val id: Int,
     val title: String,
     val artist: String,
     val album: String,
@@ -18,6 +18,14 @@ data class SongWithPosition(
 
 @Dao
 interface PlaylistSongDao {
+
+    @Query("""
+    SELECT song.id, song.title, song.artist, song.album, song.length, playlist_song.position
+    FROM playlist_song
+    JOIN song ON song.id = playlist_song.songId
+    WHERE playlist_song.playlistId = :playlistId AND playlist_song.position = :position
+""")
+    fun observeSongAtPosition(playlistId: Int, position: Long): Flow<SongWithPosition?>
 
     @Query("""
         SELECT song.id, song.title, song.artist, song.album, song.length, playlist_song.position

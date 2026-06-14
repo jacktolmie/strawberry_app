@@ -25,6 +25,7 @@ import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalSlider
 import androidx.compose.material3.rememberSliderState
@@ -117,10 +118,10 @@ fun PlayerScreen(
 
             Spacer(modifier = Modifier.width(10.dp).border(2.dp, Color.Blue))
 
-                val sliderState = rememberSliderState(valueRange = 0f..100f)
-                LaunchedEffect(playerValues.volume) {sliderState.value = playerValues.volume.toFloat()}
+                val volumeSliderState = rememberSliderState(valueRange = 0f..100f)
+                LaunchedEffect(playerValues.volume) { volumeSliderState.value = playerValues.volume.toFloat() }
 
-                sliderState.onValueChangeFinished = { callbacks.setVolume(sliderState.value.toInt())}
+                volumeSliderState.onValueChangeFinished = { callbacks.setVolume(volumeSliderState.value.toInt())}
 
                 Column(
                     modifier = Modifier.fillMaxHeight(),
@@ -130,10 +131,10 @@ fun PlayerScreen(
                     CreateButton(volume_up, "Volume up", callbacks.sendVolumeUp)
 
                     VerticalSlider(
-                        state = sliderState,
+                        state = volumeSliderState,
                         modifier = Modifier
                             .fillMaxHeight(.75f)
-                            .progressSemantics(sliderState.value, 0f..100f),
+                            .progressSemantics(volumeSliderState.value, 0f..100f),
                         reverseDirection = true
                     )
 
@@ -143,6 +144,12 @@ fun PlayerScreen(
         }
 
         Spacer(modifier = Modifier.height(10.dp))
+
+        val timeSliderState = rememberSliderState(valueRange = 0f..playerValues.currentSong.)
+
+        Slider(
+
+        )
 
         // Player control buttons
         Row(modifier = Modifier

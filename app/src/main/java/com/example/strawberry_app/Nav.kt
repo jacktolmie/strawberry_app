@@ -6,7 +6,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.strawberry_app.screens.ScreenList
 import com.example.strawberry_app.screens.playerScreen.PlayerRoute
-import com.example.strawberry_app.screens.playerScreen.PlayerValues
 import com.example.strawberry_app.screens.playlistScreen.PlaylistRoute
 import com.example.strawberry_app.screens.settingsScreen.SettingsRoute
 
