@@ -25,19 +25,19 @@ import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.jsonObject
 import java.io.DataInputStream
 import java.io.DataOutputStream
+import java.net.InetSocketAddress
 import java.net.Socket
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.time.Duration.Companion.milliseconds
 
 @Singleton
 class NetworkManager @Inject constructor(
     private val repository: ServerRepository,
     @ApplicationScope private val scope: CoroutineScope
 ) {
-
     private val _connectionState = MutableStateFlow<ConnectionState>(ConnectionState.Disconnected)
     val connectionStateFlow: StateFlow<ConnectionState> = _connectionState.asStateFlow()
 
@@ -45,21 +45,26 @@ class NetworkManager @Inject constructor(
     private val connectionMutex = Mutex()
     private var dataOutputStream: DataOutputStream? = null
 
-    private val json = Json{ ignoreUnknownKeys = false} // Change to true after testing
+    private val json = Json{ ignoreUnknownKeys = true}
     private var listenerJob: Job? = null
     private var reconnectJob: Job? = null
-    var shouldReconnect = MutableStateFlow(true)
+    private var _shouldReconnect = MutableStateFlow(true)
+//    val shouldReconnect = _shouldReconnect.asStateFlow()
+
     private var socket: Socket? = null
     private val _serverMessages =
         MutableSharedFlow<IncomingMessage>(replay = 0, extraBufferCapacity = 64)
 
     val serverMessages = _serverMessages.asSharedFlow()
-    private val reconnectCount = MutableStateFlow(0)
-    private val reconnectTimer = MutableStateFlow<Long>(0)
+//    private val reconnectCount = MutableStateFlow(0)
+var reconnectCount = 0L
+//    private val reconnectTimer = MutableStateFlow<Long>(0)
+    var reconnectTimer = 0L
 
     private val delayTime = MutableStateFlow<Long>(3000)
 
     init {
+
         scope.launch {
             repository.serverInfoFlow
                 .distinctUntilChanged()
@@ -75,69 +80,89 @@ class NetworkManager @Inject constructor(
     }
     companion object {
         private const val MAX_MESSAGE_SIZE = 1_048_576
+        private const val MAX_CONNECTION_ATTEMPTS = 11
     }
 
     suspend fun connect(serverInfo: ServerInfo?) {
-
-        if(serverInfo == null){
-            Log.e("NetworkManager", "No server info provided")
-            return
-        }
-
-        if (serverInfo.ip.isBlank()){
-            Log.e("NetworkManager", "Server IP is blank")
-            return
-        }
-
         connectionMutex.withLock {
+            if (serverInfo == null) {
+                Log.e("NetworkManager", "No server info provided")
+                return
+            }
+
+            if (serverInfo.ip.isBlank()) {
+                Log.e("NetworkManager", "Server IP is blank")
+                return
+            }
 
             if (_connectionState.value == ConnectionState.Connecting) return
 
             currentServerInfo = serverInfo
 
-            shouldReconnect.value = true
+            _shouldReconnect.value = true
 
             if (socket?.isConnected == true && socket?.isClosed == false) {
                 disconnect(updateStatus = false)
             }
 
             _connectionState.value = ConnectionState.Connecting
-        }
 
-        try {
-            Log.i("NetworkManager", "Connecting to server ${serverInfo.ip} on port ${serverInfo.port}")
-            val connectedSocket = withContext(Dispatchers.IO){ Socket(serverInfo.ip, serverInfo.port) }
+            try {
+                Log.i(
+                    "NetworkManager",
+                    "Connecting to server ${serverInfo.ip} on port ${serverInfo.port}"
+                )
+                val connectedSocket = withContext(Dispatchers.IO) {
+                    Socket().apply {
+                        connect(InetSocketAddress(serverInfo.ip, serverInfo.port), 5000)
+                    }
+                }
 
-            socket = connectedSocket
+                socket = connectedSocket
 
-            val inputStream = withContext(Dispatchers.IO){ DataInputStream(connectedSocket.getInputStream()) }
-            val outputStream = withContext(Dispatchers.IO){ DataOutputStream(connectedSocket.getOutputStream()) }
+                val inputStream =
+                    withContext(Dispatchers.IO) { DataInputStream(connectedSocket.getInputStream()) }
+                val outputStream =
+                    withContext(Dispatchers.IO) { DataOutputStream(connectedSocket.getOutputStream()) }
 
-            val isAuthenticated = withContext(Dispatchers.IO){ authenticate(serverInfo, connectedSocket, inputStream, outputStream) }
+                val isAuthenticated = withContext(Dispatchers.IO) {
+                    authenticate(
+                        serverInfo,
+                        connectedSocket,
+                        inputStream,
+                        outputStream
+                    )
+                }
 
-            if (isAuthenticated) {
-                dataOutputStream = outputStream
-                _connectionState.value = ConnectionState.Connected
-                startListening(inputStream)
-                resetReconnects()
-            } else {
-                Log.i("NetworkManager", "Failed connecting to server")
-                _connectionState.value = ConnectionState.Error("Authentication failed")
+                if (isAuthenticated) {
+                    dataOutputStream = outputStream
+                    _connectionState.value = ConnectionState.Connected
+
+                    val shouldReconnectAfter = startListening(inputStream)
+
+                    resetReconnects()
+                    closeResources()
+
+                    if (shouldReconnectAfter) startReconnectLoop(currentServerInfo)
+
+                } else {
+                    Log.i("NetworkManager", "Failed connecting to server")
+                    _connectionState.value = ConnectionState.Error("Authentication failed")
+                    closeResources()
+                    startReconnectLoop(currentServerInfo)
+                }
+
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                Log.e("NetworkManager", "Error: ${e.message}")
+                if (e.message.toString().contains("Connection refused")) {
+                    Log.e("NetworkManager", "Strawberry not running?")
+                    _connectionState.value = ConnectionState.Error("Player not responding")
+                } else _connectionState.value = ConnectionState.Error(e.message ?: "Unknown error")
                 closeResources()
-                scheduleReconnect(currentServerInfo)
+                startReconnectLoop(currentServerInfo)
             }
-
-        } catch (e: CancellationException){
-            throw e
-        } catch (e: Exception) {
-            Log.e("NetworkManager", "Error: ${e.message}")
-            if(e.message.toString().contains("Connection refused")){
-                Log.e("NetworkManager", "Strawberry not running?")
-                _connectionState.value = ConnectionState.Error("Player not responding")
-            }
-            else _connectionState.value = ConnectionState.Error(e.message ?: "Unknown error")
-            closeResources()
-            scheduleReconnect(currentServerInfo)
         }
     }
 
@@ -169,7 +194,7 @@ class NetworkManager @Inject constructor(
     }
 
     suspend fun disconnect(updateStatus: Boolean = true) {
-        shouldReconnect.value = false
+        _shouldReconnect.value = false
         reconnectJob?.cancelAndJoin()
         reconnectJob = null
 
@@ -177,7 +202,7 @@ class NetworkManager @Inject constructor(
         if (updateStatus) _connectionState.value = ConnectionState.Disconnected
     }
 
-    private suspend fun startListening(dataInputStream: DataInputStream) {
+    private suspend fun startListening(dataInputStream: DataInputStream): Boolean {
         listenerJob?.cancelAndJoin()
 
         listenerJob = scope.launch {
@@ -189,7 +214,7 @@ class NetworkManager @Inject constructor(
                         val messageBytes = ByteArray(length)
                         dataInputStream.readFully(messageBytes)
                         val jsonString = String(messageBytes, Charsets.UTF_8)
-                        val obj = json.parseToJsonElement(jsonString).jsonObject
+//                        val obj = json.parseToJsonElement(jsonString).jsonObject
 
                         try {
                             val parsedMessage = json.decodeFromString<IncomingMessage>(jsonString)
@@ -198,7 +223,6 @@ class NetworkManager @Inject constructor(
                         } catch (e: SerializationException) {
                             Log.e("NetworkManager", "Failed to parse message: $jsonString — ${e.message}")
                         }
-
                     } else {
                         Log.e(
                             "NetworkManager",
@@ -207,6 +231,8 @@ class NetworkManager @Inject constructor(
                         break
                     }
                 }
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 // This will catch read errors, like the server closing the connection
                 Log.e("NetworkManager", "Listener error: ${e.message}")
@@ -216,13 +242,16 @@ class NetworkManager @Inject constructor(
                     _connectionState.value = ConnectionState.Disconnected
                 }
 
-                val info = currentServerInfo
-                if (shouldReconnect.value && info != null && info.ip.isNotBlank()) {
-                    closeResources()
-                    scheduleReconnect(currentServerInfo)
-                }
+//                val info = currentServerInfo
+//                if (_shouldReconnect.value && info != null && info.ip.isNotBlank()) {
+//                    closeResources()
+//                    startReconnectLoop(currentServerInfo)
+//                }
             }
         }
+        listenerJob?.join()
+
+        return _shouldReconnect.value && currentServerInfo?.ip?.isNotBlank() == true && _connectionState.value !is ConnectionState.Disconnected
     }
 
     suspend fun sendCommand(command: OutgoingMessage) {
@@ -239,7 +268,7 @@ class NetworkManager @Inject constructor(
                     Log.e("NetworkManager", "Failed to send command: ${e.message}")
                     _connectionState.value = ConnectionState.Error(e.message.toString())
                     closeResources()
-                    scheduleReconnect(currentServerInfo)
+                    startReconnectLoop(currentServerInfo)
                 }
             } else {
                 Log.d("NetworkManager", "Cannot send command, not connected.")
@@ -247,23 +276,23 @@ class NetworkManager @Inject constructor(
         }
     }
 
-    private fun scheduleReconnect(serverInfo: ServerInfo?){
+    private fun startReconnectLoop(serverInfo: ServerInfo?){
 
-        if(!shouldReconnect.value || reconnectJob?.isActive == true) return
+        if(!_shouldReconnect.value || reconnectJob?.isActive == true) return
 
         reconnectJob = scope.launch {
 
-            while (reconnectCount.value < 11){
-                if(!shouldReconnect.value ||
+            while (reconnectCount < MAX_CONNECTION_ATTEMPTS){
+                if(!_shouldReconnect.value ||
                     _connectionState.value == ConnectionState.Connected
                 ) return@launch
 
                 var countDown = delayTime.value
 
                 while(countDown > 0){
-                    reconnectTimer.value = countDown
-                    _connectionState.value = ConnectionState.Reconnecting(reconnectCount.value, reconnectTimer.value / 1000)
-                    delay(1000)
+                    reconnectTimer = countDown
+                    _connectionState.value = ConnectionState.Reconnecting(reconnectCount, reconnectTimer/ 1000)
+                    delay(1000.milliseconds)
                     countDown -= 1000
                 }
                 if(serverInfo != null){
@@ -271,7 +300,7 @@ class NetworkManager @Inject constructor(
                 }
 
                 delayTime.value += 2000
-                reconnectCount.value += 1
+                reconnectCount += 1
             }
         }
     }
@@ -288,8 +317,8 @@ class NetworkManager @Inject constructor(
     }
 
     private fun resetReconnects(){
-        reconnectTimer.value = 0
-        reconnectCount.value = 0
+        reconnectTimer = 0
+        reconnectCount = 0
         delayTime.value = 3000
     }
 }

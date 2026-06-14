@@ -8,5 +8,5 @@ import kotlinx.serialization.json.JsonIgnoreUnknownKeys
 data class Playlist(
     val id: Int,
     val name: String,
-    val songs: List<Song>
+    val songs: List<SongInfo>
 )

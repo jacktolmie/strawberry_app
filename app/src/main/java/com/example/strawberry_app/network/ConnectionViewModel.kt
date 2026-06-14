@@ -61,17 +61,6 @@ class ConnectionViewModel @Inject constructor(
             initialValue = SettingsGuiData()
         )
 
-    init {
-        viewModelScope.launch {
-            serverRepository.serverInfoFlow
-                .debounce(300)
-                .collect { info ->
-                    if (info != null) networkManager.connect(info)
-                    else networkManager.disconnect()
-                }
-        }
-    }
-
     fun manualDisconnect(disconnectPressed: Boolean) {
         viewModelScope.launch {
             networkManager.manualDisconnect(disconnectPressed)

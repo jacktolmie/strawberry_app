@@ -16,6 +16,7 @@ object EventTypeSerializer : JsonContentPolymorphicSerializer<EventType>(EventTy
     override fun selectDeserializer(element: JsonElement): DeserializationStrategy<EventType> {
         return when (element.jsonObject["event"]?.jsonPrimitive?.content) {
             "active_playlist" -> EventType.ActivePlaylist.serializer()
+//            "current_playlist" -> EventType.CurrentPlaylist.serializer()
             "favourite_playlist" -> EventType.FavouritePlaylist.serializer()
             "gui_updates" -> EventType.GuiUpdates.serializer()
             "make_all_playlists" -> EventType.MakeAllPlaylists.serializer()
@@ -79,7 +80,8 @@ sealed class EventType: IncomingMessage() {
     @Serializable
     @JsonIgnoreUnknownKeys
     @SerialName("make_current_playlist")
-    data class MakeCurrentPlaylist(val playlist: Playlist) : EventType()
+    data class MakeCurrentPlaylist(
+        @SerialName("current_playlist") val playlist: Playlist) : EventType()
 
     @Serializable
     @JsonIgnoreUnknownKeys
