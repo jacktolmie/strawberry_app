@@ -58,9 +58,8 @@ class PlaylistRepository @Inject constructor(
                                 PlaylistState(
                                     activePlaylist = info.active_playlist,
                                     currentPlaylist = info.current_playlist,
-                                    currentSongData = getCurrentSongLength().collectAsStateWithLifecycle()
+                                    currentSongIndex = info.current_song
                                 )
-
                             }
                         }
                         is EventType.MakeAllPlaylists -> makeAllPlaylists(info.playlists)

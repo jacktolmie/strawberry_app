@@ -35,7 +35,7 @@ class PlayerViewModel @Inject constructor(
 ): ViewModel(){
 
     private val _networkStatus = networkManager.connectionStateFlow
-    private val _playlistRepo = playlistRepository.playlistState.flowWithLifecycle()
+//    private val _playlistRepo = playlistRepository.playlistState.flowWithLifecycle()
 
     private val _playerState = MutableStateFlow(PlayerValues())
     val playerState = _playerState.asStateFlow()
@@ -62,16 +62,16 @@ class PlayerViewModel @Inject constructor(
                     is EventType.GuiUpdates -> {
                         _playerState.update {
                             PlayerValues(
-                                activePlaylist = message.active_playlist,
-                                currentSong = message.current_song,
-                                currentTime = message.time,
-                                playState = when(message.playing){
-                                    "paused" -> PlayState.PAUSED
-                                    "playing" -> PlayState.PLAYING
-                                    else -> PlayState.STOPPED
+                                activePlaylist =    message.active_playlist,
+                                currentSong =       message.current_song,
+                                currentTime =       message.time,
+                                playState =         when(message.playing){
+                                                        "paused" ->     PlayState.PAUSED
+                                                         "playing" ->    PlayState.PLAYING
+                                                        else ->         PlayState.STOPPED
                                 },
-                                songLength = playlistRepository.playlistState.value.currentSongData
-                                volume = message.volume
+                                songLength =        playlistRepository.playlistState.value.currentSongData?.length ?: 0,
+                                volume =            message.volume
                             )
                         }
                     }
@@ -86,7 +86,6 @@ class PlayerViewModel @Inject constructor(
         }
     }
 
-    fun getTime() = _playerState.value.currentTime
     fun isConnected() = _networkStatus.value == ConnectionState.Connected
     fun sendMute() = sendCommand(OutgoingMessage.Mute)
     fun sendNext() = sendCommand(OutgoingMessage.Next)

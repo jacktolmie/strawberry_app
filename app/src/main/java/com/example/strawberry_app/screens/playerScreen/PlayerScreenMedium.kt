@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -145,10 +146,11 @@ fun PlayerScreen(
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        val timeSliderState = rememberSliderState(valueRange = 0f..playerValues.currentSong.)
+        val timeSliderState = rememberSliderState(valueRange = 0f..playerValues.songLength.toFloat())
+        LaunchedEffect(playerValues.currentTime) { timeSliderState.value = playerValues.currentTime.toFloat()}
 
-        Slider(
-
+        Slider(modifier = Modifier.border(2.dp, Color.Blue),
+            state = timeSliderState
         )
 
         // Player control buttons
