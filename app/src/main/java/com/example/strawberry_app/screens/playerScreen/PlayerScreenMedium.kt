@@ -146,10 +146,13 @@ fun PlayerScreen(
 
         Spacer(modifier = Modifier.height(10.dp))
 
+        // Time slider
         val range = if (playerValues.songLength > 0) 0f..playerValues.songLength.toFloat() else 0f..1f
         val timeSliderState = rememberSliderState(valueRange = range)
         LaunchedEffect(playerValues.currentTime) { timeSliderState.value = playerValues.currentTime.toFloat()}
 
+        Text(text = formatTime(timeSliderState.value.toLong()))
+        Text(text = timeSliderState.value.toString())
         Slider(modifier = Modifier
             .fillMaxWidth()
             .padding(start = 20.dp, end = 20.dp),
@@ -192,6 +195,13 @@ fun CreateButton(image: ImageVector, description: String, control: () -> Unit) {
         )
     }
 }
+
+fun formatTime(time: Long): String {
+    val minutes = time / 60
+    val seconds = time % 60
+    return "$minutes:$seconds"
+}
+
 
 @Composable
 @Preview
