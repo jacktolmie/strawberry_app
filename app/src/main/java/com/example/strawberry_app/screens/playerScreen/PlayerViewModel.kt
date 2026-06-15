@@ -51,7 +51,7 @@ class PlayerViewModel @Inject constructor(
                 }
             }
         }
-        viewModelScope.launch { observeNetworkMessages() }
+//        viewModelScope.launch { observeNetworkMessages() }
     }
 
 
@@ -60,6 +60,7 @@ class PlayerViewModel @Inject constructor(
             networkManager.serverMessages.collect{ message ->
                 when(message) {
                     is EventType.GuiUpdates -> {
+                        println("NetworkManager gui_updates called")
                         _playerState.update {
                             PlayerValues(
                                 activePlaylist =    message.active_playlist,

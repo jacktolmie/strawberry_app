@@ -40,6 +40,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.min
 import com.example.strawberry_app.R
 import com.example.strawberry_app.ui.theme.icons.fast_forward
 import com.example.strawberry_app.ui.theme.icons.fast_rewind
@@ -199,6 +200,7 @@ fun CreateButton(image: ImageVector, description: String, control: () -> Unit) {
 fun formatTime(time: Long): String {
     val minutes = time / 60
     val seconds = time % 60
+    println("NetworkManager formatTime $minutes and $seconds")
     return "$minutes:$seconds"
 }
 

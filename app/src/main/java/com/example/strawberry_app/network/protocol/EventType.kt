@@ -60,7 +60,7 @@ sealed class EventType: IncomingMessage() {
 
 
     @Serializable
-    @JsonIgnoreUnknownKeys
+//    @JsonIgnoreUnknownKeys
     @SerialName("gui_updates")
     data class GuiUpdates(
         val active_playlist: Int,
