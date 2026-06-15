@@ -103,7 +103,7 @@ class PlaylistRepository @Inject constructor(
     @OptIn(ExperimentalCoroutinesApi::class)
     private fun getCurrentSongLength(): Flow<SongWithPosition?> {
         return playlistState.flatMapLatest { state ->
-            if (state.currentPlaylist == -1 || state.currentSongData?.id == -1){
+            if (state.currentPlaylist == -1 || state.currentSongIndex == -1){
                 flowOf(null)
             }else {
                 playlistSongDao.observeSongAtPosition(state.currentPlaylist,

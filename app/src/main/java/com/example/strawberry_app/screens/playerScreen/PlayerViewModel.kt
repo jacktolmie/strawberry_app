@@ -53,6 +53,7 @@ class PlayerViewModel @Inject constructor(
 
         viewModelScope.launch {
             playlistRepository.currentSongData.collect { songData ->
+                println("NetworkManager songData: $songData")
                 _playerState.update { it.copy(songLength = songData?.length ?: 0L) }
             }
         }
@@ -64,7 +65,6 @@ class PlayerViewModel @Inject constructor(
             networkManager.serverMessages.collect{ message ->
                 when(message) {
                     is EventType.GuiUpdates -> {
-                        println("NetworkManager gui_updates called")
                         _playerState.update {
                             PlayerValues(
                                 activePlaylist =    message.active_playlist,
@@ -91,9 +91,7 @@ class PlayerViewModel @Inject constructor(
                     is EventType.Pause -> _playerState.update { it.copy(playState = PlayState.PAUSED) }
                     is EventType.Stop -> _playerState.update { it.copy(playState = PlayState.STOPPED) }
 
-                    is EventType.SeekTo -> _playerState.update {
-                        println("NetworkManager Event seekto sent")
-                        it.copy(currentTime = message.time) }
+                    is EventType.SeekTo -> _playerState.update {it.copy(currentTime = message.time) }
 
                     else -> Unit
                 }
@@ -104,14 +102,23 @@ class PlayerViewModel @Inject constructor(
     fun isConnected() = _networkStatus.value == ConnectionState.Connected
     fun sendMute() = sendCommand(OutgoingMessage.Mute)
     fun sendNext() = sendCommand(OutgoingMessage.Next)
-    fun sendPause() = sendCommand(OutgoingMessage.Pause)
+    fun sendPause(){
+        sendCommand(OutgoingMessage.Pause)
+        _playerState.update { it.copy(playState = PlayState.PAUSED) }
+    }
     fun sendPlayPause() = sendCommand(OutgoingMessage.PlayPause)
-    fun sendPlay() = sendCommand(OutgoingMessage.Play)
+    fun sendPlay(){
+        sendCommand(OutgoingMessage.Play)
+        _playerState.update { it.copy(playState = PlayState.PLAYING) }
+    }
     fun sendPrevious() = sendCommand(OutgoingMessage.Previous)
     fun sendSeekBackward() = sendCommand(OutgoingMessage.SeekBackward)
     fun sendSeekForward() = sendCommand(OutgoingMessage.SeekForward)
     fun sendSeekTo(seekTo: Int) = sendCommand(OutgoingMessage.SeekTo(seekTo))
-    fun sendStop() = sendCommand(OutgoingMessage.Stop)
+    fun sendStop() {
+        sendCommand(OutgoingMessage.Stop)
+        _playerState.update { it.copy(playState = PlayState.STOPPED) }
+    }
     fun sendStopAfterCurrent() = sendCommand(OutgoingMessage.StopAfterCurrent)
     fun sendVolume(volume: Int) = sendCommand(OutgoingMessage.Volume(volume))
     fun sendVolumeDown() = sendCommand(OutgoingMessage.VolumeDown)

@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -40,7 +39,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.min
 import com.example.strawberry_app.R
 import com.example.strawberry_app.ui.theme.icons.fast_forward
 import com.example.strawberry_app.ui.theme.icons.fast_rewind
@@ -147,18 +145,23 @@ fun PlayerScreen(
         }
 
         Spacer(modifier = Modifier.height(10.dp))
-
+        println("NetworkManager songLength: ${playerValues.songLength}")
         // Time slider
-        val range = if (playerValues.songLength > 0) 0f..playerValues.songLength.toFloat() else 0f..1f
-        val timeSliderState = rememberSliderState(valueRange = range)
-        LaunchedEffect(playerValues.currentTime) { timeSliderState.value = playerValues.currentTime.toFloat()}
-
-        Text(text = formatTime(timeSliderState.value.toLong()))
-        Text(text = timeSliderState.value.toString())
-        Slider(modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 20.dp, end = 20.dp),
-            state = timeSliderState
+//        val timeSliderState = rememberSliderState(
+//            valueRange = if (playerValues.songLength > 0) 0f..playerValues.songLength.toFloat() else 0f..1f
+//        )
+//        LaunchedEffect(playerValues.currentTime) {
+//            timeSliderState.value = playerValues.currentTime.toFloat()
+//        }
+//        Text(text = formatTime(timeSliderState.value.toLong()))
+        Text(text = playerValues.currentTime.toString())
+        Slider(
+            value = playerValues.currentTime.toFloat(),
+            onValueChange = { },
+            valueRange = if (playerValues.songLength > 0) 0f..playerValues.songLength.toFloat() else 0f..1f,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 20.dp, end = 20.dp)
         )
 
         // Player control buttons
@@ -170,9 +173,8 @@ fun PlayerScreen(
         {
             CreateButton(skip_previous, "Previous", callbacks.sendPrevious)
             CreateButton(fast_rewind, "Fast Rewind", callbacks.sendSeekBackward)
-            // Show proper play or pause button, and the proper callback
 
-//            val playPauseImage by remember {}
+            // Show proper play or pause button, and the proper callback
             CreateButton(
                 image = when(playerValues.playState){
                     PlayState.PAUSED -> play_arrow
