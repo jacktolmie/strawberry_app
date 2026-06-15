@@ -35,7 +35,6 @@ class PlayerViewModel @Inject constructor(
 ): ViewModel(){
 
     private val _networkStatus = networkManager.connectionStateFlow
-//    private val _playlistRepo = playlistRepository.playlistState.flowWithLifecycle()
 
     private val _playerState = MutableStateFlow(PlayerValues())
     val playerState = _playerState.asStateFlow()
@@ -51,7 +50,12 @@ class PlayerViewModel @Inject constructor(
                 }
             }
         }
-//        viewModelScope.launch { observeNetworkMessages() }
+
+        viewModelScope.launch {
+            playlistRepository.currentSongData.collect { songData ->
+                _playerState.update { it.copy(songLength = songData?.length ?: 0L) }
+            }
+        }
     }
 
 
@@ -71,15 +75,25 @@ class PlayerViewModel @Inject constructor(
                                                          "playing" ->    PlayState.PLAYING
                                                         else ->         PlayState.STOPPED
                                 },
-                                songLength =        playlistRepository.playlistState.value.currentSongData?.length ?: 0,
+                                songLength =        _playerState.value.songLength,
                                 volume =            message.volume
                             )
                         }
                     }
 
                     is EventType.VolumeChanged -> _playerState.update { it.copy(volume = message.volume) }
-                    is EventType.Time -> _playerState.update { it.copy(currentTime = message.time) }
+                    is EventType.Time -> _playerState.update {
+                        println("NetworkManager Event time sent")
+                        it.copy(currentTime = message.time) }
                     is EventType.SongChanged -> _playerState.update { it.copy(currentSong = message.track_id) }
+                    // Update play/pause button
+                    is EventType.Play -> _playerState.update { it.copy(playState = PlayState.PLAYING) }
+                    is EventType.Pause -> _playerState.update { it.copy(playState = PlayState.PAUSED) }
+                    is EventType.Stop -> _playerState.update { it.copy(playState = PlayState.STOPPED) }
+
+                    is EventType.SeekTo -> _playerState.update {
+                        println("NetworkManager Event seekto sent")
+                        it.copy(currentTime = message.time) }
 
                     else -> Unit
                 }

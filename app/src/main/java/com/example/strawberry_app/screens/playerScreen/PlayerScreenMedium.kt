@@ -46,6 +46,7 @@ import com.example.strawberry_app.ui.theme.icons.fast_forward
 import com.example.strawberry_app.ui.theme.icons.fast_rewind
 import com.example.strawberry_app.ui.theme.icons.pause
 import com.example.strawberry_app.ui.theme.icons.play_arrow
+import com.example.strawberry_app.ui.theme.icons.play_pause
 import com.example.strawberry_app.ui.theme.icons.skip_next
 import com.example.strawberry_app.ui.theme.icons.skip_previous
 import com.example.strawberry_app.ui.theme.icons.stop
@@ -170,8 +171,14 @@ fun PlayerScreen(
             CreateButton(skip_previous, "Previous", callbacks.sendPrevious)
             CreateButton(fast_rewind, "Fast Rewind", callbacks.sendSeekBackward)
             // Show proper play or pause button, and the proper callback
+
+//            val playPauseImage by remember {}
             CreateButton(
-                if(playerValues.playState == PlayState.PLAYING) pause else play_arrow,
+                image = when(playerValues.playState){
+                    PlayState.PAUSED -> play_arrow
+                    PlayState.PLAYING -> pause
+                    else -> play_pause
+                },
                 "Play / Pause",
                 if(playerValues.playState == PlayState.PLAYING) callbacks.sendPause else callbacks.sendPlay
             )

@@ -44,6 +44,8 @@ class PlaylistRepository @Inject constructor(
     private val _playlistState = MutableStateFlow(PlaylistState())
     val playlistState = _playlistState.asStateFlow()
 
+    val currentSongData = getCurrentSongLength()
+
     init {
         scope.launch {
             serverMessages
@@ -66,6 +68,12 @@ class PlaylistRepository @Inject constructor(
                         is EventType.MakeCurrentPlaylist -> makeCurrentPlaylist(info.playlist)
                         else -> Unit
             } }
+        }
+
+        scope.launch {
+            getCurrentSongLength().collect { songData ->
+                _playlistState.update { it.copy(currentSongData = songData) }
+            }
         }
     }
 
@@ -93,13 +101,13 @@ class PlaylistRepository @Inject constructor(
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    fun getCurrentSongLength(): Flow<SongWithPosition?> {
+    private fun getCurrentSongLength(): Flow<SongWithPosition?> {
         return playlistState.flatMapLatest { state ->
             if (state.currentPlaylist == -1 || state.currentSongData?.id == -1){
                 flowOf(null)
             }else {
                 playlistSongDao.observeSongAtPosition(state.currentPlaylist,
-                    state.currentSongData?.length ?: 0
+                    state.currentSongIndex.toLong()
                 )
             }
         }

@@ -13,7 +13,7 @@ data class SongWithPosition(
     val artist: String,
     val album: String,
     val length: Long,
-    val position: Int
+    val position: Long
 )
 
 @Dao
