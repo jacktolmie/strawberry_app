@@ -55,6 +55,8 @@ import com.example.strawberry_app.ui.theme.icons.stop
 import com.example.strawberry_app.ui.theme.icons.volume_down
 import com.example.strawberry_app.ui.theme.icons.volume_off
 import com.example.strawberry_app.ui.theme.icons.volume_up
+import java.lang.Math.pow
+import kotlin.math.pow
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -150,29 +152,38 @@ fun PlayerScreen(
 
         Spacer(modifier = Modifier.height(10.dp))
         println("NetworkManager songLength: ${playerValues.songLength}")
+
         // Time slider
-//        val timeSliderState = rememberSliderState(
-//            valueRange = if (playerValues.songLength > 0) 0f..playerValues.songLength.toFloat() else 0f..1f
-//        )
-//        LaunchedEffect(playerValues.currentTime) {
-//            timeSliderState.value = playerValues.currentTime.toFloat()
-//        }
-
-        Text(text = formatTime(playerValues.currentTime))
-
         var sliderPosition by remember { mutableFloatStateOf(playerValues.currentTime.toFloat()) }
 
-        Slider(
-            value = playerValues.currentTime.toFloat(),
-            onValueChange = { sliderPosition = it},
-            onValueChangeFinished = {
-                println("PlayerScreen slider position: ${sliderPosition.toInt()}")
-                callbacks.sendSeekTo(sliderPosition.toInt())},
-            valueRange = if (playerValues.songLength > 0) 0f..playerValues.songLength.toFloat() else 0f..1f,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 20.dp, end = 20.dp)
+//        Text(text = formatTime(playerValues.currentTime))
+        Text(text = if (playerValues.currentTime > 0) formatTime(playerValues.currentTime) else "0")
+
+        Row(modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 10.dp, end = 10.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.CenterVertically
         )
+        {
+            Text(text = "0")
+            Slider(
+                value = playerValues.currentTime.toFloat(),
+                onValueChange = {
+                    sliderPosition = it
+                    playerValues.copy(currentTime = it.toLong())
+                },
+                onValueChangeFinished = {
+                    println("PlayerScreen slider position: ${sliderPosition.toInt()}")
+                    callbacks.sendSeekTo(sliderPosition.toInt())},
+                valueRange = if (playerValues.songLength > 0) 0f..playerValues.songLength.toFloat() else 0f..1f,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 20.dp, end = 20.dp)
+            )
+            Text(text = if (playerValues.songLength > 0) formatTime(playerValues.songLength) else "0")
+        }
+
 
         // Player control buttons
         Row(modifier = Modifier
@@ -217,10 +228,10 @@ fun CreateButton(image: ImageVector, description: String, control: () -> Unit) {
 }
 
 fun formatTime(time: Long): String {
-    val minutes = time / 60
-    val seconds = time % 60
-    println("NetworkManager formatTime $minutes and $seconds")
-    return "$minutes:$seconds"
+    val hours = time / 3_600_000
+    val minutes = (time % 3_600_000) / 60_000
+    val seconds = (time % 60_000) / 1_000
+    return "%d:%02d:%02d".format(hours, minutes, seconds)
 }
 
 

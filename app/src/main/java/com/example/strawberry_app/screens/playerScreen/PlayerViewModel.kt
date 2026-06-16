@@ -80,12 +80,12 @@ class PlayerViewModel @Inject constructor(
                     }
 
                     is EventType.VolumeChanged -> _playerState.update { it.copy(volume = message.volume) }
-                    is EventType.Time -> _playerState.update {
-                        println("NetworkManager Event time sent")
-                        it.copy(currentTime = message.time) }
+                    is EventType.Time -> _playerState.update { it.copy(currentTime = message.time) }
                     is EventType.SongChanged -> _playerState.update { it.copy(currentSong = message.track_id) }
                     // Update play/pause button
-                    is EventType.Play -> _playerState.update { it.copy(playState = PlayState.PLAYING) }
+                    is EventType.Play -> _playerState.update {
+                        it.copy(playState = PlayState.PLAYING)
+                    }
                     is EventType.Pause -> _playerState.update { it.copy(playState = PlayState.PAUSED) }
                     is EventType.Stop -> _playerState.update { it.copy(playState = PlayState.STOPPED) }
 
