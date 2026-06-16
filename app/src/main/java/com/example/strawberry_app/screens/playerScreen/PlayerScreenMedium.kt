@@ -31,6 +31,10 @@ import androidx.compose.material3.VerticalSlider
 import androidx.compose.material3.rememberSliderState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -153,11 +157,17 @@ fun PlayerScreen(
 //        LaunchedEffect(playerValues.currentTime) {
 //            timeSliderState.value = playerValues.currentTime.toFloat()
 //        }
-//        Text(text = formatTime(timeSliderState.value.toLong()))
-        Text(text = playerValues.currentTime.toString())
+
+        Text(text = formatTime(playerValues.currentTime))
+
+        var sliderPosition by remember { mutableFloatStateOf(playerValues.currentTime.toFloat()) }
+
         Slider(
             value = playerValues.currentTime.toFloat(),
-            onValueChange = { },
+            onValueChange = { sliderPosition = it},
+            onValueChangeFinished = {
+                println("PlayerScreen slider position: ${sliderPosition.toInt()}")
+                callbacks.sendSeekTo(sliderPosition.toInt())},
             valueRange = if (playerValues.songLength > 0) 0f..playerValues.songLength.toFloat() else 0f..1f,
             modifier = Modifier
                 .fillMaxWidth()

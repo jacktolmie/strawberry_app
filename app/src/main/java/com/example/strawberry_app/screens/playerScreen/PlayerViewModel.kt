@@ -1,7 +1,6 @@
 package com.example.strawberry_app.screens.playerScreen
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.viewModelScope
 import com.example.strawberry_app.music.PlaylistRepository
 import com.example.strawberry_app.network.ConnectionState
@@ -42,7 +41,7 @@ class PlayerViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             networkManager.connectionStateFlow.collect { state ->
-                if (state is ConnectionState.Disconnected){
+                if (state is ConnectionState.Disconnected || state is ConnectionState.Connecting){
                     _playerState.update { PlayerValues() }
                 }
                 if (state is ConnectionState.Connected) {
@@ -53,7 +52,6 @@ class PlayerViewModel @Inject constructor(
 
         viewModelScope.launch {
             playlistRepository.currentSongData.collect { songData ->
-                println("NetworkManager songData: $songData")
                 _playerState.update { it.copy(songLength = songData?.length ?: 0L) }
             }
         }

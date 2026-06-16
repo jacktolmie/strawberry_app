@@ -13,10 +13,10 @@ import androidx.compose.ui.Modifier
 import com.example.strawberry_app.screens.playerScreen.PlayerRoute
 import com.example.strawberry_app.screens.playlistScreen.PlaylistRoute
 import com.example.strawberry_app.screens.settingsScreen.SettingsRoute
-import kotlinx.coroutines.launch
-import com.example.strawberry_app.ui.theme.icons.settings
 import com.example.strawberry_app.ui.theme.icons.music_note
 import com.example.strawberry_app.ui.theme.icons.queue_music
+import com.example.strawberry_app.ui.theme.icons.settings
+import kotlinx.coroutines.launch
 
 
 @Composable

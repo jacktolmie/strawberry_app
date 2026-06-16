@@ -1,6 +1,5 @@
 package com.example.strawberry_app.music
 
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.strawberry_app.data.dao.PlaylistDao
 import com.example.strawberry_app.data.dao.PlaylistSongDao
 import com.example.strawberry_app.data.dao.SongDao
@@ -52,7 +51,6 @@ class PlaylistRepository @Inject constructor(
                 .collectLatest { info ->
                     when(info){
                         is EventType.GuiUpdates -> {
-
                             when (info.playlists) {
                                 is EventType.MakeAllPlaylists -> makeAllPlaylists(info.playlists.playlists)
                             }

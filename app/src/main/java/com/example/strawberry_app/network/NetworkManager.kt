@@ -49,16 +49,13 @@ class NetworkManager @Inject constructor(
     private var listenerJob: Job? = null
     private var reconnectJob: Job? = null
     private var _shouldReconnect = MutableStateFlow(true)
-//    val shouldReconnect = _shouldReconnect.asStateFlow()
 
     private var socket: Socket? = null
     private val _serverMessages =
-        MutableSharedFlow<IncomingMessage>(replay = 0, extraBufferCapacity = 64)
+        MutableSharedFlow<IncomingMessage>(replay = 1, extraBufferCapacity = 64)
 
     val serverMessages = _serverMessages.asSharedFlow()
-//    private val reconnectCount = MutableStateFlow(0)
 var reconnectCount = 0L
-//    private val reconnectTimer = MutableStateFlow<Long>(0)
     var reconnectTimer = 0L
 
     private val delayTime = MutableStateFlow<Long>(3000)
@@ -214,11 +211,10 @@ var reconnectCount = 0L
                         val messageBytes = ByteArray(length)
                         dataInputStream.readFully(messageBytes)
                         val jsonString = String(messageBytes, Charsets.UTF_8)
-//                        val obj = json.parseToJsonElement(jsonString).jsonObject
 
                         try {
                             val parsedMessage = json.decodeFromString<IncomingMessage>(jsonString)
-                            Log.e("NetworkManager", "Unparsed message $jsonString")
+                            Log.e("NetworkManager", "Unparsed message $jsonString") // Delete when done testing
                             Log.e("NetworkManager", "Server sent: $parsedMessage") // Delete when done testing
                             _serverMessages.tryEmit(parsedMessage)
                         } catch (e: SerializationException) {
@@ -242,12 +238,6 @@ var reconnectCount = 0L
                 if (_connectionState.value !is ConnectionState.Disconnected) {
                     _connectionState.value = ConnectionState.Disconnected
                 }
-
-//                val info = currentServerInfo
-//                if (_shouldReconnect.value && info != null && info.ip.isNotBlank()) {
-//                    closeResources()
-//                    startReconnectLoop(currentServerInfo)
-//                }
             }
         }
         listenerJob?.join()

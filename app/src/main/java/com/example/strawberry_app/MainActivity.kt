@@ -5,7 +5,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -14,7 +13,6 @@ import com.example.strawberry_app.music.PlaylistRepository
 import com.example.strawberry_app.network.ConnectionViewModel
 import com.example.strawberry_app.ui.theme.Strawberry_appTheme
 import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.HiltAndroidApp
 import jakarta.inject.Inject
 
 @AndroidEntryPoint

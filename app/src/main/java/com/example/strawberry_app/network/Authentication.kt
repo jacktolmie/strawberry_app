@@ -4,15 +4,11 @@ import android.util.Log
 import com.example.strawberry_app.network.protocol.AuthType
 import com.example.strawberry_app.server.ServerInfo
 import kotlinx.io.IOException
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerializationException
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import java.io.BufferedReader
 import java.io.DataInputStream
 import java.io.DataOutputStream
-import java.io.InputStreamReader
 import java.net.Socket
 
 private const val MAX_MESSAGE_LENGTH = 10_000
