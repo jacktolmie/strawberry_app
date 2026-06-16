@@ -76,7 +76,7 @@ sealed class OutgoingMessage {
 
     @Serializable
     @SerialName("seek-to")
-    data class SeekTo(val seekTo: Int): OutgoingMessage()
+    data class SeekTo(val seekTo: Long): OutgoingMessage()
 
     @Serializable
     @SerialName("send-active-playlist")

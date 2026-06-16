@@ -55,8 +55,6 @@ import com.example.strawberry_app.ui.theme.icons.stop
 import com.example.strawberry_app.ui.theme.icons.volume_down
 import com.example.strawberry_app.ui.theme.icons.volume_off
 import com.example.strawberry_app.ui.theme.icons.volume_up
-import java.lang.Math.pow
-import kotlin.math.pow
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -156,7 +154,6 @@ fun PlayerScreen(
         // Time slider
         var sliderPosition by remember { mutableFloatStateOf(playerValues.currentTime.toFloat()) }
 
-//        Text(text = formatTime(playerValues.currentTime))
         Text(text = if (playerValues.currentTime > 0) formatTime(playerValues.currentTime) else "0")
 
         Row(modifier = Modifier
@@ -171,15 +168,16 @@ fun PlayerScreen(
                 value = playerValues.currentTime.toFloat(),
                 onValueChange = {
                     sliderPosition = it
-                    playerValues.copy(currentTime = it.toLong())
+                    callbacks.timeChanged(it.toLong())
                 },
                 onValueChangeFinished = {
                     println("PlayerScreen slider position: ${sliderPosition.toInt()}")
-                    callbacks.sendSeekTo(sliderPosition.toInt())},
+
+                    callbacks.sendSeekTo(sliderPosition.toLong())},
                 valueRange = if (playerValues.songLength > 0) 0f..playerValues.songLength.toFloat() else 0f..1f,
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 20.dp, end = 20.dp)
+                    .weight(1F)
+                    .padding(start = 10.dp, end = 10.dp)
             )
             Text(text = if (playerValues.songLength > 0) formatTime(playerValues.songLength) else "0")
         }
@@ -254,7 +252,8 @@ fun PlayerScreenPreview(){
             sendStopAfterCurrent =  {},
             setVolume =  {},
             sendVolumeDown =  {},
-            sendVolumeUp =  {}
+            sendVolumeUp =  {},
+            timeChanged = {}
         ),
         playerValues = PlayerValues()
     )

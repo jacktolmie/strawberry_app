@@ -112,7 +112,7 @@ class PlayerViewModel @Inject constructor(
     fun sendPrevious() = sendCommand(OutgoingMessage.Previous)
     fun sendSeekBackward() = sendCommand(OutgoingMessage.SeekBackward)
     fun sendSeekForward() = sendCommand(OutgoingMessage.SeekForward)
-    fun sendSeekTo(seekTo: Int) = sendCommand(OutgoingMessage.SeekTo(seekTo))
+    fun sendSeekTo(seekTo: Long) = sendCommand(OutgoingMessage.SeekTo(seekTo / 1000))
     fun sendStop() {
         sendCommand(OutgoingMessage.Stop)
         _playerState.update { it.copy(playState = PlayState.STOPPED) }
@@ -126,5 +126,9 @@ class PlayerViewModel @Inject constructor(
         viewModelScope.launch {
             networkManager.sendCommand(command)
         }
+    }
+
+    fun timeChanged(time: Long){
+        _playerState.update { it.copy(currentTime = time) }
     }
 }

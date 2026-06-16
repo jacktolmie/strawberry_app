@@ -17,12 +17,13 @@ class PlayerCallbacks(
     val sendPrevious: () -> Unit,
     val sendSeekBackward: () -> Unit,
     val sendSeekForward: () -> Unit,
-    val sendSeekTo: (Int) -> Unit,
+    val sendSeekTo: (Long) -> Unit,
     val sendStop: () -> Unit,
     val sendStopAfterCurrent: () -> Unit,
     val setVolume: (Int) -> Unit,
     val sendVolumeDown: () -> Unit,
-    val sendVolumeUp: () -> Unit
+    val sendVolumeUp: () -> Unit,
+    val timeChanged: (Long) -> Unit
 )
 
 @Suppress("ParamsComparedByRef")
@@ -48,7 +49,8 @@ fun PlayerRoute(
             sendStopAfterCurrent = playerViewModel::sendStopAfterCurrent,
             setVolume = playerViewModel::sendVolume,
             sendVolumeDown = playerViewModel::sendVolumeDown,
-            sendVolumeUp = playerViewModel::sendVolumeUp
+            sendVolumeUp = playerViewModel::sendVolumeUp,
+            timeChanged = playerViewModel::timeChanged
         )
     }
 
