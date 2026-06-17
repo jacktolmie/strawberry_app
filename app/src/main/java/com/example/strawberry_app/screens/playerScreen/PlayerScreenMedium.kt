@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -39,6 +40,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -149,7 +151,6 @@ fun PlayerScreen(
         }
 
         Spacer(modifier = Modifier.height(10.dp))
-        println("NetworkManager songLength: ${playerValues.songLength}")
 
         // Time slider
         var sliderPosition by remember { mutableFloatStateOf(playerValues.currentTime.toFloat()) }
@@ -209,30 +210,6 @@ fun PlayerScreen(
             }
     }
 }
-
-@Composable
-fun CreateButton(image: ImageVector, description: String, control: () -> Unit) {
-    IconButton(
-        modifier = Modifier.size(48.dp),
-        onClick = { control() }
-    ) {
-        Icon(
-            imageVector = image,
-            contentDescription = description,
-            tint = MaterialTheme.colorScheme.onSurface,
-            modifier = Modifier.size(24.dp)
-        )
-    }
-}
-
-//fun formatTime(time: Long): String {
-//    println("Playerscreen called with time $time")
-//    val hours = time / 3_600_000
-//    val minutes = (time % 3_600_000) / 60_000
-//    val seconds = (time % 60_000) / 1_000
-//    return "%d:%02d:%02d".format(hours, minutes, seconds)
-//}
-
 
 @Composable
 @Preview

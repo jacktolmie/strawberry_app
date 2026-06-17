@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.system.measureTimeMillis
 
 enum class PlayState{
     PLAYING, PAUSED, STOPPED
@@ -81,7 +82,7 @@ class PlayerViewModel @Inject constructor(
                     is EventType.VolumeChanged -> _playerState.update {it.copy(volume = message.volume) }
                     is EventType.Time -> _playerState.update { it.copy(currentTime = message.time) }
                     is EventType.SongChanged -> _playerState.update { it.copy(currentSong = message.track_id) }
-                    // Update play/pause button
+                    // If playing, update current GUI settings to match server.
                     is EventType.Play -> _playerState.update {
                         it.copy(
                             activePlaylist = message.active_playlist,
@@ -91,7 +92,15 @@ class PlayerViewModel @Inject constructor(
                             songLength = message.length
                         )
                     }
-                    is EventType.Pause -> _playerState.update { it.copy(playState = PlayState.PAUSED) }
+                    // If paused, sync time sent from server
+                    is EventType.Pause -> _playerState.update {
+                        it.copy(
+                            currentTime = message.time,
+                            playState = PlayState.PAUSED
+                        )
+                    }
+
+                    // If stopped, set player screen to defaults.
                     is EventType.Stop -> _playerState.update { PlayerValues() }
 
                     is EventType.SeekTo -> _playerState.update {it.copy(currentTime = message.time) }
@@ -138,10 +147,11 @@ class PlayerViewModel @Inject constructor(
     }
 
     fun formatTime(time: Long): String {
-        println("playerviewmodel called with time $time")
         val hours = time / 3_600_000
         val minutes = (time % 3_600_000) / 60_000
         val seconds = (time % 60_000) / 1_000
-        return "%d:%02d:%02d".format(hours, minutes, seconds)
+
+        return  if (hours > 0L) "%d:%02d:%02d".format(hours, minutes, seconds)
+                else "%d:%02d".format(minutes, seconds)
     }
 }
