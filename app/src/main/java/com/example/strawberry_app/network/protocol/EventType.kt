@@ -97,9 +97,10 @@ sealed class EventType: IncomingMessage() {
     @JsonIgnoreUnknownKeys
     @SerialName("play")
     data class Play(
-        val time: Long,
         val active_playlist: Int = 0,
-        val row: Int? = null
+        val length: Long = 0L,
+        val row: Int? = null,
+        val time: Long = 0L
     ) : EventType()
 
     @Serializable

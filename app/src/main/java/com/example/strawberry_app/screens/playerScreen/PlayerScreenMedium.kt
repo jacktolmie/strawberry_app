@@ -154,7 +154,7 @@ fun PlayerScreen(
         // Time slider
         var sliderPosition by remember { mutableFloatStateOf(playerValues.currentTime.toFloat()) }
 
-        Text(text = if (playerValues.currentTime > 0) formatTime(playerValues.currentTime) else "0")
+        Text(text = if (playerValues.currentTime > 0) callbacks.formatTime(playerValues.currentTime) else "0")
 
         Row(modifier = Modifier
             .fillMaxWidth()
@@ -179,7 +179,7 @@ fun PlayerScreen(
                     .weight(1F)
                     .padding(start = 10.dp, end = 10.dp)
             )
-            Text(text = if (playerValues.songLength > 0) formatTime(playerValues.songLength) else "0")
+            Text(text = if (playerValues.songLength > 0) callbacks.formatTime(playerValues.songLength) else "0")
         }
 
 
@@ -225,12 +225,13 @@ fun CreateButton(image: ImageVector, description: String, control: () -> Unit) {
     }
 }
 
-fun formatTime(time: Long): String {
-    val hours = time / 3_600_000
-    val minutes = (time % 3_600_000) / 60_000
-    val seconds = (time % 60_000) / 1_000
-    return "%d:%02d:%02d".format(hours, minutes, seconds)
-}
+//fun formatTime(time: Long): String {
+//    println("Playerscreen called with time $time")
+//    val hours = time / 3_600_000
+//    val minutes = (time % 3_600_000) / 60_000
+//    val seconds = (time % 60_000) / 1_000
+//    return "%d:%02d:%02d".format(hours, minutes, seconds)
+//}
 
 
 @Composable
@@ -238,6 +239,7 @@ fun formatTime(time: Long): String {
 fun PlayerScreenPreview(){
     PlayerScreen(
         callbacks = PlayerCallbacks(
+            formatTime = {""},
             isConnected =  {},
             sendMute =  {},
             sendNext = {},

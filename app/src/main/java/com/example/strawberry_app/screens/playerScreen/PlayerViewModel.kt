@@ -20,7 +20,7 @@ enum class PlayState{
 
 data class PlayerValues(
     val activePlaylist: Int = -1,
-    val currentSong: Int = -1,
+    val currentSong: Int? = -1,
     val currentTime: Long = -1L,
     val playState: PlayState = PlayState.STOPPED,
     val songLength: Long = -1L,
@@ -52,18 +52,16 @@ class PlayerViewModel @Inject constructor(
 
         viewModelScope.launch {
             playlistRepository.currentSongData.collect { songData ->
-                _playerState.update { it.copy(songLength = songData?.length ?: 0L) }
+                _playerState.update { it.copy(songLength = songData?.length ?: 0L ) }
             }
         }
     }
-
 
     private fun observeNetworkMessages() {
         viewModelScope.launch {
             networkManager.serverMessages.collect{ message ->
                 when(message) {
                     is EventType.GuiUpdates -> {
-                        println("Playerviewmodel gui updates called")
                         _playerState.update {
                             PlayerValues(
                                 activePlaylist =    message.active_playlist,
@@ -85,11 +83,16 @@ class PlayerViewModel @Inject constructor(
                     is EventType.SongChanged -> _playerState.update { it.copy(currentSong = message.track_id) }
                     // Update play/pause button
                     is EventType.Play -> _playerState.update {
-                        println("PlayerViewModel EventType Play called")
-                        it.copy(playState = PlayState.PLAYING)
+                        it.copy(
+                            activePlaylist = message.active_playlist,
+                            currentSong = message.row,
+                            currentTime = message.time,
+                            playState = PlayState.PLAYING,
+                            songLength = message.length
+                        )
                     }
                     is EventType.Pause -> _playerState.update { it.copy(playState = PlayState.PAUSED) }
-                    is EventType.Stop -> _playerState.update { it.copy(playState = PlayState.STOPPED) }
+                    is EventType.Stop -> _playerState.update { PlayerValues() }
 
                     is EventType.SeekTo -> _playerState.update {it.copy(currentTime = message.time) }
 
@@ -132,5 +135,13 @@ class PlayerViewModel @Inject constructor(
 
     fun timeChanged(time: Long){
         _playerState.update { it.copy(currentTime = time) }
+    }
+
+    fun formatTime(time: Long): String {
+        println("playerviewmodel called with time $time")
+        val hours = time / 3_600_000
+        val minutes = (time % 3_600_000) / 60_000
+        val seconds = (time % 60_000) / 1_000
+        return "%d:%02d:%02d".format(hours, minutes, seconds)
     }
 }

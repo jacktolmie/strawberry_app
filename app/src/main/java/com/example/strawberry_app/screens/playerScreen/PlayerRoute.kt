@@ -8,6 +8,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 
 class PlayerCallbacks(
+    val formatTime: (Long) -> String,
     val isConnected: () -> Unit,
     val sendMute: () -> Unit,
     val sendNext: () -> Unit,
@@ -35,6 +36,7 @@ fun PlayerRoute(
 
     val callbacks = remember {
         PlayerCallbacks(
+            formatTime = playerViewModel::formatTime,
             isConnected = playerViewModel::isConnected,
             sendMute = playerViewModel::sendMute,
             sendNext = playerViewModel::sendNext,
