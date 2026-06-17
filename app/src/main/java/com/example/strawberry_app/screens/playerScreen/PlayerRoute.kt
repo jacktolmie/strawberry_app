@@ -9,11 +9,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 class PlayerCallbacks(
     val formatTime: (Long) -> String,
-    val isConnected: () -> Unit,
+//    val isConnected: () -> Unit,
     val sendMute: () -> Unit,
     val sendNext: () -> Unit,
     val sendPause: () -> Unit,
-    val sendPlayPause: () -> Unit,
+//    val sendPlayPause: () -> Unit,
     val sendPlay: () -> Unit,
     val sendPrevious: () -> Unit,
     val sendSeekBackward: () -> Unit,
@@ -37,11 +37,11 @@ fun PlayerRoute(
     val callbacks = remember {
         PlayerCallbacks(
             formatTime = playerViewModel::formatTime,
-            isConnected = playerViewModel::isConnected,
+//            isConnected = playerViewModel::isConnected,
             sendMute = playerViewModel::sendMute,
             sendNext = playerViewModel::sendNext,
             sendPause = playerViewModel::sendPause,
-            sendPlayPause = playerViewModel::sendPlayPause,
+//            sendPlayPause = playerViewModel::sendPlayPause,
             sendPlay = playerViewModel::sendPlay,
             sendPrevious = playerViewModel::sendPrevious,
             sendSeekBackward = playerViewModel::sendSeekBackward,

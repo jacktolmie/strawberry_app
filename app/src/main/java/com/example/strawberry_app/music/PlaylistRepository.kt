@@ -110,4 +110,6 @@ class PlaylistRepository @Inject constructor(
             }
         }
     }
+
+    fun getSongById(id: Int) : Flow<SongEntity?> = songDao.observeById(id)
 }

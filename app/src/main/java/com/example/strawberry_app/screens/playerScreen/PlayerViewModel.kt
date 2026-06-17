@@ -2,18 +2,24 @@ package com.example.strawberry_app.screens.playerScreen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.strawberry_app.data.entity.SongEntity
 import com.example.strawberry_app.music.PlaylistRepository
 import com.example.strawberry_app.network.ConnectionState
 import com.example.strawberry_app.network.NetworkManager
 import com.example.strawberry_app.network.protocol.EventType
 import com.example.strawberry_app.network.protocol.OutgoingMessage
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.system.measureTimeMillis
 
 enum class PlayState{
     PLAYING, PAUSED, STOPPED
@@ -34,10 +40,22 @@ class PlayerViewModel @Inject constructor(
     private val playlistRepository: PlaylistRepository
 ): ViewModel(){
 
-    private val _networkStatus = networkManager.connectionStateFlow
+//    private val _networkStatus = networkManager.connectionStateFlow
 
     private val _playerState = MutableStateFlow(PlayerValues())
     val playerState = _playerState.asStateFlow()
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val currentSong : StateFlow<SongEntity?> = _playerState
+        .flatMapLatest { state ->
+            if (state.currentSong == -1 ) flowOf(null)
+            else playlistRepository.getSongById(state.currentSong ?: 0)
+        }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = null
+        )
 
     init {
         viewModelScope.launch {
@@ -111,14 +129,14 @@ class PlayerViewModel @Inject constructor(
         }
     }
 
-    fun isConnected() = _networkStatus.value == ConnectionState.Connected
+//    fun isConnected() = _networkStatus.value == ConnectionState.Connected
     fun sendMute() = sendCommand(OutgoingMessage.Mute)
     fun sendNext() = sendCommand(OutgoingMessage.Next)
     fun sendPause(){
         sendCommand(OutgoingMessage.Pause)
         _playerState.update { it.copy(playState = PlayState.PAUSED) }
     }
-    fun sendPlayPause() = sendCommand(OutgoingMessage.PlayPause)
+//    fun sendPlayPause() = sendCommand(OutgoingMessage.PlayPause)
     fun sendPlay(){
         sendCommand(OutgoingMessage.Play)
         _playerState.update { it.copy(playState = PlayState.PLAYING) }

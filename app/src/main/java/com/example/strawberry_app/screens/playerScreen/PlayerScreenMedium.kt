@@ -211,11 +211,11 @@ fun PlayerScreenPreview(){
     PlayerScreen(
         callbacks = PlayerCallbacks(
             formatTime = {""},
-            isConnected =  {},
+//            isConnected =  {},
             sendMute =  {},
             sendNext = {},
             sendPause =  {},
-            sendPlayPause =  {},
+//            sendPlayPause =  {},
             sendPlay =  {},
             sendPrevious =  {},
             sendSeekBackward =  {},
