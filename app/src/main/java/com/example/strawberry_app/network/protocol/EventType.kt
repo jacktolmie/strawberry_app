@@ -47,7 +47,7 @@ sealed class EventType: IncomingMessage() {
     @SerialName("active_playlist")
     data class ActivePlaylist(
         val id: Int,
-        val row: Int? = null
+        val row: Long? = null
     ) : EventType()
 
     @Serializable
@@ -65,7 +65,7 @@ sealed class EventType: IncomingMessage() {
     data class GuiUpdates(
         val active_playlist: Int,
         val current_playlist: Int,
-        val current_song: Int,
+        val current_song: Long,
         val time: Long = 0,
         val playing: String = "",
         val volume: Int = 0,
@@ -99,7 +99,7 @@ sealed class EventType: IncomingMessage() {
     data class Play(
         val active_playlist: Int = 0,
         val length: Long = 0L,
-        val row: Int? = null,
+        val row: Long? = null,
         val time: Long = 0L
     ) : EventType()
 
@@ -131,7 +131,7 @@ sealed class EventType: IncomingMessage() {
     @Serializable
     @JsonIgnoreUnknownKeys
     @SerialName("song_changed")
-    data class SongChanged(val track_id: Int = 0) : EventType()
+    data class SongChanged(val track_id: Long = 0) : EventType()
 
     @Serializable
     @JsonIgnoreUnknownKeys

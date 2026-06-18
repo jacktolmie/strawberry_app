@@ -55,7 +55,7 @@ import com.example.strawberry_app.ui.theme.icons.volume_up
 @Composable
 fun PlayerScreen(
     callbacks: PlayerCallbacks,
-    playerValues: PlayerValues)
+    playerScreenValues: PlayerScreenState)
 {
     Column(modifier = Modifier
         .fillMaxSize()
@@ -72,7 +72,7 @@ fun PlayerScreen(
         {
             // Song text for the song playing
             Text(
-                text = "This is the song area. It is a very long song and needs to scroll",
+                text = playerScreenValues.currentSong?.title ?: "Strawberry Remote",
                 modifier = Modifier.basicMarquee(
                     iterations = Int.MAX_VALUE,
                     repeatDelayMillis = 10000,
@@ -81,9 +81,15 @@ fun PlayerScreen(
                 maxLines = 1
             )
 
+            val artistAlbum = listOfNotNull(
+                playerScreenValues.currentSong?.artist?.takeIf { it.isNotBlank() },
+                playerScreenValues.currentSong?.album?.takeIf { it.isNotBlank() }
+            ).joinToString(" • ")
+
             // Album/Artist text.
             Text(
-                text = "This will be the album/group, It is a very long song and needs to scroll",
+                text = artistAlbum,
+//                    "This will be the album/group, It is a very long song and needs to scroll",
                 modifier = Modifier.basicMarquee(
                     iterations = Int.MAX_VALUE,
                     repeatDelayMillis = 10000,
@@ -119,7 +125,7 @@ fun PlayerScreen(
             Spacer(modifier = Modifier.width(10.dp).border(2.dp, Color.Blue))
 
                 val volumeSliderState = rememberSliderState(valueRange = 0f..100f)
-                LaunchedEffect(playerValues.volume) { volumeSliderState.value = playerValues.volume.toFloat() }
+                LaunchedEffect(playerScreenValues.playerValues.volume) { volumeSliderState.value = playerScreenValues.playerValues.volume.toFloat() }
 
                 volumeSliderState.onValueChangeFinished = { callbacks.setVolume(volumeSliderState.value.toInt())}
 
@@ -146,9 +152,9 @@ fun PlayerScreen(
         Spacer(modifier = Modifier.height(10.dp))
 
         // Time slider
-        var sliderPosition by remember { mutableFloatStateOf(playerValues.currentTime.toFloat()) }
+        var sliderPosition by remember { mutableFloatStateOf(playerScreenValues.playerValues.currentTime.toFloat()) }
 
-        Text(text = if (playerValues.currentTime > 0) callbacks.formatTime(playerValues.currentTime) else "0")
+        Text(text = if (playerScreenValues.playerValues.currentTime > 0) callbacks.formatTime(playerScreenValues.playerValues.currentTime) else "0")
 
         Row(modifier = Modifier
             .fillMaxWidth()
@@ -159,7 +165,7 @@ fun PlayerScreen(
         {
             Text(text = "0")
             Slider(
-                value = playerValues.currentTime.toFloat(),
+                value = playerScreenValues.playerValues.currentTime.toFloat(),
                 onValueChange = {
                     sliderPosition = it
                     callbacks.timeChanged(it.toLong())
@@ -168,12 +174,12 @@ fun PlayerScreen(
                     println("PlayerScreen slider position: ${sliderPosition.toInt()}")
 
                     callbacks.sendSeekTo(sliderPosition.toLong())},
-                valueRange = if (playerValues.songLength > 0) 0f..playerValues.songLength.toFloat() else 0f..1f,
+                valueRange = if (playerScreenValues.playerValues.songLength > 0) 0f..playerScreenValues.playerValues.songLength.toFloat() else 0f..1f,
                 modifier = Modifier
                     .weight(1F)
                     .padding(start = 10.dp, end = 10.dp)
             )
-            Text(text = if (playerValues.songLength > 0) callbacks.formatTime(playerValues.songLength) else "0")
+            Text(text = if (playerScreenValues.playerValues.songLength > 0) callbacks.formatTime(playerScreenValues.playerValues.songLength) else "0")
         }
 
 
@@ -189,13 +195,13 @@ fun PlayerScreen(
 
             // Show proper play or pause button, and the proper callback
             CreateButton(
-                image = when(playerValues.playState){
+                image = when(playerScreenValues.playerValues.playState){
                     PlayState.PAUSED -> play_arrow
                     PlayState.PLAYING -> pause
                     else -> play_pause
                 },
                 "Play / Pause",
-                if(playerValues.playState == PlayState.PLAYING) callbacks.sendPause else callbacks.sendPlay
+                if(playerScreenValues.playerValues.playState == PlayState.PLAYING) callbacks.sendPause else callbacks.sendPlay
             )
             // Send both stop and stop after current for the stop button.
             CreateLongPressButton(stop, "Stop", callbacks.sendStop, callbacks.sendStopAfterCurrent)
@@ -228,6 +234,6 @@ fun PlayerScreenPreview(){
             sendVolumeUp =  {},
             timeChanged = {}
         ),
-        playerValues = PlayerValues()
+        playerScreenValues = PlayerScreenState()
     )
 }

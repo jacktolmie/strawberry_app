@@ -27,7 +27,7 @@ import kotlinx.coroutines.launch
 data class PlaylistState(
     val currentPlaylist: Int = -1,
     val activePlaylist: Int = -1,
-    val currentSongIndex: Int = -1,
+    val currentSongIndex: Long = -1,
     val currentSongData: SongWithPosition? = null
 )
 
@@ -58,7 +58,7 @@ class PlaylistRepository @Inject constructor(
                                 PlaylistState(
                                     activePlaylist = info.active_playlist,
                                     currentPlaylist = info.current_playlist,
-                                    currentSongIndex = info.current_song
+                                    currentSongIndex = info.current_song.toLong()
                                 )
                             }
                         }
@@ -101,15 +101,15 @@ class PlaylistRepository @Inject constructor(
     @OptIn(ExperimentalCoroutinesApi::class)
     private fun getCurrentSongLength(): Flow<SongWithPosition?> {
         return playlistState.flatMapLatest { state ->
-            if (state.currentPlaylist == -1 || state.currentSongIndex == -1){
+            if (state.currentPlaylist == -1 || state.currentSongIndex == -1L){
                 flowOf(null)
             }else {
                 playlistSongDao.observeSongAtPosition(state.currentPlaylist,
-                    state.currentSongIndex.toLong()
+                    state.currentSongIndex
                 )
             }
         }
     }
 
-    fun getSongById(id: Int) : Flow<SongEntity?> = songDao.observeById(id)
+    fun getSongById(id: Long) : Flow<SongEntity?> = songDao.observeById(id)
 }

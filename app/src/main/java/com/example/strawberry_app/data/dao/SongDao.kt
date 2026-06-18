@@ -23,5 +23,5 @@ interface SongDao {
     suspend fun deleteOrphans()
 
     @Query("SELECT * FROM song WHERE id = :id")
-    fun observeById(id: Int): Flow<SongEntity?>
+    fun observeById(id: Long): Flow<SongEntity?>
 }

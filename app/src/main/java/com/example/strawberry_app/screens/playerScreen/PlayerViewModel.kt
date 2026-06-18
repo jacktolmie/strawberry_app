@@ -27,7 +27,7 @@ enum class PlayState{
 
 data class PlayerValues(
     val activePlaylist: Int = -1,
-    val currentSong: Int? = -1,
+    val currentSong: Long? = -1,
     val currentTime: Long = -1L,
     val playState: PlayState = PlayState.STOPPED,
     val songLength: Long = -1L,
@@ -48,8 +48,8 @@ class PlayerViewModel @Inject constructor(
     @OptIn(ExperimentalCoroutinesApi::class)
     val currentSong : StateFlow<SongEntity?> = _playerState
         .flatMapLatest { state ->
-            if (state.currentSong == -1 ) flowOf(null)
-            else playlistRepository.getSongById(state.currentSong ?: 0)
+            if (state.currentSong == -1L ) flowOf(null)
+            else playlistRepository.getSongById(state.currentSong ?: 0L)
         }
         .stateIn(
             scope = viewModelScope,
@@ -95,6 +95,7 @@ class PlayerViewModel @Inject constructor(
                                 volume =            message.volume
                             )
                         }
+
                     }
 
                     is EventType.VolumeChanged -> _playerState.update {it.copy(volume = message.volume) }
