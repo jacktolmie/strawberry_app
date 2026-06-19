@@ -52,7 +52,6 @@ fun CreateLongPressButton(image: ImageVector, description: String, shortPress: (
 @Composable
 fun CreateRepeatButton(image: ImageVector, description: String, control: () -> Unit){
     Box( modifier = Modifier
-        .clickable { control() }
         .onTouchHeld { control() }
     ) {
         Icon(imageVector = image, contentDescription = description)

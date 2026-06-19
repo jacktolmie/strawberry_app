@@ -50,9 +50,6 @@ import com.example.strawberry_app.ui.theme.icons.stop
 import com.example.strawberry_app.ui.theme.icons.volume_down
 import com.example.strawberry_app.ui.theme.icons.volume_off
 import com.example.strawberry_app.ui.theme.icons.volume_up
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.time.delay
-import kotlin.time.Duration.Companion.milliseconds
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -155,17 +152,6 @@ fun PlayerScreen(
 
         // Time slider
         var sliderPosition by remember { mutableFloatStateOf(playerScreenValues.playerValues.currentTime.toFloat()) }
-
-        LaunchedEffect(Unit) {
-            println("playerscreen launch effect called")
-            while(true) {
-                delay(1000.milliseconds)
-                println("playerviewmodel: ${playerScreenValues.playerValues.playState}")
-                if (playerScreenValues.playerValues.playState == PlayState.PLAYING) {
-                    callbacks.timerUpdate()
-                }
-            }
-        }
 
         Text(text = if (playerScreenValues.playerValues.currentTime > 0) callbacks.formatTime(playerScreenValues.playerValues.currentTime) else "0")
 

@@ -9,6 +9,7 @@ import com.example.strawberry_app.network.NetworkManager
 import com.example.strawberry_app.network.protocol.EventType
 import com.example.strawberry_app.network.protocol.OutgoingMessage
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -18,6 +19,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.milliseconds
 
 enum class PlayState{
     PLAYING, PAUSED, STOPPED
@@ -69,6 +71,9 @@ class PlayerViewModel @Inject constructor(
                 _playerState.update { it.copy(songLength = songData?.length ?: 0L ) }
             }
         }
+
+        // Start timing slider increment.
+        timerUpdate()
     }
 
     private fun observeNetworkMessages() {
@@ -116,9 +121,9 @@ class PlayerViewModel @Inject constructor(
                     // If stopped, set player screen to defaults.
                     is EventType.Stop -> _playerState.update {
                         val currentVolume = _playerState.value.volume
-                        PlayerValues()
                         it.copy(
                             currentSong = SongInfo(),
+                            currentTime = 0,
                             songLength = 0,
                             volume = currentVolume,
                             playState = PlayState.STOPPED
@@ -189,7 +194,14 @@ class PlayerViewModel @Inject constructor(
     }
 
     fun timerUpdate() {
-        println("playerviewmodel timerupdate called with current time: ${_playerState.value.currentTime}")
-        _playerState.update { it.copy(currentTime = it.currentTime + 1000L) }
+        viewModelScope.launch {
+            while(true) {
+                delay(1000.milliseconds)
+                if(_playerState.value.playState == PlayState.PLAYING){
+                    _playerState.update { it.copy(currentTime = it.currentTime + 1000L) }
+                }
+            }
+        }
+
     }
 }
