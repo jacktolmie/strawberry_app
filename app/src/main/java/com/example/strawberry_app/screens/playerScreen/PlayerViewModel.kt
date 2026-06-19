@@ -44,7 +44,6 @@ class PlayerViewModel @Inject constructor(
     private val _playerState = MutableStateFlow(PlayerValues())
     val playerState = _playerState.asStateFlow()
 
-//    @OptIn(ExperimentalCoroutinesApi::class)
     val currentSong: StateFlow<SongInfo?> = _playerState
         .map { it.currentSong }
         .stateIn(
