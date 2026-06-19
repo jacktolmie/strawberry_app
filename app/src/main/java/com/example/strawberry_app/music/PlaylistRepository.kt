@@ -111,5 +111,14 @@ class PlaylistRepository @Inject constructor(
         }
     }
 
+//    private fun getCurrentSong(): Flow<SongEntity?> {
+//        return playlistState.flatMapLatest { state ->
+//            if (state.currentSongIndex == -1) flowOf(null)
+//            else {
+//                playlistSongDao.observeSongAtPosition(state.)
+//            }
+//        }
+//    }
+
     fun getSongById(id: Long) : Flow<SongEntity?> = songDao.observeById(id)
 }

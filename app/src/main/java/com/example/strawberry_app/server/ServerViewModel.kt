@@ -81,7 +81,6 @@ class ServerViewModel @Inject constructor(
     }
 
     fun onIpChanged(newIp: String) {
-        println("New address: $newIp")
         _uiState.update {
             it.copy(ip = newIp, hasChanged = true)
         }

@@ -14,6 +14,7 @@ import kotlinx.serialization.json.jsonPrimitive
 
 object EventTypeSerializer : JsonContentPolymorphicSerializer<EventType>(EventType::class) {
     override fun selectDeserializer(element: JsonElement): DeserializationStrategy<EventType> {
+        val eventType = element.jsonObject["event"]?.jsonPrimitive?.content
         return when (element.jsonObject["event"]?.jsonPrimitive?.content) {
             "active_playlist" -> EventType.ActivePlaylist.serializer()
 //            "current_playlist" -> EventType.CurrentPlaylist.serializer()
@@ -30,6 +31,7 @@ object EventTypeSerializer : JsonContentPolymorphicSerializer<EventType>(EventTy
             "seek_forward" -> EventType.SeekForward.serializer()
             "seek_to" -> EventType.SeekTo.serializer()
             "song_changed" -> EventType.SongChanged.serializer()
+            "song_info" -> EventType.SongInfo.serializer()
             "stop" -> EventType.Stop.serializer()
             "time" -> EventType.Time.serializer()
             "volume" -> EventType.Volume.serializer()
@@ -133,6 +135,17 @@ sealed class EventType: IncomingMessage() {
     @SerialName("song_changed")
     data class SongChanged(val track_id: Long = 0) : EventType()
 
+    @Serializable
+    @JsonIgnoreUnknownKeys
+    @SerialName("song_info")
+    data class SongInfo(
+        val id: Int = 0,
+        val artist: String = "",
+        val album: String = "",
+        val title: String = "",
+        val length: Long = 0
+        //val coverImage // Unknown for now.
+    ): EventType()
     @Serializable
     @JsonIgnoreUnknownKeys
     @SerialName("stop")

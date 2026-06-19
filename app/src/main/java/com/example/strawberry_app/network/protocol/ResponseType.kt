@@ -29,7 +29,6 @@ object ResponseTypeSerializer : JsonContentPolymorphicSerializer<ResponseType>(R
             "set_current_playlist_to" -> ResponseType.SetActivePlaylistTo.serializer()
             "shuffled_playlist" -> ResponseType.ShuffledPlaylist.serializer()
             "shuffled_all_playlists" -> ResponseType.ShuffledALlPlaylists.serializer()
-            "song_info" -> ResponseType.SongInfo.serializer()
             "songs" -> ResponseType.Songs.serializer()
             else -> throw SerializationException("Unknown response type: $element")
         }
@@ -108,18 +107,6 @@ sealed  class ResponseType: IncomingMessage() {
     @JsonIgnoreUnknownKeys
     @SerialName("shuffled_all_playlists")
     object ShuffledALlPlaylists: ResponseType()
-
-    @Serializable
-    @JsonIgnoreUnknownKeys
-    @SerialName("song_info")
-    data class SongInfo(
-        val id: Int = 0,
-        val artist: String = "",
-        val album: String = "",
-        val title: String = "",
-        val length: Long = 0
-        //val coverImage // Unknown for now.
-    ): ResponseType()
 
     @Serializable
     @JsonIgnoreUnknownKeys

@@ -215,7 +215,7 @@ var reconnectCount = 0L
                         try {
                             val parsedMessage = json.decodeFromString<IncomingMessage>(jsonString)
                             Log.e("NetworkManager", "Unparsed message $jsonString") // Delete when done testing
-                            Log.e("NetworkManager", "Server sent: $parsedMessage") // Delete when done testing
+//                            Log.e("NetworkManager", "Server sent: $parsedMessage") // Delete when done testing
                             _serverMessages.tryEmit(parsedMessage)
                         } catch (e: SerializationException) {
                             Log.e("NetworkManager", "Failed to parse message: $jsonString — ${e.message}")

@@ -5,11 +5,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.strawberry_app.data.entity.SongEntity
+import com.example.strawberry_app.music.SongInfo
 
 data class PlayerScreenState(
     val playerValues: PlayerValues = PlayerValues(),
-    val currentSong: SongEntity? = null
+    val currentSong: SongInfo? = null
 )
 
 class PlayerCallbacks(
@@ -29,7 +29,8 @@ class PlayerCallbacks(
     val setVolume: (Int) -> Unit,
     val sendVolumeDown: () -> Unit,
     val sendVolumeUp: () -> Unit,
-    val timeChanged: (Long) -> Unit
+    val timeChanged: (Long) -> Unit,
+    val timerUpdate: () -> Unit
 )
 
 @Suppress("ParamsComparedByRef")
@@ -58,7 +59,8 @@ fun PlayerRoute(
             setVolume = playerViewModel::sendVolume,
             sendVolumeDown = playerViewModel::sendVolumeDown,
             sendVolumeUp = playerViewModel::sendVolumeUp,
-            timeChanged = playerViewModel::timeChanged
+            timeChanged = playerViewModel::timeChanged,
+            timerUpdate = playerViewModel::timerUpdate
         )
     }
 

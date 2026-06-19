@@ -2,20 +2,18 @@ package com.example.strawberry_app.screens.playerScreen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.strawberry_app.data.entity.SongEntity
 import com.example.strawberry_app.music.PlaylistRepository
+import com.example.strawberry_app.music.SongInfo
 import com.example.strawberry_app.network.ConnectionState
 import com.example.strawberry_app.network.NetworkManager
 import com.example.strawberry_app.network.protocol.EventType
 import com.example.strawberry_app.network.protocol.OutgoingMessage
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -27,10 +25,11 @@ enum class PlayState{
 
 data class PlayerValues(
     val activePlaylist: Int = -1,
-    val currentSong: Long? = -1,
-    val currentTime: Long = -1L,
+    val currentSong: SongInfo? = null,
+    val currentSongId: Long? = -1,
+    val currentTime: Long = 0L,
     val playState: PlayState = PlayState.STOPPED,
-    val songLength: Long = -1L,
+    val songLength: Long = 0L,
     val volume: Int = 0
 )
 
@@ -45,12 +44,9 @@ class PlayerViewModel @Inject constructor(
     private val _playerState = MutableStateFlow(PlayerValues())
     val playerState = _playerState.asStateFlow()
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    val currentSong : StateFlow<SongEntity?> = _playerState
-        .flatMapLatest { state ->
-            if (state.currentSong == -1L ) flowOf(null)
-            else playlistRepository.getSongById(state.currentSong ?: 0L)
-        }
+//    @OptIn(ExperimentalCoroutinesApi::class)
+    val currentSong: StateFlow<SongInfo?> = _playerState
+        .map { it.currentSong }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
@@ -84,7 +80,7 @@ class PlayerViewModel @Inject constructor(
                         _playerState.update {
                             PlayerValues(
                                 activePlaylist =    message.active_playlist,
-                                currentSong =       message.current_song,
+                                currentSongId =       message.current_song,
                                 currentTime =       message.time,
                                 playState =         when(message.playing){
                                                         "paused" ->     PlayState.PAUSED
@@ -95,17 +91,16 @@ class PlayerViewModel @Inject constructor(
                                 volume =            message.volume
                             )
                         }
-
                     }
 
                     is EventType.VolumeChanged -> _playerState.update {it.copy(volume = message.volume) }
                     is EventType.Time -> _playerState.update { it.copy(currentTime = message.time) }
-                    is EventType.SongChanged -> _playerState.update { it.copy(currentSong = message.track_id) }
+                    is EventType.SongChanged -> _playerState.update { it.copy(currentSongId = message.track_id) }
                     // If playing, update current GUI settings to match server.
                     is EventType.Play -> _playerState.update {
                         it.copy(
                             activePlaylist = message.active_playlist,
-                            currentSong = message.row,
+                            currentSongId = message.row,
                             currentTime = message.time,
                             playState = PlayState.PLAYING,
                             songLength = message.length
@@ -120,9 +115,29 @@ class PlayerViewModel @Inject constructor(
                     }
 
                     // If stopped, set player screen to defaults.
-                    is EventType.Stop -> _playerState.update { PlayerValues() }
+                    is EventType.Stop -> _playerState.update {
+                        val currentVolume = _playerState.value.volume
+                        PlayerValues()
+                        it.copy(
+                            currentSong = SongInfo(),
+                            songLength = 0,
+                            volume = currentVolume,
+                            playState = PlayState.STOPPED
+                        )
+                    }
 
                     is EventType.SeekTo -> _playerState.update {it.copy(currentTime = message.time) }
+
+                    // When song is changed, update the player screen.
+                    is EventType.SongInfo -> _playerState.update {
+                        it.copy(currentSong = SongInfo(
+                            id = message.id,
+                            artist = message.artist,
+                            album = message.album,
+                            title = message.title,
+                            length = message.length
+                        ))
+                    }
 
                     else -> Unit
                 }
@@ -172,5 +187,10 @@ class PlayerViewModel @Inject constructor(
 
         return  if (hours > 0L) "%d:%02d:%02d".format(hours, minutes, seconds)
                 else "%d:%02d".format(minutes, seconds)
+    }
+
+    fun timerUpdate() {
+        println("playerviewmodel timerupdate called with current time: ${_playerState.value.currentTime}")
+        _playerState.update { it.copy(currentTime = it.currentTime + 1000L) }
     }
 }

@@ -50,6 +50,9 @@ import com.example.strawberry_app.ui.theme.icons.stop
 import com.example.strawberry_app.ui.theme.icons.volume_down
 import com.example.strawberry_app.ui.theme.icons.volume_off
 import com.example.strawberry_app.ui.theme.icons.volume_up
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.time.delay
+import kotlin.time.Duration.Companion.milliseconds
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -72,7 +75,7 @@ fun PlayerScreen(
         {
             // Song text for the song playing
             Text(
-                text = playerScreenValues.currentSong?.title ?: "Strawberry Remote",
+                text = playerScreenValues.currentSong?.title ?: "",
                 modifier = Modifier.basicMarquee(
                     iterations = Int.MAX_VALUE,
                     repeatDelayMillis = 10000,
@@ -89,7 +92,6 @@ fun PlayerScreen(
             // Album/Artist text.
             Text(
                 text = artistAlbum,
-//                    "This will be the album/group, It is a very long song and needs to scroll",
                 modifier = Modifier.basicMarquee(
                     iterations = Int.MAX_VALUE,
                     repeatDelayMillis = 10000,
@@ -154,6 +156,17 @@ fun PlayerScreen(
         // Time slider
         var sliderPosition by remember { mutableFloatStateOf(playerScreenValues.playerValues.currentTime.toFloat()) }
 
+        LaunchedEffect(Unit) {
+            println("playerscreen launch effect called")
+            while(true) {
+                delay(1000.milliseconds)
+                println("playerviewmodel: ${playerScreenValues.playerValues.playState}")
+                if (playerScreenValues.playerValues.playState == PlayState.PLAYING) {
+                    callbacks.timerUpdate()
+                }
+            }
+        }
+
         Text(text = if (playerScreenValues.playerValues.currentTime > 0) callbacks.formatTime(playerScreenValues.playerValues.currentTime) else "0")
 
         Row(modifier = Modifier
@@ -171,8 +184,6 @@ fun PlayerScreen(
                     callbacks.timeChanged(it.toLong())
                 },
                 onValueChangeFinished = {
-                    println("PlayerScreen slider position: ${sliderPosition.toInt()}")
-
                     callbacks.sendSeekTo(sliderPosition.toLong())},
                 valueRange = if (playerScreenValues.playerValues.songLength > 0) 0f..playerScreenValues.playerValues.songLength.toFloat() else 0f..1f,
                 modifier = Modifier
@@ -232,7 +243,8 @@ fun PlayerScreenPreview(){
             setVolume =  {},
             sendVolumeDown =  {},
             sendVolumeUp =  {},
-            timeChanged = {}
+            timeChanged = {},
+            timerUpdate = {}
         ),
         playerScreenValues = PlayerScreenState()
     )
