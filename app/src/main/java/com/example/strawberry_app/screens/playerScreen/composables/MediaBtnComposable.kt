@@ -42,7 +42,8 @@ fun MediaBtnComposable(
                     else -> play_pause
                 },
                 "Play / Pause",
-                if(playerScreenValues.playerValues.playState == PlayState.PLAYING) callbacks.sendPause else callbacks.sendPlay
+//                if(playerScreenValues.playerValues.playState == PlayState.PLAYING) callbacks.sendPause else callbacks.sendPlay
+                callbacks.sendPlayPause
             )
             // Send both stop and stop after current for the stop button.
             CreateLongPressButton(stop, "Stop", callbacks.sendStop, callbacks.sendStopAfterCurrent)

@@ -152,15 +152,21 @@ class PlayerViewModel @Inject constructor(
 //    fun isConnected() = _networkStatus.value == ConnectionState.Connected
     fun sendMute() = sendCommand(OutgoingMessage.Mute)
     fun sendNext() = sendCommand(OutgoingMessage.Next)
-    fun sendPause(){
-        sendCommand(OutgoingMessage.Pause)
-        _playerState.update { it.copy(playState = PlayState.PAUSED) }
+//    fun sendPause(){
+//        sendCommand(OutgoingMessage.Pause)
+//        _playerState.update { it.copy(playState = PlayState.PAUSED) }
+//    }
+    fun sendPlayPause() {
+        sendCommand(OutgoingMessage.PlayPause)
+        _playerState.update { it.copy(
+            playState = if (_playerState.value.playState == PlayState.PLAYING)
+                PlayState.PAUSED else PlayState.PLAYING
+        ) }
     }
-//    fun sendPlayPause() = sendCommand(OutgoingMessage.PlayPause)
-    fun sendPlay(){
-        sendCommand(OutgoingMessage.Play)
-        _playerState.update { it.copy(playState = PlayState.PLAYING) }
-    }
+//    fun sendPlay(){
+//        sendCommand(OutgoingMessage.Play)
+//        _playerState.update { it.copy(playState = PlayState.PLAYING) }
+//    }
     fun sendPrevious() = sendCommand(OutgoingMessage.Previous)
     fun sendSeekBackward() = sendCommand(OutgoingMessage.SeekBackward)
     fun sendSeekForward() = sendCommand(OutgoingMessage.SeekForward)
