@@ -101,8 +101,7 @@ fun PlayerScreenPreview(){
             setVolume =  {},
             sendVolumeDown =  {},
             sendVolumeUp =  {},
-            timeChanged = {},
-            timerUpdate = {}
+            timeChanged = {}
         ),
         playerScreenValues = PlayerScreenState()
     )

@@ -30,7 +30,6 @@ class PlayerCallbacks(
     val sendVolumeDown: () -> Unit,
     val sendVolumeUp: () -> Unit,
     val timeChanged: (Long) -> Unit,
-    val timerUpdate: () -> Unit
 )
 
 @Suppress("ParamsComparedByRef")
@@ -59,8 +58,7 @@ fun PlayerRoute(
             setVolume = playerViewModel::sendVolume,
             sendVolumeDown = playerViewModel::sendVolumeDown,
             sendVolumeUp = playerViewModel::sendVolumeUp,
-            timeChanged = playerViewModel::timeChanged,
-            timerUpdate = playerViewModel::timerUpdate
+            timeChanged = playerViewModel::timeChanged
         )
     }
 
