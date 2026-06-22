@@ -19,7 +19,6 @@ class SettingsCallbacks(
     val onConnectClicked: () -> Unit
 )
 
-@Suppress("ParamsComparedByRef")
 @Composable
 fun SettingsRoute(
     serverViewModel: ServerViewModel = hiltViewModel(),

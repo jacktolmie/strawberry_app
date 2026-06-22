@@ -71,7 +71,6 @@ fun MedLrgScreenBtns(
 
     Button(
         onClick ={
-            println("viewmodel connection state: ${isConnected(connectionState)}")
             if (isConnected(connectionState) == "Connect") callbacks.onConnectClicked() else callbacks.onDisconnectClicked()
         }
     )

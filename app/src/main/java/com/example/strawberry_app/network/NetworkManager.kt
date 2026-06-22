@@ -297,6 +297,7 @@ var reconnectCount = 0L
     }
 
     fun manualConnect() {
+        resetReconnects()
         scope.launch {
             connect(currentServerInfo)
         }

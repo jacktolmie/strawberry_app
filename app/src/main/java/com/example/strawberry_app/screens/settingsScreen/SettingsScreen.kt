@@ -26,10 +26,8 @@ import com.example.strawberry_app.screens.settingsScreen.composables.TextboxIp
 import com.example.strawberry_app.screens.settingsScreen.composables.TextboxPassword
 import com.example.strawberry_app.screens.settingsScreen.composables.TextboxPort
 import com.example.strawberry_app.server.SettingsUiState
-import com.skydoves.compose.stability.runtime.TraceRecomposition
 
 @Composable
-@TraceRecomposition // Delete later
 fun SettingsScreen(
     serverUiState: SettingsUiState,
     connectionState: ConnectionState,
