@@ -7,15 +7,14 @@ import com.example.strawberry_app.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.milliseconds
 
 @OptIn(FlowPreview::class)
 @HiltViewModel
@@ -26,14 +25,14 @@ class ServerViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(SettingsUiState())
     val uiState: StateFlow<SettingsUiState> = _uiState.asStateFlow()
 
-    val serverInfo: StateFlow<ServerInfo?> =
-        serverRepository.serverInfoFlow.stateIn(
-            viewModelScope,
-            SharingStarted.WhileSubscribed(5000),
-            null
-        )
+//    val serverInfo: StateFlow<ServerInfo?> =
+//        serverRepository.serverInfoFlow.stateIn(
+//            viewModelScope,
+//            SharingStarted.WhileSubscribed(5000),
+//            null
+//        )
 
-    private var savedServerInfo: StateFlow<ServerInfo?> = serverInfo
+    private lateinit var savedServerInfo : ServerInfo
 
     init {
         viewModelScope.launch {
@@ -47,13 +46,14 @@ class ServerViewModel @Inject constructor(
                             password = info.password
                         )
                     }
+                    savedServerInfo = ServerInfo(_uiState.value.ip, _uiState.value.port.toInt(), _uiState.value.password)
                 }
             }
         }
 
         viewModelScope.launch {
             uiState
-                .debounce(300)
+                .debounce(300.milliseconds)
                 .collect {
                     validate()
                     showSaveButton()
@@ -62,17 +62,19 @@ class ServerViewModel @Inject constructor(
     }
 
     fun cancel(){
-        _uiState.update {
-            it.copy(
-                ip = savedServerInfo.value?.ip ?: "",
-                port = savedServerInfo.value?.port.toString(),
-                password = savedServerInfo.value?.password ?: "",
-                ipError = null,
-                portError = null,
-                isIpValid = true,
-                isPortValid = true,
-                hasChanged = false,
-            )
+        if (_uiState.value.hasChanged) {
+            _uiState.update {
+                it.copy(
+                    ip = savedServerInfo.ip,// .value?.ip ?: "",
+                    port = savedServerInfo.port.toString(),// .value?.port.toString(),
+                    password = savedServerInfo.password, // .value?.password ?: "",
+                    ipError = null,
+                    portError = null,
+                    isIpValid = true,
+                    isPortValid = true,
+                    hasChanged = false,
+                )
+            }
         }
     }
 
