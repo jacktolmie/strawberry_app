@@ -22,13 +22,24 @@ import com.example.strawberry_app.network.ConnectionState.Connected
 import com.example.strawberry_app.screens.settingsScreen.SettingsCallbacks
 import com.example.strawberry_app.server.SettingsUiState
 
+
+fun isConnected(connectionState: ConnectionState): String{
+    return when(connectionState) {
+        is Connected -> "Disconnect"
+        is ConnectionState.Connecting -> "Disconnect"
+        is ConnectionState.Reconnecting -> "Disconnect"
+        else -> "Connect"
+
+    }
+//    return connectionState == Connected
+}
 @Composable
 fun MedLrgScreenBtns(
     serverUiState: SettingsUiState,
     callbacks: SettingsCallbacks,
     connectionState: ConnectionState
 ){
-    val isConnected = connectionState == Connected
+//    val isConnected = connectionState == Connected
 
     Row(modifier = Modifier
         .fillMaxWidth()
@@ -60,14 +71,15 @@ fun MedLrgScreenBtns(
 
     Button(
         onClick ={
-            callbacks.onDisconnectClicked(isConnected)
+            println("viewmodel connection state: ${isConnected(connectionState)}")
+            if (isConnected(connectionState) == "Connect") callbacks.onConnectClicked() else callbacks.onDisconnectClicked()
         }
     )
     {
         Text(
             modifier = Modifier.widthIn(min = 80.dp),
             textAlign = TextAlign.Center,
-            text = if(isConnected) "Disconnect" else "Connect"
+            text = isConnected(connectionState)
         )
     }
 }
@@ -109,7 +121,7 @@ fun SmallScreenBtns(
 
     Button(
         onClick ={
-            callbacks.onDisconnectClicked(isConnected)
+            callbacks.onDisconnectClicked()
         }
     )
     {

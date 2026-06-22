@@ -5,7 +5,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 
 @Composable
 fun PlaylistRoute(
-    playlistViewModel: PlaylistViewModel = hiltViewModel()
+//    playlistViewModel: PlaylistViewModel = hiltViewModel()
 ){
 
 }

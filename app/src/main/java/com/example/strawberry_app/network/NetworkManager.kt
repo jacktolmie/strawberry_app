@@ -296,14 +296,14 @@ var reconnectCount = 0L
         }
     }
 
-    fun manualDisconnect(disconnectPressed: Boolean){
+    fun manualConnect() {
         scope.launch {
-            if(disconnectPressed){
-                disconnect()
-            } else{
-                if(currentServerInfo != null) connect(currentServerInfo)
-            }
-
+            connect(currentServerInfo)
+        }
+    }
+    fun manualDisconnect() {
+        scope.launch {
+            disconnect(true)
         }
     }
 

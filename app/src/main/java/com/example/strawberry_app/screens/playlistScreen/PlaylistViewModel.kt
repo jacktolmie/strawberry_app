@@ -16,15 +16,15 @@ data class PlaylistValues(
     val currentSongId: Long = -1
 )
 
-@HiltViewModel
-class PlaylistViewModel @Inject constructor(
-    private val networkManager: NetworkManager,
-    private val playlistRepository: PlaylistRepository
-){
-
-    private val _playlistState = MutableStateFlow(PlaylistValues())
-    val playlistState = _playlistState.asStateFlow()
-}
+//@HiltViewModel
+//class PlaylistViewModel @Inject constructor(
+//    private val networkManager: NetworkManager,
+//    private val playlistRepository: PlaylistRepository
+//){
+//
+//    private val _playlistState = MutableStateFlow(PlaylistValues())
+//    val playlistState = _playlistState.asStateFlow()
+//}
 
 //class PlaylistViewModel @Inject constructor(
 //    private val playlistDao: PlaylistDao,

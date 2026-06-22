@@ -2,6 +2,7 @@ package com.example.strawberry_app.network
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.strawberry_app.network.ConnectionState.Connected
 import com.example.strawberry_app.network.ConnectionState.Connecting
 import com.example.strawberry_app.network.ConnectionState.Disconnected
@@ -62,9 +63,15 @@ class ConnectionViewModel @Inject constructor(
             initialValue = SettingsGuiData()
         )
 
-    fun manualDisconnect(disconnectPressed: Boolean) {
+    fun manualDisconnect() {
         viewModelScope.launch {
-            networkManager.manualDisconnect(disconnectPressed)
+            networkManager.manualDisconnect()
+        }
+    }
+
+    fun manualConnect(){
+        viewModelScope.launch {
+            networkManager.manualConnect()
         }
     }
 }

@@ -15,7 +15,8 @@ class SettingsCallbacks(
     val onPasswordChanged: (String) -> Unit,
     val onSaveClicked: () -> Unit,
     val onCancelClicked: () -> Unit,
-    val onDisconnectClicked: (Boolean) -> Unit
+    val onDisconnectClicked: () -> Unit,
+    val onConnectClicked: () -> Unit
 )
 
 @Suppress("ParamsComparedByRef")
@@ -29,6 +30,8 @@ fun SettingsRoute(
         .connectionState
         .collectAsStateWithLifecycle()
 
+
+
     val callbacks = remember {
         SettingsCallbacks(
             onIpChanged = serverViewModel::onIpChanged,
@@ -36,7 +39,8 @@ fun SettingsRoute(
             onPasswordChanged = serverViewModel::onPasswordChanged,
             onSaveClicked = serverViewModel::save,
             onCancelClicked = serverViewModel::cancel,
-            onDisconnectClicked = connectionViewModel::manualDisconnect
+            onDisconnectClicked = connectionViewModel::manualDisconnect,
+            onConnectClicked = connectionViewModel::manualConnect
         )
     }
 

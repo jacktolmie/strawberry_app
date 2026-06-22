@@ -37,8 +37,6 @@ fun SettingsScreen(
     settingsGuiData: SettingsGuiData
 ) {
 
-//    val isConnected = connectionState == Connected
-
     Column(modifier = Modifier
         .statusBarsPadding()
         .fillMaxWidth()
@@ -93,7 +91,8 @@ fun SettingsPreview(){
             onPasswordChanged = {},
             onSaveClicked = {},
             onCancelClicked = {},
-            onDisconnectClicked = {}
+            onDisconnectClicked = {},
+            onConnectClicked = {}
         ),
         SettingsGuiData()
     )
