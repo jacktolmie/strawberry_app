@@ -43,7 +43,7 @@ class PlaylistRepository @Inject constructor(
     private val _playlistState = MutableStateFlow(PlaylistState())
     val playlistState = _playlistState.asStateFlow()
 
-    val currentSongData = getCurrentSongLength()
+    val currentSongData = getCurrentSong()
 
     init {
         scope.launch {
@@ -58,7 +58,7 @@ class PlaylistRepository @Inject constructor(
                                 PlaylistState(
                                     activePlaylist = info.active_playlist,
                                     currentPlaylist = info.current_playlist,
-                                    currentSongIndex = info.current_song.toLong()
+                                    currentSongIndex = info.current_song
                                 )
                             }
                         }
@@ -69,7 +69,7 @@ class PlaylistRepository @Inject constructor(
         }
 
         scope.launch {
-            getCurrentSongLength().collect { songData ->
+            getCurrentSong().collect { songData ->
                 _playlistState.update { it.copy(currentSongData = songData) }
             }
         }
@@ -99,7 +99,7 @@ class PlaylistRepository @Inject constructor(
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private fun getCurrentSongLength(): Flow<SongWithPosition?> {
+    private fun getCurrentSong(): Flow<SongWithPosition?> {
         return playlistState.flatMapLatest { state ->
             if (state.currentPlaylist == -1 || state.currentSongIndex == -1L){
                 flowOf(null)
@@ -110,15 +110,6 @@ class PlaylistRepository @Inject constructor(
             }
         }
     }
-
-//    private fun getCurrentSong(): Flow<SongEntity?> {
-//        return playlistState.flatMapLatest { state ->
-//            if (state.currentSongIndex == -1) flowOf(null)
-//            else {
-//                playlistSongDao.observeSongAtPosition(state.)
-//            }
-//        }
-//    }
 
     fun getSongById(id: Long) : Flow<SongEntity?> = songDao.observeById(id)
 }

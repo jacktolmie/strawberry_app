@@ -41,8 +41,6 @@ class PlayerViewModel @Inject constructor(
     private val playlistRepository: PlaylistRepository
 ): ViewModel(){
 
-//    private val _networkStatus = networkManager.connectionStateFlow
-
     private val _playerState = MutableStateFlow(PlayerValues())
     val playerState = _playerState.asStateFlow()
 

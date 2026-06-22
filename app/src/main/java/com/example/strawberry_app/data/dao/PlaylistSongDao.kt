@@ -9,11 +9,11 @@ import kotlinx.coroutines.flow.Flow
 
 data class SongWithPosition(
     val id: Int,
-    val title: String,
     val artist: String,
     val album: String,
     val length: Long,
-    val position: Long
+    val position: Long,
+    val title: String
 )
 
 @Dao
