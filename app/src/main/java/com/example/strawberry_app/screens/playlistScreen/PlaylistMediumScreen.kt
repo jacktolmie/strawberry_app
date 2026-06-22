@@ -11,18 +11,18 @@ fun PlaylistMediumScreen(
     playlistRepository: PlaylistRepository
 ){
 
-    SecondaryScrollableTabRow(
-        selectedTabIndex = playlistRepository.playlistState.collectAsState()
-    ) {
-
-    }
+//    SecondaryScrollableTabRow(
+////        selectedTabIndex = playlistRepository.playlistState.collectAsState()
+//    ) {
+//
+//    }
 
 }
 
 @Composable
 @Preview
 fun playlistPreview(){
-    PlaylistMediumScreen(
-
-    )
+//    PlaylistMediumScreen(
+//
+//    )
 }
