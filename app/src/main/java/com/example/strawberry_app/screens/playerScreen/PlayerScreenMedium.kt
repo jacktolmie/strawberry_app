@@ -26,7 +26,6 @@ import com.example.strawberry_app.screens.playerScreen.composables.SongInfoCompo
 import com.example.strawberry_app.screens.playerScreen.composables.TimerSlider
 import com.example.strawberry_app.screens.playerScreen.composables.VolumeSliderVertComposable
 
-//@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun PlayerScreen(
     callbacks: PlayerCallbacks,
@@ -86,12 +85,9 @@ fun PlayerScreenPreview(){
     PlayerScreen(
         callbacks = PlayerCallbacks(
             formatTime = {""},
-//            isConnected =  {},
             sendMute =  {},
             sendNext = {},
-//            sendPause =  {},
             sendPlayPause =  {},
-//            sendPlay =  {},
             sendPrevious =  {},
             sendSeekBackward =  {},
             sendSeekForward =  {},

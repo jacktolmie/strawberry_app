@@ -51,8 +51,4 @@ class ServerRepository @Inject constructor(
             it[KEY_PASSWORD] = info.password
         }
     }
-
-    suspend fun clearServerInfo(){
-        datastore.edit { it.clear()}
-    }
 }

@@ -147,13 +147,9 @@ class PlayerViewModel @Inject constructor(
         }
     }
 
-//    fun isConnected() = _networkStatus.value == ConnectionState.Connected
     fun sendMute() = sendCommand(OutgoingMessage.Mute)
     fun sendNext() = sendCommand(OutgoingMessage.Next)
-//    fun sendPause(){
-//        sendCommand(OutgoingMessage.Pause)
-//        _playerState.update { it.copy(playState = PlayState.PAUSED) }
-//    }
+
     fun sendPlayPause() {
         sendCommand(OutgoingMessage.PlayPause)
         _playerState.update { it.copy(
@@ -161,18 +157,17 @@ class PlayerViewModel @Inject constructor(
                 PlayState.PAUSED else PlayState.PLAYING
         ) }
     }
-//    fun sendPlay(){
-//        sendCommand(OutgoingMessage.Play)
-//        _playerState.update { it.copy(playState = PlayState.PLAYING) }
-//    }
+
     fun sendPrevious() = sendCommand(OutgoingMessage.Previous)
     fun sendSeekBackward() = sendCommand(OutgoingMessage.SeekBackward)
     fun sendSeekForward() = sendCommand(OutgoingMessage.SeekForward)
     fun sendSeekTo(seekTo: Long) = sendCommand(OutgoingMessage.SeekTo(seekTo / 1000))
+
     fun sendStop() {
         sendCommand(OutgoingMessage.Stop)
         _playerState.update { it.copy(playState = PlayState.STOPPED) }
     }
+
     fun sendStopAfterCurrent() = sendCommand(OutgoingMessage.StopAfterCurrent)
     fun sendVolume(volume: Int) = sendCommand(OutgoingMessage.Volume(volume))
     fun sendVolumeDown() = sendCommand(OutgoingMessage.VolumeDown)
@@ -206,6 +201,5 @@ class PlayerViewModel @Inject constructor(
                 }
             }
         }
-
     }
 }

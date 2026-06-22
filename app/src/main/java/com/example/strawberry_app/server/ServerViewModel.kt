@@ -25,13 +25,6 @@ class ServerViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(SettingsUiState())
     val uiState: StateFlow<SettingsUiState> = _uiState.asStateFlow()
 
-//    val serverInfo: StateFlow<ServerInfo?> =
-//        serverRepository.serverInfoFlow.stateIn(
-//            viewModelScope,
-//            SharingStarted.WhileSubscribed(5000),
-//            null
-//        )
-
     private lateinit var savedServerInfo : ServerInfo
 
     init {
@@ -65,9 +58,9 @@ class ServerViewModel @Inject constructor(
         if (_uiState.value.hasChanged) {
             _uiState.update {
                 it.copy(
-                    ip = savedServerInfo.ip,// .value?.ip ?: "",
-                    port = savedServerInfo.port.toString(),// .value?.port.toString(),
-                    password = savedServerInfo.password, // .value?.password ?: "",
+                    ip = savedServerInfo.ip,
+                    port = savedServerInfo.port.toString(),
+                    password = savedServerInfo.password,
                     ipError = null,
                     portError = null,
                     isIpValid = true,
