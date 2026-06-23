@@ -65,13 +65,20 @@ sealed class EventType: IncomingMessage() {
     @JsonIgnoreUnknownKeys
     @SerialName("gui_updates")
     data class GuiUpdates(
-        val active_playlist: Int,
-        val current_playlist: Int,
-        val current_song: Long,
-        val time: Long = 0,
+        @SerialName("active_playlist")
+        val activePlaylist: Int = -1,
+        @SerialName("current_playlist")
+        val currentPlaylist: Int = -1,
+        @SerialName("current_song")
+        val currentSong: Long = -1L,
+        val time: Long = 0L,
         val playing: String = "",
         val volume: Int = 0,
-        val playlists: MakeAllPlaylists? = null
+        val playlists: MakeAllPlaylists? = null,
+        val length: Long = 0,
+        val title: String = "",
+        val artist: String = "",
+        val album: String = "",
     ) : EventType()
 
     @Serializable

@@ -10,7 +10,6 @@ import com.example.strawberry_app.screens.playerScreen.PlayerScreenState
 
 @Composable
 fun SongInfoComposable(
-    callbacks: PlayerCallbacks,
     playerScreenValues: PlayerScreenState
 ){
     // Song text for the song playing

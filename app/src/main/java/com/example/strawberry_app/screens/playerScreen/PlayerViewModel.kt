@@ -20,7 +20,7 @@ import kotlin.time.Duration.Companion.milliseconds
 @HiltViewModel
 class PlayerViewModel @Inject constructor(
     private val networkManager: NetworkManager,
-    val messageRepository: MessageRepository
+    private val messageRepository: MessageRepository
 ): ViewModel(){
     val currentSong: StateFlow<SongInfo?> = messageRepository.serverUpdates
         .map { it.currentSong }

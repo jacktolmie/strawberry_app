@@ -12,6 +12,5 @@ data class ServerValues(
     val currentSongId: Long? = -1,
     val currentTime: Long = 0L,
     val playState: PlayState = PlayState.STOPPED,
-    val songLength: Long = 0L,
     val volume: Int = 0
 )

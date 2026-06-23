@@ -7,6 +7,7 @@ import com.example.strawberry_app.network.ConnectionState
 import com.example.strawberry_app.network.NetworkManager
 import com.example.strawberry_app.network.protocol.EventType
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -14,13 +15,15 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class MessageRepository @Inject constructor(
-//    serverMessages: SharedFlow<@JvmSuppressWildcards IncomingMessage>,
     private val networkManager: NetworkManager,
     private val playlistRepository: PlaylistRepository,
     @ApplicationScope private val scope: CoroutineScope
 ){
     private val _serverUpdates = MutableStateFlow(ServerValues())
     val serverUpdates = _serverUpdates.asStateFlow()
+//    val playlistUpdates = MutableStateFlow<PlaylistRepository>
+
+    private var observeJob: Job? = null
 
     init {
         scope.launch {
@@ -36,6 +39,7 @@ class MessageRepository @Inject constructor(
     }
 
     private fun observeNetworkMessages() {
+        observeJob?.cancel()
         scope.launch {
             networkManager.serverMessages.collect{ message ->
                 when(message) {
@@ -45,17 +49,16 @@ class MessageRepository @Inject constructor(
                         }
                         _serverUpdates.update {
                             ServerValues(
-                                activePlaylist =    message.active_playlist,
-                                currentPlaylist =   message.current_playlist,
-                                currentSongId =     message.current_song,
+                                activePlaylist =    message.activePlaylist,
+                                currentPlaylist =   message.currentPlaylist,
+                                currentSongId =     message.currentSong,
                                 currentTime =       message.time,
                                 playState =         when(message.playing){
                                                         "paused" ->     PlayState.PAUSED
                                                          "playing" ->    PlayState.PLAYING
                                                         else ->         PlayState.STOPPED
                                 },
-                                songLength =        _serverUpdates.value.songLength,
-                                volume =            message.volume
+                                volume =            message.volume,
                             )
                         }
                     }

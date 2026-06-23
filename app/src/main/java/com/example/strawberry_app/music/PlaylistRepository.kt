@@ -33,7 +33,6 @@ data class PlaylistState(
 
 @Singleton
 class PlaylistRepository @Inject constructor(
-    private val serverMessages: SharedFlow<@JvmSuppressWildcards IncomingMessage>,
     private val playlistDao: PlaylistDao,
     private val songDao: SongDao,
     private val playlistSongDao: PlaylistSongDao,
@@ -46,28 +45,6 @@ class PlaylistRepository @Inject constructor(
     val currentSongData = getCurrentSong()
 
     init {
-        scope.launch {
-            serverMessages
-                .collectLatest { info ->
-                    when(info){
-                        is EventType.GuiUpdates -> {
-                            when (info.playlists) {
-                                is EventType.MakeAllPlaylists -> makeAllPlaylists(info.playlists.playlists)
-                            }
-                            _playlistState.update{
-                                PlaylistState(
-                                    activePlaylist = info.active_playlist,
-                                    currentPlaylist = info.current_playlist,
-                                    currentSongIndex = info.current_song
-                                )
-                            }
-                        }
-                        is EventType.MakeAllPlaylists -> makeAllPlaylists(info.playlists)
-                        is EventType.MakeCurrentPlaylist -> makeCurrentPlaylist(info.playlist)
-                        else -> Unit
-            } }
-        }
-
         scope.launch {
             getCurrentSong().collect { songData ->
                 _playlistState.update { it.copy(currentSongData = songData) }
