@@ -4,11 +4,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.strawberry_app.music.SongInfo
+import com.example.strawberry_app.screens.ServerValues
 
-//data class PlayerScreenState(
-//    val playerValues: ServerValues = ServerValues(),
-//    val currentSong: SongInfo? = null
-//)
+data class PlayerScreenState(
+    val playerValues: ServerValues = ServerValues()
+)
 
 class PlayerCallbacks(
     val formatTime: (Long) -> String,
@@ -32,9 +34,8 @@ class PlayerCallbacks(
 fun PlayerRoute(
     playerViewModel: PlayerViewModel = hiltViewModel()
 ){
-//    val playerValues by playerViewModel.messageRepository.serverUpdates.collectAsStateWithLifecycle()
+    val playerValues by playerViewModel.serverUpdates.collectAsStateWithLifecycle()
 //    val currentSong by playerViewModel.currentSong.collectAsStateWithLifecycle()
-    val playerValues by playerViewModel.messageRepository.
 
     val callbacks = remember {
         PlayerCallbacks(
@@ -55,7 +56,7 @@ fun PlayerRoute(
         )
     }
 
-//    val playerScreenData = PlayerScreenState(playerValues, currentSong)
+    val playerScreenData = PlayerScreenState(playerValues) //, currentSong)
 
-    PlayerScreen(callbacks, playerValues) //playerScreenData)
+    PlayerScreen(callbacks, playerScreenData)
 }

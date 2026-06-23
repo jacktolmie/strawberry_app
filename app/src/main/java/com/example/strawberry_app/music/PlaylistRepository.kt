@@ -42,7 +42,7 @@ class PlaylistRepository @Inject constructor(
     private val _playlistState = MutableStateFlow(PlaylistState())
     val playlistState = _playlistState.asStateFlow()
 
-    val currentSongData by
+    val currentSongData: Flow<SongWithPosition?> = getCurrentSong()
 
     init {
         scope.launch {
@@ -86,6 +86,10 @@ class PlaylistRepository @Inject constructor(
                 )
             }
         }
+    }
+
+    fun updateCurrentSong(playlistId: Int, songIndex: Long) {
+        _playlistState.update { it.copy(currentPlaylist = playlistId, currentSongIndex = songIndex) }
     }
 
     fun getSongById(id: Long) : Flow<SongEntity?> = songDao.observeById(id)

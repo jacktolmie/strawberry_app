@@ -49,14 +49,14 @@ fun TimerSlider(
             onValueChangeFinished = {
                 callbacks.sendSeekTo(sliderPosition.toLong())
             },
-            valueRange = if (playerScreenValues.playerValues.songLength > 0) 0f..playerScreenValues.playerValues.songLength.toFloat() else 0f..1f,
+            valueRange = if (playerScreenValues.playerValues.currentSong.length > 0) 0f..playerScreenValues.playerValues.currentSong.length.toFloat() else 0f..1f,
             modifier = Modifier
                 .weight(1F)
                 .padding(start = 10.dp, end = 10.dp)
         )
         Text(
-            text = if (playerScreenValues.playerValues.songLength > 0) callbacks.formatTime(
-                playerScreenValues.playerValues.songLength
+            text = if (playerScreenValues.playerValues.currentSong.length > 0) callbacks.formatTime(
+                playerScreenValues.playerValues.currentSong.length
             ) else "0"
         )
 

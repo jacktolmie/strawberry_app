@@ -10,6 +10,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -36,6 +37,23 @@ class MessageRepository @Inject constructor(
                 }
             }
         }
+        scope.launch {
+            playlistRepository.currentSongData.collectLatest { songWithPosition ->
+                songWithPosition?.let{
+                    _serverUpdates.update { state ->
+                        state.copy(
+                            currentSong = SongInfo(
+                                id = it.id,
+                                artist = it.artist,
+                                album = it.album,
+                                title = it.title,
+                                length = it.length
+                            )
+                        )
+                    }
+                }
+            }
+        }
     }
 
     private fun observeNetworkMessages() {
@@ -45,21 +63,24 @@ class MessageRepository @Inject constructor(
                 when(message) {
                     is EventType.GuiUpdates -> {
                         when (message.playlists) {
-                            is EventType.MakeAllPlaylists -> playlistRepository.makeAllPlaylists(message.playlists.playlists)
+                            is EventType.MakeAllPlaylists -> {
+                                playlistRepository.makeAllPlaylists(message.playlists.playlists)
+                                playlistRepository.updateCurrentSong(message.activePlaylist, message.currentSong)
+                            }
                         }
                         _serverUpdates.update {
                             ServerValues(
                                 activePlaylist =    message.activePlaylist,
                                 currentPlaylist =   message.currentPlaylist,
+                                currentSong =       _serverUpdates.value.currentSong,
                                 currentSongId =     message.currentSong,
                                 currentTime =       message.time,
                                 playState =         when(message.playing){
                                                         "paused" ->     PlayState.PAUSED
-                                                         "playing" ->    PlayState.PLAYING
+                                                        "playing" ->    PlayState.PLAYING
                                                         else ->         PlayState.STOPPED
                                 },
                                 volume =            message.volume,
-                                currentSong =       playlistRepository.currentSongData.collect { it }
                             )
                         }
                     }
@@ -67,11 +88,10 @@ class MessageRepository @Inject constructor(
                     // If playing, update current GUI settings to match server.
                     is EventType.Play -> _serverUpdates.update {
                         it.copy(
-                            activePlaylist = message.active_playlist,
+                            activePlaylist = message.activePlaylist,
                             currentSongId = message.row,
                             currentTime = message.time,
-                            playState = PlayState.PLAYING,
-                            songLength = message.
+                            playState = PlayState.PLAYING
                         )
                     }
                     // If paused, sync time sent from server
@@ -82,7 +102,7 @@ class MessageRepository @Inject constructor(
                         )
                     }
                     is EventType.SeekTo -> _serverUpdates.update {it.copy(currentTime = message.time) }
-                    is EventType.SongChanged -> _serverUpdates.update { it.copy(currentSongId = message.track_id) }
+                    is EventType.SongChanged -> _serverUpdates.update { it.copy(currentSongId = message.trackId) }
                     // When song is changed, update the player screen.
                     is EventType.SongInfo -> _serverUpdates.update {
                         it.copy(currentSong = SongInfo(
@@ -99,7 +119,6 @@ class MessageRepository @Inject constructor(
                         it.copy(
                             currentSong = SongInfo(),
                             currentTime = 0,
-                            songLength = 0,
                             volume = currentVolume,
                             playState = PlayState.STOPPED
                         )

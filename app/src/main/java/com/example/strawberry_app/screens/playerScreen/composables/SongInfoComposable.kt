@@ -5,7 +5,6 @@ import androidx.compose.foundation.basicMarquee
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.example.strawberry_app.screens.playerScreen.PlayerCallbacks
 import com.example.strawberry_app.screens.playerScreen.PlayerScreenState
 
 @Composable
@@ -14,7 +13,7 @@ fun SongInfoComposable(
 ){
     // Song text for the song playing
     Text(
-        text = playerScreenValues.currentSong?.title ?: "",
+        text = playerScreenValues.playerValues.currentSong.title,
         modifier = Modifier.basicMarquee(
             iterations = Int.MAX_VALUE,
             repeatDelayMillis = 10000,
@@ -24,9 +23,9 @@ fun SongInfoComposable(
     )
 
     val artistAlbum = listOfNotNull(
-        playerScreenValues.currentSong?.artist?.takeIf { it.isNotBlank() },
-        playerScreenValues.currentSong?.album?.takeIf { it.isNotBlank() }
-    ).joinToString(" • ")
+        playerScreenValues.playerValues.currentSong.artist,
+        playerScreenValues.playerValues.currentSong.album
+    ).joinToString(if(playerScreenValues.playerValues.currentSong.artist.isNotBlank()) " • " else "")
 
     // Album/Artist text.
     Text(

@@ -10,7 +10,6 @@ import androidx.compose.ui.unit.dp
 import com.example.strawberry_app.screens.PlayState
 import com.example.strawberry_app.screens.playerScreen.PlayerCallbacks
 import com.example.strawberry_app.screens.playerScreen.PlayerScreenState
-import com.example.strawberry_app.screens.playerScreen.PlayerViewModel
 import com.example.strawberry_app.ui.theme.icons.fast_forward
 import com.example.strawberry_app.ui.theme.icons.fast_rewind
 import com.example.strawberry_app.ui.theme.icons.pause
@@ -24,8 +23,7 @@ import com.example.strawberry_app.ui.theme.icons.stop
 @Composable
 fun MediaBtnComposable(
     callbacks: PlayerCallbacks,
-    playerViewModel: PlayerViewModel
-//    playerScreenValues: PlayerScreenState
+    playerScreenValues: PlayerScreenState
 ) {
         Row(modifier = Modifier
             .widthIn(max = 400.dp),
@@ -38,13 +36,12 @@ fun MediaBtnComposable(
 
             // Show proper play or pause button, and the proper callback
             CreateButton(
-                image = when(playerViewModel.messageRepository.serverUpdates.value.playState playState playerScreenValues.playerValues.playState){
+                image = when(playerScreenValues.playerValues.playState){
                     PlayState.PAUSED -> play_arrow
                     PlayState.PLAYING -> pause
                     else -> play_pause
                 },
                 "Play / Pause",
-//                if(playerScreenValues.playerValues.playState == PlayState.PLAYING) callbacks.sendPause else callbacks.sendPlay
                 callbacks.sendPlayPause
             )
             // Send both stop and stop after current for the stop button.

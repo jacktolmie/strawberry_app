@@ -46,7 +46,7 @@ fun PlayerScreen(
         )
         {
             // Song text for the song playing
-            SongInfoComposable(callbacks, playerScreenValues)
+            SongInfoComposable( playerScreenValues)
         }
 
         Spacer(modifier = Modifier.height(10.dp))

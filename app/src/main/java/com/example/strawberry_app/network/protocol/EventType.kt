@@ -14,10 +14,9 @@ import kotlinx.serialization.json.jsonPrimitive
 
 object EventTypeSerializer : JsonContentPolymorphicSerializer<EventType>(EventType::class) {
     override fun selectDeserializer(element: JsonElement): DeserializationStrategy<EventType> {
-        val eventType = element.jsonObject["event"]?.jsonPrimitive?.content
+//        val eventType = element.jsonObject["event"]?.jsonPrimitive?.content
         return when (element.jsonObject["event"]?.jsonPrimitive?.content) {
             "active_playlist" -> EventType.ActivePlaylist.serializer()
-//            "current_playlist" -> EventType.CurrentPlaylist.serializer()
             "favourite_playlist" -> EventType.FavouritePlaylist.serializer()
             "gui_updates" -> EventType.GuiUpdates.serializer()
             "make_all_playlists" -> EventType.MakeAllPlaylists.serializer()
@@ -106,9 +105,10 @@ sealed class EventType: IncomingMessage() {
     @JsonIgnoreUnknownKeys
     @SerialName("play")
     data class Play(
-        val active_playlist: Int = 0,
+        @SerialName("active_playlist")
+        val activePlaylist: Int = 0,
         val length: Long = 0L,
-        val row: Long? = null,
+        val row: Long = -1L,
         val time: Long = 0L
     ) : EventType()
 
@@ -140,7 +140,7 @@ sealed class EventType: IncomingMessage() {
     @Serializable
     @JsonIgnoreUnknownKeys
     @SerialName("song_changed")
-    data class SongChanged(val track_id: Long = 0) : EventType()
+    data class SongChanged(@SerialName("track_id") val trackId: Long = 0) : EventType()
 
     @Serializable
     @JsonIgnoreUnknownKeys
