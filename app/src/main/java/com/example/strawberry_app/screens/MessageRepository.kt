@@ -59,6 +59,7 @@ class MessageRepository @Inject constructor(
                                                         else ->         PlayState.STOPPED
                                 },
                                 volume =            message.volume,
+                                currentSong =       playlistRepository.currentSongData.collect { it }
                             )
                         }
                     }
@@ -70,7 +71,7 @@ class MessageRepository @Inject constructor(
                             currentSongId = message.row,
                             currentTime = message.time,
                             playState = PlayState.PLAYING,
-                            songLength = message.length
+                            songLength = message.
                         )
                     }
                     // If paused, sync time sent from server

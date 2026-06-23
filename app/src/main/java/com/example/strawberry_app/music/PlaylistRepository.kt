@@ -42,7 +42,7 @@ class PlaylistRepository @Inject constructor(
     private val _playlistState = MutableStateFlow(PlaylistState())
     val playlistState = _playlistState.asStateFlow()
 
-    val currentSongData = getCurrentSong()
+    val currentSongData by
 
     init {
         scope.launch {
