@@ -75,7 +75,7 @@ class PlaylistRepository @Inject constructor(
         }
     }
 
-    private suspend fun makeAllPlaylists(playlists: List<Playlist>){
+    suspend fun makeAllPlaylists(playlists: List<Playlist>){
         playlistDao.deleteAll()
 
         playlists.forEachIndexed { index, playlist ->
@@ -94,7 +94,7 @@ class PlaylistRepository @Inject constructor(
         }
     }
 
-    private suspend fun makeCurrentPlaylist(playlist: Playlist){
+    suspend fun makeCurrentPlaylist(playlist: Playlist){
         playlistDao.insert(PlaylistEntity(playlist.id, playlist.name))
     }
 
