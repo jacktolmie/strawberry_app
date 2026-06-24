@@ -1,5 +1,6 @@
 package com.example.strawberry_app.screens.playerScreen.composables
 
+import android.telecom.Call
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -9,10 +10,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.strawberry_app.R
+import com.example.strawberry_app.screens.ServerValues
 import com.example.strawberry_app.screens.playerScreen.PlayerCallbacks
 import com.example.strawberry_app.screens.playerScreen.PlayerScreenState
+import javax.security.auth.callback.Callback
 
 @Composable
 fun SongImageComposable(
@@ -29,5 +33,14 @@ fun SongImageComposable(
             R.drawable.strawberry),
         contentDescription = "Test Image",
         contentScale = ContentScale.Crop
+    )
+}
+
+@Preview
+@Composable
+fun SongImagePreview(){
+    SongImageComposable(
+        PlayerCallbacks(),
+        PlayerScreenState(ServerValues())
     )
 }

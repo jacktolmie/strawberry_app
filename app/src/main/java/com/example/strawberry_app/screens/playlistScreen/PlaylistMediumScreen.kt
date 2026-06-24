@@ -11,11 +11,7 @@ fun PlaylistMediumScreen(
     playlistRepository: PlaylistRepository
 ){
 
-//    SecondaryScrollableTabRow(
-////        selectedTabIndex = playlistRepository.playlistState.collectAsState()
-//    ) {
-//
-//    }
+
 
 }
 

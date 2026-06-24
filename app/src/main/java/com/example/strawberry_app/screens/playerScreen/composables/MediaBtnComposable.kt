@@ -1,13 +1,17 @@
 package com.example.strawberry_app.screens.playerScreen.composables
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.strawberry_app.screens.PlayState
+import com.example.strawberry_app.screens.ServerValues
 import com.example.strawberry_app.screens.playerScreen.PlayerCallbacks
 import com.example.strawberry_app.screens.playerScreen.PlayerScreenState
 import com.example.strawberry_app.ui.theme.icons.fast_forward
@@ -18,14 +22,16 @@ import com.example.strawberry_app.ui.theme.icons.play_pause
 import com.example.strawberry_app.ui.theme.icons.skip_next
 import com.example.strawberry_app.ui.theme.icons.skip_previous
 import com.example.strawberry_app.ui.theme.icons.stop
+import javax.security.auth.callback.Callback
 
 // Media buttons for player screen.
 @Composable
 fun MediaBtnComposable(
     callbacks: PlayerCallbacks,
-    playerScreenValues: PlayerScreenState
+    playerScreenValues: PlayerScreenState,
+    modifier: Modifier = Modifier
 ) {
-        Row(modifier = Modifier
+        Row(modifier = modifier
             .widthIn(max = 400.dp),
             horizontalArrangement = Arrangement.spacedBy(5.dp),
             verticalAlignment = Alignment.CenterVertically
@@ -49,4 +55,16 @@ fun MediaBtnComposable(
             CreateRepeatButton(fast_forward, "Fast Forward", callbacks.sendSeekForward)
             CreateButton(skip_next, "Next", callbacks.sendNext)
             }
+}
+
+@Preview
+@Composable
+fun MediaBtnPreview(){
+    MediaBtnComposable(
+        PlayerCallbacks(),
+        playerScreenValues = PlayerScreenState(
+            playerValues = ServerValues()
+        ),
+        Modifier.background(Color.White)
+    )
 }

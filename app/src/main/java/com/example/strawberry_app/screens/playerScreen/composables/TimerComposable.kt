@@ -1,5 +1,6 @@
 package com.example.strawberry_app.screens.playerScreen.composables
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,7 +14,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.strawberry_app.screens.ServerValues
 import com.example.strawberry_app.screens.playerScreen.PlayerCallbacks
 import com.example.strawberry_app.screens.playerScreen.PlayerScreenState
 
@@ -21,18 +25,19 @@ import com.example.strawberry_app.screens.playerScreen.PlayerScreenState
 @Composable
 fun TimerSlider(
     callbacks: PlayerCallbacks,
-    playerScreenValues: PlayerScreenState
+    playerScreenValues: PlayerScreenState,
+    modifier: Modifier = Modifier
 ) {
     var sliderPosition by remember { mutableFloatStateOf(playerScreenValues.playerValues.currentTime.toFloat()) }
 
-    Text(
+    Text(modifier = modifier,
         text = if (playerScreenValues.playerValues.currentTime > 0) callbacks.formatTime(
             playerScreenValues.playerValues.currentTime
         ) else ""
     )
 
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(start = 10.dp, end = 10.dp),
         horizontalArrangement = Arrangement.SpaceEvenly,
@@ -60,4 +65,14 @@ fun TimerSlider(
             ) else ""
         )
     }
+}
+
+@Preview
+@Composable
+fun TimerSliderPreview(){
+    TimerSlider(
+        PlayerCallbacks(),
+        PlayerScreenState(ServerValues()),
+        Modifier.background(Color.White)
+    )
 }

@@ -13,20 +13,20 @@ data class PlayerScreenState(
 )
 
 class PlayerCallbacks(
-    val formatTime: (Long) -> String,
-    val sendMute: () -> Unit,
-    val sendNext: () -> Unit,
-    val sendPlayPause: () -> Unit,
-    val sendPrevious: () -> Unit,
-    val sendSeekBackward: () -> Unit,
-    val sendSeekForward: () -> Unit,
-    val sendSeekTo: (Long) -> Unit,
-    val sendStop: () -> Unit,
-    val sendStopAfterCurrent: () -> Unit,
-    val setVolume: (Int) -> Unit,
-    val sendVolumeDown: () -> Unit,
-    val sendVolumeUp: () -> Unit,
-    val timeChanged: (Long) -> Unit,
+    val formatTime: (Long) -> String = {""},
+    val sendMute: () -> Unit = {},
+    val sendNext: () -> Unit = {},
+    val sendPlayPause: () -> Unit = {},
+    val sendPrevious: () -> Unit = {},
+    val sendSeekBackward: () -> Unit = {},
+    val sendSeekForward: () -> Unit = {},
+    val sendSeekTo: (Long) -> Unit = {},
+    val sendStop: () -> Unit = {},
+    val sendStopAfterCurrent: () -> Unit = {},
+    val setVolume: (Int) -> Unit = {},
+    val sendVolumeDown: () -> Unit = {},
+    val sendVolumeUp: () -> Unit = {},
+    val timeChanged: (Long) -> Unit = {},
 )
 
 @Suppress("ParamsComparedByRef")
@@ -35,7 +35,6 @@ fun PlayerRoute(
     playerViewModel: PlayerViewModel = hiltViewModel()
 ){
     val playerValues by playerViewModel.serverUpdates.collectAsStateWithLifecycle()
-//    val currentSong by playerViewModel.currentSong.collectAsStateWithLifecycle()
 
     val callbacks = remember {
         PlayerCallbacks(

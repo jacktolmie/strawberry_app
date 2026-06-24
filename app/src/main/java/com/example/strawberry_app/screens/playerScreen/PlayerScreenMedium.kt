@@ -83,22 +83,7 @@ fun PlayerScreen(
 @Preview
 fun PlayerScreenPreview(){
     PlayerScreen(
-        callbacks = PlayerCallbacks(
-            formatTime = {""},
-            sendMute =  {},
-            sendNext = {},
-            sendPlayPause =  {},
-            sendPrevious =  {},
-            sendSeekBackward =  {},
-            sendSeekForward =  {},
-            sendSeekTo =  {},
-            sendStop =  {},
-            sendStopAfterCurrent =  {},
-            setVolume =  {},
-            sendVolumeDown =  {},
-            sendVolumeUp =  {},
-            timeChanged = {}
-        ),
+        callbacks = PlayerCallbacks(),
         playerScreenValues = PlayerScreenState()
     )
 }
