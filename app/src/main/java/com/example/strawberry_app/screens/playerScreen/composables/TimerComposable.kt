@@ -28,7 +28,7 @@ fun TimerSlider(
     Text(
         text = if (playerScreenValues.playerValues.currentTime > 0) callbacks.formatTime(
             playerScreenValues.playerValues.currentTime
-        ) else "0"
+        ) else ""
     )
 
     Row(
@@ -39,7 +39,7 @@ fun TimerSlider(
         verticalAlignment = Alignment.CenterVertically
     )
     {
-        Text(text = "0")
+        Text(text = if(playerScreenValues.playerValues.currentTime > 0) "0" else "")
         Slider(
             value = playerScreenValues.playerValues.currentTime.toFloat(),
             onValueChange = {
@@ -57,8 +57,7 @@ fun TimerSlider(
         Text(
             text = if (playerScreenValues.playerValues.currentSong.length > 0) callbacks.formatTime(
                 playerScreenValues.playerValues.currentSong.length
-            ) else "0"
+            ) else ""
         )
-
     }
 }
