@@ -8,7 +8,7 @@ import androidx.compose.runtime.collectAsState
 
 @Composable
 fun PlaylistMediumScreen(
-    playlistRepository: PlaylistRepository
+    callbacks: PlaylistCallbacks
 ){
 
 
@@ -17,8 +17,8 @@ fun PlaylistMediumScreen(
 
 @Composable
 @Preview
-fun playlistPreview(){
-//    PlaylistMediumScreen(
-//
-//    )
+fun PlaylistPreview(){
+    PlaylistMediumScreen(
+        PlaylistCallbacks()
+    )
 }

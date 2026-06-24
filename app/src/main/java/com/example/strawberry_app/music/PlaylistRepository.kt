@@ -8,17 +8,13 @@ import com.example.strawberry_app.data.entity.PlaylistEntity
 import com.example.strawberry_app.data.entity.PlaylistSongEntity
 import com.example.strawberry_app.data.entity.SongEntity
 import com.example.strawberry_app.network.ApplicationScope
-import com.example.strawberry_app.network.protocol.EventType
-import com.example.strawberry_app.network.protocol.IncomingMessage
 import jakarta.inject.Inject
 import jakarta.inject.Singleton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.update
@@ -55,7 +51,7 @@ class PlaylistRepository @Inject constructor(
     suspend fun makeAllPlaylists(playlists: List<Playlist>){
         playlistDao.deleteAll()
 
-        playlists.forEachIndexed { index, playlist ->
+        playlists.forEach { playlist ->
 
             playlistDao.insert(PlaylistEntity(playlist.id, playlist.name))
 
