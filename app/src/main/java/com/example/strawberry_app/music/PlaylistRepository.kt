@@ -48,6 +48,26 @@ class PlaylistRepository @Inject constructor(
         }
     }
 
+    suspend fun deletePlaylist(playlistId: Long){
+        playlistDao.deleteById(id = playlistId)
+    }
+    suspend fun deleteSongs(playlistId: Long, songs: List<Long>){
+        playlistSongDao.deleteForPlaylist(playlistId = playlistId, songsId = songs)
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private fun getCurrentSong(): Flow<SongWithPosition?> {
+        return playlistState.flatMapLatest { state ->
+            if (state.currentPlaylist == -1 || state.currentSongIndex == -1L){
+                flowOf(null)
+            }else {
+                playlistSongDao.observeSongAtPosition(state.currentPlaylist,
+                    state.currentSongIndex
+                )
+            }
+        }
+    }
+
     suspend fun makeAllPlaylists(playlists: List<Playlist>){
         playlistDao.deleteAll()
 
@@ -71,18 +91,6 @@ class PlaylistRepository @Inject constructor(
         playlistDao.insert(PlaylistEntity(playlist.id, playlist.name))
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    private fun getCurrentSong(): Flow<SongWithPosition?> {
-        return playlistState.flatMapLatest { state ->
-            if (state.currentPlaylist == -1 || state.currentSongIndex == -1L){
-                flowOf(null)
-            }else {
-                playlistSongDao.observeSongAtPosition(state.currentPlaylist,
-                    state.currentSongIndex
-                )
-            }
-        }
-    }
 
     fun updateCurrentSong(playlistId: Int, songIndex: Long) {
         _playlistState.update { it.copy(currentPlaylist = playlistId, currentSongIndex = songIndex) }

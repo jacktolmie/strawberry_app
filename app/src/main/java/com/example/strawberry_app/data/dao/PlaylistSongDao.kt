@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.strawberry_app.data.entity.PlaylistSongEntity
+import com.example.strawberry_app.music.SongInfo
 import kotlinx.coroutines.flow.Flow
 
 data class SongWithPosition(
@@ -41,6 +42,6 @@ interface PlaylistSongDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(entities: List<PlaylistSongEntity>)
 
-    @Query("DELETE FROM playlist_song WHERE playlistId = :playlistId")
-    suspend fun deleteForPlaylist(playlistId: Long)
+    @Query("DELETE FROM playlist_song WHERE playlistId = :playlistId AND songId IN (:songsId)")
+    suspend fun deleteForPlaylist(playlistId: Long, songsId: List<Long>)
 }

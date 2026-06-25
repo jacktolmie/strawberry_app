@@ -15,6 +15,7 @@ object ErrorTypeSerializer : JsonContentPolymorphicSerializer<ErrorType>(ErrorTy
         return when (element.jsonObject["error"]?.jsonPrimitive?.content) {
             "command_not_found" -> ErrorType.CommandNotFound.serializer()
             "not_enough_arguments_passed_needs" -> ErrorType.NotEnoughArguments.serializer()
+            "playlist_not_cleared" -> ErrorType.PlaylistNotCleared.serializer()
             "playlist_not_closed" -> ErrorType.PlaylistNotClosed.serializer()
             "playlist_not_found" -> ErrorType.PlaylistNotFound.serializer()
             "wrong_argument_sent" -> ErrorType.WrongArgumentSent.serializer()
@@ -34,6 +35,10 @@ sealed class ErrorType: IncomingMessage() {
     @Serializable
     @SerialName("not_enough_arguments_passed_needs")
     data class NotEnoughArguments(val required: Int = 0): ErrorType()
+
+    @Serializable
+    @SerialName("playlist_not_cleared")
+    data object PlaylistNotCleared: ErrorType()
 
     @Serializable
     @SerialName("playlist_not_closed")

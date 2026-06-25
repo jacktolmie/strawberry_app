@@ -12,11 +12,11 @@ import androidx.compose.ui.tooling.preview.Preview
 fun MedLrgScreenTabs(
     modifier: Modifier = Modifier
 ){
-        SecondaryScrollableTabRow(
-//        selectedTabIndex = playlistRepository.playlistState.collectAsState()
-    ) {
-
-    }
+//        SecondaryScrollableTabRow(
+////        selectedTabIndex = playlistRepository.playlistState.collectAsState()
+//    ) {
+//
+//    }
 }
 
 @Preview
