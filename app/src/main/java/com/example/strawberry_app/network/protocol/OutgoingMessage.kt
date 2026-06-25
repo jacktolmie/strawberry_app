@@ -20,11 +20,11 @@ sealed class OutgoingMessage {
 
     @Serializable
     @SerialName("delete-current-playlist")
-    data class DeleteCurrentPlaylist(val id: Int): OutgoingMessage()
+    data class DeleteCurrentPlaylist(val id: Long): OutgoingMessage()
 
     @Serializable
     @SerialName("favourite-playlist")
-    data class FavouritePlaylist(val favourite: Boolean): OutgoingMessage()
+    data class FavouritePlaylist(val playlistId: Long, val favourite: Boolean): OutgoingMessage()
 
     @Serializable
     @SerialName("mute")
@@ -51,8 +51,8 @@ sealed class OutgoingMessage {
     data object Previous: OutgoingMessage()
 
     @Serializable
-    @SerialName("remove-current-song-playlist")
-    data class RemoveCurrentSongFromPlaylist(val id: Int): OutgoingMessage()
+    @SerialName("remove-current-songs-playlist")
+    data class RemoveCurrentSongFromPlaylist(val playlistId: Long, val songIndex: Long): OutgoingMessage()
 
     @Serializable
     @SerialName("remove-duplicates-playlist")
@@ -88,11 +88,11 @@ sealed class OutgoingMessage {
 
     @Serializable
     @SerialName("send-current-playlist")
-    data class SendPlaylist(val id: Int): OutgoingMessage()
+    data class SendPlaylist(val id: Long): OutgoingMessage()
 
     @Serializable
     @SerialName("set-current-playlist")
-    data class SetCurrentPlaylist(val id: Int): OutgoingMessage()
+    data class SetCurrentPlaylist(val id: Long): OutgoingMessage()
 
     @Serializable
     @SerialName("shuffle-all-playlists")
@@ -100,7 +100,7 @@ sealed class OutgoingMessage {
 
     @Serializable
     @SerialName("shuffle-playlist")
-    data object ShufflePlaylist: OutgoingMessage()
+    data class ShufflePlaylist(val id: Long): OutgoingMessage()
 
     @Serializable
     @SerialName("stop")

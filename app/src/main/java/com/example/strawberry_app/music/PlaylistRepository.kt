@@ -1,5 +1,6 @@
 package com.example.strawberry_app.music
 
+import androidx.lifecycle.viewModelScope
 import com.example.strawberry_app.data.dao.PlaylistDao
 import com.example.strawberry_app.data.dao.PlaylistSongDao
 import com.example.strawberry_app.data.dao.SongDao
@@ -8,6 +9,8 @@ import com.example.strawberry_app.data.entity.PlaylistEntity
 import com.example.strawberry_app.data.entity.PlaylistSongEntity
 import com.example.strawberry_app.data.entity.SongEntity
 import com.example.strawberry_app.network.ApplicationScope
+import com.example.strawberry_app.network.NetworkManager
+import com.example.strawberry_app.network.protocol.OutgoingMessage
 import jakarta.inject.Inject
 import jakarta.inject.Singleton
 import kotlinx.coroutines.CoroutineScope
@@ -29,9 +32,11 @@ data class PlaylistState(
 
 @Singleton
 class PlaylistRepository @Inject constructor(
+    private val networkManager: NetworkManager,
     private val playlistDao: PlaylistDao,
-    private val songDao: SongDao,
     private val playlistSongDao: PlaylistSongDao,
+    private val songDao: SongDao,
+
     @ApplicationScope private val scope: CoroutineScope
 ) {
 
@@ -48,10 +53,11 @@ class PlaylistRepository @Inject constructor(
         }
     }
 
-    suspend fun deletePlaylist(playlistId: Long){
-        playlistDao.deleteById(id = playlistId)
+    fun deletePlaylist(playlistId: Long){
+        sendCommand(OutgoingMessage.DeleteCurrentPlaylist(playlistId))
     }
-    suspend fun deleteSongs(playlistId: Long, songs: List<Long>){
+
+    fun deleteSongs(playlistId: Long, songs: List<Long>){
         playlistSongDao.deleteForPlaylist(playlistId = playlistId, songsId = songs)
     }
 
@@ -91,6 +97,11 @@ class PlaylistRepository @Inject constructor(
         playlistDao.insert(PlaylistEntity(playlist.id, playlist.name))
     }
 
+    fun sendCommand(command: OutgoingMessage) {
+        scope.launch {
+            networkManager.sendCommand(command)
+        }
+    }
 
     fun updateCurrentSong(playlistId: Int, songIndex: Long) {
         _playlistState.update { it.copy(currentPlaylist = playlistId, currentSongIndex = songIndex) }

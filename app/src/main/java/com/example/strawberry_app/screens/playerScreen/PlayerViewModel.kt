@@ -25,14 +25,6 @@ class PlayerViewModel @Inject constructor(
 
     val serverUpdates = messageRepository.serverUpdates
 
-//    val currentSong: StateFlow<SongInfo?> = messageRepository.serverUpdates
-//        .map { it.currentSong }
-//        .stateIn(
-//            scope = viewModelScope,
-//            started = SharingStarted.WhileSubscribed(5000),
-//            initialValue = null
-//        )
-
     init {
         // Start timing slider increment.
         timerUpdate()
