@@ -53,14 +53,6 @@ class PlaylistRepository @Inject constructor(
         }
     }
 
-    fun deletePlaylist(playlistId: Long){
-        sendCommand(OutgoingMessage.DeleteCurrentPlaylist(playlistId))
-    }
-
-    fun deleteSongs(playlistId: Long, songs: List<Long>){
-//        playlistSongDao.deleteForPlaylist(playlistId = playlistId, songsId = songs)
-    }
-
     @OptIn(ExperimentalCoroutinesApi::class)
     private fun getCurrentSong(): Flow<SongWithPosition?> {
         return playlistState.flatMapLatest { state ->
@@ -73,6 +65,8 @@ class PlaylistRepository @Inject constructor(
             }
         }
     }
+
+    fun getSongById(id: Long) : Flow<SongEntity?> = songDao.observeById(id)
 
     suspend fun makeAllPlaylists(playlists: List<Playlist>){
         playlistDao.deleteAll()
@@ -107,5 +101,28 @@ class PlaylistRepository @Inject constructor(
         _playlistState.update { it.copy(currentPlaylist = playlistId, currentSongIndex = songIndex) }
     }
 
-    fun getSongById(id: Long) : Flow<SongEntity?> = songDao.observeById(id)
+    // Functions to change server playlists.
+    fun clearCurrentPlaylist(id: Long) = sendCommand(OutgoingMessage.ClearPlaylist(id))
+    fun closeCurrentPlaylist(id: Long) = sendCommand(OutgoingMessage.CloseCurrent(id))
+    fun deleteCurrentPlaylist(playlistId: Long) = sendCommand(OutgoingMessage.DeleteCurrentPlaylist(playlistId))
+    fun deleteSongsPlaylist(playlistId: Long, songs: List<Long>){
+        sendCommand(
+            OutgoingMessage.RemoveCurrentSongFromPlaylist(
+                playlistId = playlistId,
+                songsList = songs
+            )
+        )
+    }
+    fun makeFavouritePlaylist(id: Long, favourite: Boolean) =
+        sendCommand(OutgoingMessage.FavouritePlaylist(playlistId = id, favourite = favourite))
+    fun removeSongsCurrentPlaylist(id: Long, songsList: List<Long>){
+        // Fill in with required data
+    }
+    fun removeDuplicatesInPlaylist() = sendCommand(OutgoingMessage.RemoveDuplicatesFromPlaylist)
+    fun renameCurrentPlaylist(id: Long, name:String) =
+        sendCommand(OutgoingMessage.RenamePlaylist(id = id, name = name))
+    fun sendActivePlaylist(id: Long) = sendCommand(OutgoingMessage.SendActivePlaylist(id))
+    fun sendAllPlaylists(playlists: List<Playlist>) = sendCommand(OutgoingMessage.SendAllPlaylists(playlists = playlists))
+    fun sendCurrentPlaylist(id: Long, playlist: Playlist) = sendCommand(OutgoingMessage.Sen)
+
 }

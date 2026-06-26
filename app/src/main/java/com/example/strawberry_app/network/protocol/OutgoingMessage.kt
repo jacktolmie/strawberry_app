@@ -1,5 +1,6 @@
 package com.example.strawberry_app.network.protocol
 
+import com.example.strawberry_app.music.Playlist
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -12,11 +13,11 @@ sealed class OutgoingMessage {
 
     @Serializable
     @SerialName("clear-playlist")
-    data class ClearPlaylist(val id: Int): OutgoingMessage()
+    data class ClearPlaylist(val id: Long): OutgoingMessage()
 
     @Serializable
     @SerialName("close-playlist")
-    data class CloseCurrent(val id: Int) : OutgoingMessage()
+    data class CloseCurrent(val id: Long) : OutgoingMessage()
 
     @Serializable
     @SerialName("delete-current-playlist")
@@ -52,7 +53,7 @@ sealed class OutgoingMessage {
 
     @Serializable
     @SerialName("remove-current-songs-playlist")
-    data class RemoveCurrentSongFromPlaylist(val playlistId: Long, val songIndex: Long): OutgoingMessage()
+    data class RemoveCurrentSongFromPlaylist(val playlistId: Long, val songsList: List<Long>): OutgoingMessage()
 
     @Serializable
     @SerialName("remove-duplicates-playlist")
@@ -60,7 +61,7 @@ sealed class OutgoingMessage {
 
     @Serializable
     @SerialName("rename-playlist")
-    data class RenamePlaylist(val id: Int, val name: String): OutgoingMessage()
+    data class RenamePlaylist(val id: Long, val name: String): OutgoingMessage()
 
     @Serializable
     @SerialName("restart-or-previous")
@@ -80,15 +81,15 @@ sealed class OutgoingMessage {
 
     @Serializable
     @SerialName("send-active-playlist")
-    data class SendActivePlaylist(val id: Int): OutgoingMessage()
+    data class SendActivePlaylist(val id: Long): OutgoingMessage()
 
     @Serializable
     @SerialName("send-all-playlists")
-    data object SendAllPlaylists: OutgoingMessage()
+    data class SendAllPlaylists(val playlists: List<Playlist>): OutgoingMessage()
 
     @Serializable
     @SerialName("send-current-playlist")
-    data class SendPlaylist(val id: Long): OutgoingMessage()
+    data class SendPlaylist(val id: Long, val playlist: Playlist): OutgoingMessage()
 
     @Serializable
     @SerialName("set-current-playlist")
