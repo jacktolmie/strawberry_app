@@ -11,6 +11,7 @@ import kotlinx.serialization.json.JsonClassDiscriminator
 @JsonClassDiscriminator("command")
 sealed class OutgoingMessage {
 
+    // Playlist commands
     @Serializable
     @SerialName("clear-playlist")
     data class ClearPlaylist(val id: Long): OutgoingMessage()
@@ -20,13 +21,56 @@ sealed class OutgoingMessage {
     data class CloseCurrent(val id: Long) : OutgoingMessage()
 
     @Serializable
-    @SerialName("delete-current-playlist")
+    @SerialName("delete-playlist")
     data class DeleteCurrentPlaylist(val id: Long): OutgoingMessage()
 
     @Serializable
     @SerialName("favourite-playlist")
     data class FavouritePlaylist(val playlistId: Long, val favourite: Boolean): OutgoingMessage()
 
+
+    @Serializable
+    @SerialName("remove-duplicates-playlist")
+    data object RemoveDuplicatesFromPlaylist: OutgoingMessage()
+
+    @Serializable
+    @SerialName("remove-songs-playlist")
+    data class RemoveCurrentSongsFromPlaylist(val id: Long, val songsList: List<Long>): OutgoingMessage()
+
+    @Serializable
+    @SerialName("rename-playlist")
+    data class RenamePlaylist(val id: Long, val name: String): OutgoingMessage()
+
+
+    @Serializable
+    @SerialName("send-active-playlist-songs")
+    data class SendActivePlaylistSong(val id: Long, val songIndex: Long): OutgoingMessage()
+
+    @Serializable
+    @SerialName("send-all-playlists")
+    data class SendAllPlaylists(val playlists: List<Playlist>): OutgoingMessage()
+
+    @Serializable
+    @SerialName("send-playlist")
+    data class SendCurrentPlaylist(val id: Long, val playlist: Playlist): OutgoingMessage()
+
+    @Serializable
+    @SerialName("set-current-playlist")
+    data class SetCurrentPlaylist(val id: Long): OutgoingMessage()
+
+    @Serializable
+    @SerialName("shuffle-all-playlists")
+    data object ShuffleAllPlaylists: OutgoingMessage()
+
+    @Serializable
+    @SerialName("shuffle-current-playlist")
+    data class ShuffleCurrentPlaylist(val id: Long): OutgoingMessage()
+
+    @Serializable
+    @SerialName("restart-or-previous")
+    data object RestartOrPrevious: OutgoingMessage()
+
+    // Player controls
     @Serializable
     @SerialName("mute")
     data object Mute: OutgoingMessage()
@@ -52,22 +96,6 @@ sealed class OutgoingMessage {
     data object Previous: OutgoingMessage()
 
     @Serializable
-    @SerialName("remove-current-songs-playlist")
-    data class RemoveCurrentSongFromPlaylist(val playlistId: Long, val songsList: List<Long>): OutgoingMessage()
-
-    @Serializable
-    @SerialName("remove-duplicates-playlist")
-    data object RemoveDuplicatesFromPlaylist: OutgoingMessage()
-
-    @Serializable
-    @SerialName("rename-playlist")
-    data class RenamePlaylist(val id: Long, val name: String): OutgoingMessage()
-
-    @Serializable
-    @SerialName("restart-or-previous")
-    data object RestartOrPrevious: OutgoingMessage()
-
-    @Serializable
     @SerialName("seek-backward")
     data object SeekBackward: OutgoingMessage()
 
@@ -78,30 +106,6 @@ sealed class OutgoingMessage {
     @Serializable
     @SerialName("seek-to")
     data class SeekTo(val seekTo: Long): OutgoingMessage()
-
-    @Serializable
-    @SerialName("send-active-playlist")
-    data class SendActivePlaylist(val id: Long): OutgoingMessage()
-
-    @Serializable
-    @SerialName("send-all-playlists")
-    data class SendAllPlaylists(val playlists: List<Playlist>): OutgoingMessage()
-
-    @Serializable
-    @SerialName("send-current-playlist")
-    data class SendPlaylist(val id: Long, val playlist: Playlist): OutgoingMessage()
-
-    @Serializable
-    @SerialName("set-current-playlist")
-    data class SetCurrentPlaylist(val id: Long): OutgoingMessage()
-
-    @Serializable
-    @SerialName("shuffle-all-playlists")
-    data object ShuffleAllPlaylists: OutgoingMessage()
-
-    @Serializable
-    @SerialName("shuffle-playlist")
-    data class ShufflePlaylist(val id: Long): OutgoingMessage()
 
     @Serializable
     @SerialName("stop")

@@ -14,12 +14,12 @@ fun PlaylistMediumScreen(
     callbacks: PlaylistCallbacks
 ){
 
-    Button(
-        onClick =
-        )
-    ){
-        Text(text = "Remove songs")
-    }
+//    Button(
+//        onClick =
+//        )
+//    ){
+//        Text(text = "Remove songs")
+//    }
 
 }
 

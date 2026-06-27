@@ -11,9 +11,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
 data class PlaylistValues(
-    val activePlaylist: Int = -1,
-    val currentPlaylist: Int = -1,
-    val currentSongId: Long = -1
+    val activePlaylist: Long = -1L,
+    val currentPlaylist: Long = -1L,
+    val currentSongId: Long = -1L
 )
 
 @HiltViewModel
@@ -26,13 +26,6 @@ class PlaylistViewModel @Inject constructor(
     val playlistState = _playlistState.asStateFlow()
 
     init {
-        playlistRepository.
+//        playlistRepository.
     }
 }
-
-//class PlaylistViewModel @Inject constructor(
-//    private val playlistDao: PlaylistDao,
-//    private val playlistSongDao: PlaylistSongDao,
-//    private val networkManager: NetworkManager,
-//    private val playlistRepository: PlaylistRepository
-//): ViewModel() {

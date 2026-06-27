@@ -8,7 +8,7 @@ import kotlinx.serialization.json.JsonIgnoreUnknownKeys
 @Serializable
 @JsonIgnoreUnknownKeys
 data class SongInfo(
-    val id: Int = -1,
+    val id: Long = -1L,
     val artist: String = "",
     val album: String = "",
     val title: String = "",

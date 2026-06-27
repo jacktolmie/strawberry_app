@@ -61,6 +61,7 @@ class MessageRepository @Inject constructor(
         scope.launch {
             networkManager.serverMessages.collect{ message ->
                 when(message) {
+                    is EventType.FavouritePlaylist -> playlistRepository.serverFavourite(id =  message.id, isFavourite = message.favourite)
                     is EventType.GuiUpdates -> {
                         when (message.playlists) {
                             is EventType.MakeAllPlaylists -> {

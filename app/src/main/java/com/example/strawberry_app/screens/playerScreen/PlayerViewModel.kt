@@ -2,17 +2,12 @@ package com.example.strawberry_app.screens.playerScreen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.strawberry_app.music.SongInfo
 import com.example.strawberry_app.network.NetworkManager
 import com.example.strawberry_app.network.protocol.OutgoingMessage
 import com.example.strawberry_app.screens.MessageRepository
 import com.example.strawberry_app.screens.PlayState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.milliseconds
@@ -32,7 +27,7 @@ class PlayerViewModel @Inject constructor(
 
     fun sendMute() = sendCommand(OutgoingMessage.Mute)
     fun sendNext() = sendCommand(OutgoingMessage.Next)
-
+    fun sendRestartPrevious() = sendCommand(OutgoingMessage.RestartOrPrevious)
     fun sendPlayPause() {
         sendCommand(OutgoingMessage.PlayPause)
         messageRepository.updateInformation(messageRepository.serverUpdates.value.copy(

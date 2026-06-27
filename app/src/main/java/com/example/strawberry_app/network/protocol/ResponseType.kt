@@ -1,6 +1,7 @@
 package com.example.strawberry_app.network.protocol
 
 import com.example.strawberry_app.music.Playlist
+import com.example.strawberry_app.music.SongInfo
 import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
@@ -46,22 +47,25 @@ sealed  class ResponseType: IncomingMessage() {
     @Serializable
     @JsonIgnoreUnknownKeys
     @SerialName("closed_playlist_with_id")
-    data class ClosedPlaylistWithId(val id: Int = 0): ResponseType()
+    data class ClosedPlaylistWithId(val id: Long = 0L): ResponseType()
 
     @Serializable
     @JsonIgnoreUnknownKeys
     @SerialName("deleted_playlist_with_id")
-    data class DeletedPlaylistWithId(val id: Int = 0): ResponseType()
+    data class DeletedPlaylistWithId(val id: Long = 0L): ResponseType()
 
     @Serializable
     @JsonIgnoreUnknownKeys
     @SerialName("is_playlist_a_favourite")
-    data class IsPlaylistAFavourite(val is_favourite: Boolean = false): ResponseType()
+    data class IsPlaylistAFavourite(
+        val id: Long,
+        @SerialName("is_favourite")
+        val isFavourite: Boolean = false): ResponseType()
 
     @Serializable
     @JsonIgnoreUnknownKeys
     @SerialName("playlist_closed")
-    data object PlaylistClosed: ResponseType()
+    data class PlaylistClosed(val id: Long): ResponseType()
 
 
     @Serializable
@@ -72,7 +76,9 @@ sealed  class ResponseType: IncomingMessage() {
     @Serializable
     @JsonIgnoreUnknownKeys
     @SerialName("rename_playlist")
-    data class RenamePlaylist(val name: String = ""): ResponseType()
+    data class RenamePlaylist(
+        val id: Long,
+        val name: String = ""): ResponseType()
 
     @Serializable
     @JsonIgnoreUnknownKeys
@@ -87,7 +93,7 @@ sealed  class ResponseType: IncomingMessage() {
     @Serializable
     @JsonIgnoreUnknownKeys
     @SerialName("sent_active_playlist")
-    data class SentActivePlaylist(val id: Int = 0): ResponseType()
+    data class SentActivePlaylist(val id: Long = 0L): ResponseType()
 
     @Serializable
     @JsonIgnoreUnknownKeys
@@ -112,6 +118,6 @@ sealed  class ResponseType: IncomingMessage() {
     @JsonIgnoreUnknownKeys
     @SerialName("songs")
     data class Songs(
-        val songInfos: List<com.example.strawberry_app.music.SongInfo>
+        val songInfos: List<SongInfo>
     ): ResponseType()
 }

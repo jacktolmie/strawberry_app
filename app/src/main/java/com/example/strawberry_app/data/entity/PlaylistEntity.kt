@@ -5,6 +5,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "playlist")
 data class PlaylistEntity(
-    @PrimaryKey val id: Int,
+    @PrimaryKey val id: Long,
+    val favourite: Boolean,
     val name: String
 )

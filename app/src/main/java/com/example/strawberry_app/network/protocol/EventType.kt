@@ -47,15 +47,15 @@ sealed class EventType: IncomingMessage() {
     @JsonIgnoreUnknownKeys
     @SerialName("active_playlist")
     data class ActivePlaylist(
-        val id: Int,
-        val row: Long? = null
+        val id: Long,
+        val row: Long = -1L
     ) : EventType()
 
     @Serializable
     @JsonIgnoreUnknownKeys
     @SerialName("favourite_playlist")
     data class FavouritePlaylist(
-        val id: Int,
+        val id: Long,
         val favourite: Boolean
     ) : EventType()
 
@@ -65,16 +65,16 @@ sealed class EventType: IncomingMessage() {
     @SerialName("gui_updates")
     data class GuiUpdates(
         @SerialName("active_playlist")
-        val activePlaylist: Int = -1,
+        val activePlaylist: Long = -1L,
         @SerialName("current_playlist")
-        val currentPlaylist: Int = -1,
+        val currentPlaylist: Long = -1L,
         @SerialName("current_song")
         val currentSong: Long = -1L,
         val time: Long = 0L,
         val playing: String = "",
         val volume: Int = 0,
         val playlists: MakeAllPlaylists? = null,
-        val length: Long = 0,
+        val length: Long = 0L,
         val title: String = "",
         val artist: String = "",
         val album: String = "",
@@ -106,7 +106,7 @@ sealed class EventType: IncomingMessage() {
     @SerialName("play")
     data class Play(
         @SerialName("active_playlist")
-        val activePlaylist: Int = 0,
+        val activePlaylist: Long = 0L,
         val length: Long = 0L,
         val row: Long = -1L,
         val time: Long = 0L
@@ -120,7 +120,7 @@ sealed class EventType: IncomingMessage() {
     @Serializable
     @JsonIgnoreUnknownKeys
     @SerialName("rename_playlist")
-    data class RenamePlaylist(val id: Int, val name: String) : EventType()
+    data class RenamePlaylist(val id: Long, val name: String) : EventType()
 
     @Serializable
     @JsonIgnoreUnknownKeys
@@ -140,17 +140,19 @@ sealed class EventType: IncomingMessage() {
     @Serializable
     @JsonIgnoreUnknownKeys
     @SerialName("song_changed")
-    data class SongChanged(@SerialName("track_id") val trackId: Long = 0) : EventType()
+    data class SongChanged(
+        @SerialName("track_id")
+        val trackId: Long = 0L) : EventType()
 
     @Serializable
     @JsonIgnoreUnknownKeys
     @SerialName("song_info")
     data class SongInfo(
-        val id: Int = 0,
+        val id: Long = 0L,
         val artist: String = "",
         val album: String = "",
         val title: String = "",
-        val length: Long = 0
+        val length: Long = 0L
         //val coverImage // Unknown for now.
     ): EventType()
     @Serializable

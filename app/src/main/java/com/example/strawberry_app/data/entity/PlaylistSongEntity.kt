@@ -24,7 +24,7 @@ import androidx.room.Index
     indices = [Index("songId")]
 )
 data class PlaylistSongEntity(
-    val playlistId: Int,
-    val songId: Int,
+    val playlistId: Long,
+    val songId: Long,
     val position: Int
 )

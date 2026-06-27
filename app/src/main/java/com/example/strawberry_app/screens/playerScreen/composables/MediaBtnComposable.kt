@@ -22,7 +22,6 @@ import com.example.strawberry_app.ui.theme.icons.play_pause
 import com.example.strawberry_app.ui.theme.icons.skip_next
 import com.example.strawberry_app.ui.theme.icons.skip_previous
 import com.example.strawberry_app.ui.theme.icons.stop
-import javax.security.auth.callback.Callback
 
 // Media buttons for player screen.
 @Composable
@@ -37,7 +36,7 @@ fun MediaBtnComposable(
             verticalAlignment = Alignment.CenterVertically
         )
         {
-            CreateButton(skip_previous, "Previous", callbacks.sendPrevious)
+            CreateLongPressButton(skip_previous, "Previous", callbacks.sendRestartPrevious, callbacks.sendPrevious)
             CreateRepeatButton(fast_rewind, "Fast Rewind", callbacks.sendSeekBackward)
 
             // Show proper play or pause button, and the proper callback
