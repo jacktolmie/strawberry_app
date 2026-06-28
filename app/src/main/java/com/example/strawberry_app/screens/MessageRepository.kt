@@ -1,10 +1,12 @@
 package com.example.strawberry_app.screens
 
+import android.util.Log
 import com.example.strawberry_app.music.PlaylistRepository
 import com.example.strawberry_app.music.SongInfo
 import com.example.strawberry_app.network.ApplicationScope
 import com.example.strawberry_app.network.ConnectionState
 import com.example.strawberry_app.network.NetworkManager
+import com.example.strawberry_app.network.protocol.ErrorType
 import com.example.strawberry_app.network.protocol.EventType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -61,6 +63,7 @@ class MessageRepository @Inject constructor(
         scope.launch {
             networkManager.serverMessages.collect{ message ->
                 when(message) {
+                    // Server Event messages.
                     is EventType.FavouritePlaylist -> playlistRepository.serverFavourite(id =  message.id, isFavourite = message.favourite)
                     is EventType.GuiUpdates -> {
                         when (message.playlists) {
@@ -102,6 +105,7 @@ class MessageRepository @Inject constructor(
                             playState = PlayState.PAUSED
                         )
                     }
+                    is EventType.RenamePlaylist -> playlistRepository.renameCurrentPlaylist(id = message.id, name = message.name)
                     is EventType.SeekTo -> _serverUpdates.update {it.copy(currentTime = message.time) }
                     is EventType.SongChanged -> _serverUpdates.update { it.copy(currentSongId = message.trackId) }
                     // When song is changed, update the player screen.
@@ -126,6 +130,13 @@ class MessageRepository @Inject constructor(
                     }
                     is EventType.Time -> _serverUpdates.update { it.copy(currentTime = message.time) }
                     is EventType.VolumeChanged -> _serverUpdates.update {it.copy(volume = message.volume) }
+
+                    // Server Error messages.
+                    is ErrorType.CommandNotFound -> { Log.e("Server Error:", "Command not found ${message.command}") }
+                    is ErrorType.NotEnoughArguments -> { }
+                    is ErrorType.PlaylistNotClosed -> {}
+                    is ErrorType.PlaylistNotFound -> {}
+                    is ErrorType.WrongArgumentSent -> {}
                     else -> Unit
                 }
             }

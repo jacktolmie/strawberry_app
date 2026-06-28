@@ -66,10 +66,6 @@ sealed class OutgoingMessage {
     @SerialName("shuffle-current-playlist")
     data class ShuffleCurrentPlaylist(val id: Long): OutgoingMessage()
 
-    @Serializable
-    @SerialName("restart-or-previous")
-    data object RestartOrPrevious: OutgoingMessage()
-
     // Player controls
     @Serializable
     @SerialName("mute")
@@ -94,6 +90,10 @@ sealed class OutgoingMessage {
     @Serializable
     @SerialName("previous")
     data object Previous: OutgoingMessage()
+
+    @Serializable
+    @SerialName("restart-or-previous")
+    data object RestartOrPrevious: OutgoingMessage()
 
     @Serializable
     @SerialName("seek-backward")
