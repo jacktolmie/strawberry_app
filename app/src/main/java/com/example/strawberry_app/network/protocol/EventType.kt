@@ -14,7 +14,6 @@ import kotlinx.serialization.json.jsonPrimitive
 
 object EventTypeSerializer : JsonContentPolymorphicSerializer<EventType>(EventType::class) {
     override fun selectDeserializer(element: JsonElement): DeserializationStrategy<EventType> {
-//        val eventType = element.jsonObject["event"]?.jsonPrimitive?.content
         return when (element.jsonObject["event"]?.jsonPrimitive?.content) {
             "active_playlist" -> EventType.ActivePlaylist.serializer()
             "favourite_playlist" -> EventType.FavouritePlaylist.serializer()

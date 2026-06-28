@@ -102,7 +102,7 @@ sealed  class ResponseType: IncomingMessage() {
     @Serializable
     @JsonIgnoreUnknownKeys
     @SerialName("set_current_playlist_to")
-    data class SetActivePlaylistTo(val name: String = ""): ResponseType()
+    data class SetActivePlaylistTo(val id: Long = 0L): ResponseType()
 
     @Serializable
     @JsonIgnoreUnknownKeys
@@ -118,6 +118,6 @@ sealed  class ResponseType: IncomingMessage() {
     @JsonIgnoreUnknownKeys
     @SerialName("songs")
     data class Songs(
-        val songInfos: List<SongInfo>
+        val songsInfo: List<SongInfo>
     ): ResponseType()
 }

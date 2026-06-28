@@ -8,6 +8,7 @@ import com.example.strawberry_app.network.ConnectionState
 import com.example.strawberry_app.network.NetworkManager
 import com.example.strawberry_app.network.protocol.ErrorType
 import com.example.strawberry_app.network.protocol.EventType
+import com.example.strawberry_app.network.protocol.ResponseType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -132,11 +133,29 @@ class MessageRepository @Inject constructor(
                     is EventType.VolumeChanged -> _serverUpdates.update {it.copy(volume = message.volume) }
 
                     // Server Error messages.
-                    is ErrorType.CommandNotFound -> { Log.e("Server Error:", "Command not found ${message.command}") }
-                    is ErrorType.NotEnoughArguments -> { }
-                    is ErrorType.PlaylistNotClosed -> {}
-                    is ErrorType.PlaylistNotFound -> {}
-                    is ErrorType.WrongArgumentSent -> {}
+                    is ErrorType.CommandNotFound -> { serverErrorMessage("Command not found ${message.command}") }
+                    is ErrorType.NotEnoughArguments -> { serverErrorMessage("Not enough arguments. Needs: ${message.required}") }
+                    is ErrorType.PlaylistNotClosed -> { serverErrorMessage("Playlist not closed.") }
+                    is ErrorType.PlaylistNotFound -> { serverErrorMessage("Playlist ${message.name} not found.") }
+                    is ErrorType.WrongArgumentSent -> { serverErrorMessage("Wrong argument sent: ${message.argument}") }
+
+                    // Server Response messages.
+                    is ResponseType.ClearedPlaylist -> { serverResponseMessage("Cleared playlist ${message.name}.") }
+                    is ResponseType.ClosedPlaylistWithId -> { serverResponseMessage("Closed playlist with ID: ${message.id}.") }
+                    is ResponseType.DeletedPlaylistWithId -> { serverResponseMessage("Deleted playlist with ID: ${message.id}.") }
+                    is ResponseType.IsPlaylistAFavourite -> { serverResponseMessage("Is playlist ${message.id} a favourite? ${message.isFavourite}.") }
+                    is ResponseType.PlaylistClosed -> { serverResponseMessage("Playlist ${message.id} closed.") }
+                    is ResponseType.RemovedDuplicatesFromPlaylist -> { serverResponseMessage("Removed duplicates from playlist.") }
+                    is ResponseType.RenamePlaylist -> { serverResponseMessage("Renamed playlist ${message.id} to ${message.name}.") }
+                    is ResponseType.RemovedSongFromPlaylist -> { serverResponseMessage("Removed song from playlist ${message.name}.") }
+                    is ResponseType.RunningCommand -> { serverResponseMessage("Running command ${message.command}.") }
+                    is ResponseType.SentActivePlaylist -> { serverResponseMessage("Active playlist ID: ${message.id}.") }
+                    is ResponseType.SendRequestedPlaylist -> { serverResponseMessage("Send requested playlist with ID: ${message.playlist.id}.") }
+                    is ResponseType.SetActivePlaylistTo -> { serverResponseMessage("Set active playlist to ${message.id}.") }
+                    is ResponseType.ShuffledPlaylist -> { serverResponseMessage("Shuffled playlist.") }
+                    is ResponseType.ShuffledALlPlaylists -> { serverResponseMessage("Shuffled all playlists.") }
+                    is ResponseType.Songs -> { serverResponseMessage("List of songs sent.") }
+
                     else -> Unit
                 }
             }
@@ -149,5 +168,13 @@ class MessageRepository @Inject constructor(
 
     fun updateInformation(updates: ServerValues){
         _serverUpdates.value = updates
+    }
+
+    fun serverErrorMessage(error: String){
+        Log.e("Server Error", error)
+    }
+
+    fun serverResponseMessage(message: String){
+        Log.i("Server Response:", message)
     }
 }
