@@ -1,4 +1,4 @@
-package com.example.strawberry_app.screens.playlistScreen
+package com.example.strawberry_app.screens.playlistScreen.composables
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row

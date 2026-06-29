@@ -11,7 +11,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.strawberry_app.screens.PlayState
-import com.example.strawberry_app.screens.ServerValues
+import com.example.strawberry_app.screens.ServerGuiValues
 import com.example.strawberry_app.screens.playerScreen.PlayerCallbacks
 import com.example.strawberry_app.screens.playerScreen.PlayerScreenState
 import com.example.strawberry_app.ui.theme.icons.fast_forward
@@ -62,7 +62,7 @@ fun MediaBtnPreview(){
     MediaBtnComposable(
         PlayerCallbacks(),
         playerScreenValues = PlayerScreenState(
-            playerValues = ServerValues()
+            playerValues = ServerGuiValues()
         ),
         Modifier.background(Color.White)
     )

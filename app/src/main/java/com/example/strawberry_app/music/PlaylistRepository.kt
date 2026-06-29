@@ -108,14 +108,25 @@ class PlaylistRepository @Inject constructor(
     suspend fun updatePlaylist(playlist: Playlist){
         playlistSongDao.delete(playlistId = playlist.id)
         val songs = playlist.songs.map{ song ->
-            SongEntity(id = song.id, title = song.title, artist = song.artist, album = song.album, length = song.length)
+            SongEntity(
+                id = song.id,
+                title = song.title,
+                artist = song.artist,
+                album = song.album,
+                length = song.length)
         }
         songDao.insertAll(songs = songs)
 
-        val playlistEntity = PlaylistEntity(id = playlist.id, favourite = playlist.favourite, name = playlist.name)
+        val playlistEntity = PlaylistEntity(
+            id = playlist.id,
+            favourite = playlist.favourite,
+            name = playlist.name)
 
         val songIndex = playlist.songs.mapIndexed { index, song ->
-            PlaylistSongEntity(playlistId = playlist.id, songId = song.id, position = index)
+            PlaylistSongEntity(
+                playlistId = playlist.id,
+                songId = song.id,
+                position = index)
         }
         playlistSongDao.insertAll( entities = songIndex)
 
@@ -126,18 +137,24 @@ class PlaylistRepository @Inject constructor(
     fun clearCurrentPlaylist(id: Long) = sendCommand(OutgoingMessage.ClearPlaylist(id))
     fun closeCurrentPlaylist(id: Long) = sendCommand(OutgoingMessage.CloseCurrent(id))
     fun deleteCurrentPlaylist(playlistId: Long) = sendCommand(OutgoingMessage.DeleteCurrentPlaylist(playlistId))
-//    fun receiveFavouritePlaylist(id: Long, favourite: Boolean)
     fun removeSongsCurrentPlaylist(id: Long, songsList: List<Long>) =
         sendCommand(OutgoingMessage.RemoveCurrentSongsFromPlaylist(id = id, songsList = songsList))
     fun removeDuplicatesInPlaylist() = sendCommand(OutgoingMessage.RemoveDuplicatesFromPlaylist)
     fun renameCurrentPlaylist(id: Long, name:String) = sendCommand(OutgoingMessage.RenamePlaylist(id = id, name = name))
-    fun sendActivePlaylist(id: Long, songIndex: Long) = sendCommand(OutgoingMessage.SendActivePlaylistSong(id = id, songIndex = songIndex))
+    fun sendActivePlaylistSong(id: Long, songIndex: Long) {
+        sendCommand(OutgoingMessage.SendActivePlaylistSong(id = id, songIndex = songIndex))
+    }
     fun sendAllPlaylists(playlists: List<Playlist>) = sendCommand(OutgoingMessage.SendAllPlaylists(playlists = playlists))
-    fun sendCurrentPlaylist(id: Long, playlist: Playlist) = sendCommand(OutgoingMessage.SendCurrentPlaylist(id = id, playlist =  playlist))
-    fun sendFavouritePlaylist(id: Long, favourite: Boolean) =
+    fun sendCurrentPlaylist(id: Long, playlist: Playlist) {
+        sendCommand(OutgoingMessage.SendCurrentPlaylist(id = id, playlist =  playlist))
+    }
+    fun sendPlaylistFavourite(id: Long, favourite: Boolean) =
         sendCommand(OutgoingMessage.FavouritePlaylist(playlistId = id, favourite = favourite))
-    //    fun setCurrentPlaylist(id: Long): Unit = TODO() /* Make function to change current playlist */
+    fun setCurrentPlaylist(id: Long): Unit = sendCommand(OutgoingMessage.SetCurrentPlaylist(id = id))
     fun shuffleAllPlaylists() = sendCommand(OutgoingMessage.ShuffleAllPlaylists)
     fun shuffleCurrentPlaylist(id: Long) = sendCommand(OutgoingMessage.ShuffleCurrentPlaylist(id = id))
 
+    fun serverRenamedPlaylist(id: Long, name: String) {
+        TODO() // create function to rename local name on db
+    }
 }

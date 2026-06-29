@@ -14,7 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.strawberry_app.screens.ServerValues
+import com.example.strawberry_app.screens.ServerGuiValues
 import com.example.strawberry_app.screens.playerScreen.PlayerCallbacks
 import com.example.strawberry_app.screens.playerScreen.PlayerScreenState
 import com.example.strawberry_app.ui.theme.icons.volume_down
@@ -60,7 +60,7 @@ fun VolumeSliderPreview(){
 
     VolumeSliderVertComposable(
         PlayerCallbacks(),
-    PlayerScreenState(ServerValues()),
+    PlayerScreenState(ServerGuiValues()),
         Modifier.background(Color.White)
     )
 }

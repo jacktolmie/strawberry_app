@@ -19,7 +19,7 @@ object EventTypeSerializer : JsonContentPolymorphicSerializer<EventType>(EventTy
             "favourite_playlist" -> EventType.FavouritePlaylist.serializer()
             "gui_updates" -> EventType.GuiUpdates.serializer()
             "make_all_playlists" -> EventType.MakeAllPlaylists.serializer()
-            "make_current_playlist" -> EventType.MakeCurrentPlaylist.serializer()
+            "make_playlist" -> EventType.MakeCurrentPlaylist.serializer()
             "next" -> EventType.Next.serializer()
             "pause" -> EventType.Pause.serializer()
             "play" -> EventType.Play.serializer()
@@ -81,14 +81,17 @@ sealed class EventType: IncomingMessage() {
 
     @Serializable
     @JsonIgnoreUnknownKeys
-    @SerialName("make_all_playlists")
-    data class MakeAllPlaylists(val playlists: List<Playlist>) : EventType()
+    @SerialName("make_playlist")
+    data class MakeCurrentPlaylist(
+        val id: Long,
+        val playlist: Playlist) : EventType()
 
     @Serializable
     @JsonIgnoreUnknownKeys
-    @SerialName("make_current_playlist")
-    data class MakeCurrentPlaylist(
-        @SerialName("current_playlist") val playlist: Playlist) : EventType()
+    @SerialName("make_all_playlists")
+    data class MakeAllPlaylists(val playlists: List<Playlist>) : EventType()
+
+
 
     @Serializable
     @JsonIgnoreUnknownKeys

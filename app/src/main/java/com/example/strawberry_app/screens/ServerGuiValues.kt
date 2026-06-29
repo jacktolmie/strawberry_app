@@ -5,7 +5,7 @@ import com.example.strawberry_app.music.SongInfo
 enum class PlayState{
     PLAYING, PAUSED, STOPPED
 }
-data class ServerValues(
+data class ServerGuiValues(
     val activePlaylist: Long = -1L,
     val currentPlaylist: Long = -1L,
     val currentSong: SongInfo = SongInfo(),

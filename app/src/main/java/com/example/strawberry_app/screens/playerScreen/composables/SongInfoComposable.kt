@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.strawberry_app.screens.ServerValues
+import com.example.strawberry_app.screens.ServerGuiValues
 import com.example.strawberry_app.screens.playerScreen.PlayerScreenState
 
 @Composable
@@ -48,7 +48,7 @@ fun SongInfoComposable(
 @Composable
 fun SongInfoPreview(){
     SongInfoComposable(
-        PlayerScreenState(ServerValues()),
+        PlayerScreenState(ServerGuiValues()),
         Modifier.background(Color.White)
     )
 }

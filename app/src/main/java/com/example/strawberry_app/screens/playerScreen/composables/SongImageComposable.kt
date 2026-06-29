@@ -12,7 +12,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.strawberry_app.R
-import com.example.strawberry_app.screens.ServerValues
+import com.example.strawberry_app.screens.ServerGuiValues
 import com.example.strawberry_app.screens.playerScreen.PlayerCallbacks
 import com.example.strawberry_app.screens.playerScreen.PlayerScreenState
 
@@ -39,6 +39,6 @@ fun SongImageComposable(
 fun SongImagePreview(){
     SongImageComposable(
         PlayerCallbacks(),
-        PlayerScreenState(ServerValues())
+        PlayerScreenState(ServerGuiValues())
     )
 }

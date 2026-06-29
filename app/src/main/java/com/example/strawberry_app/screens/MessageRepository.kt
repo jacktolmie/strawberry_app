@@ -23,9 +23,8 @@ class MessageRepository @Inject constructor(
     private val playlistRepository: PlaylistRepository,
     @ApplicationScope private val scope: CoroutineScope
 ){
-    private val _serverUpdates = MutableStateFlow(ServerValues())
+    private val _serverUpdates = MutableStateFlow(ServerGuiValues())
     val serverUpdates = _serverUpdates.asStateFlow()
-//    val playlistUpdates = MutableStateFlow<PlaylistRepository>
 
     private var observeJob: Job? = null
 
@@ -74,7 +73,7 @@ class MessageRepository @Inject constructor(
                             }
                         }
                         _serverUpdates.update {
-                            ServerValues(
+                            ServerGuiValues(
                                 activePlaylist =    message.activePlaylist,
                                 currentPlaylist =   message.currentPlaylist,
                                 currentSong =       _serverUpdates.value.currentSong,
@@ -106,7 +105,7 @@ class MessageRepository @Inject constructor(
                             playState = PlayState.PAUSED
                         )
                     }
-                    is EventType.RenamePlaylist -> playlistRepository.renameCurrentPlaylist(id = message.id, name = message.name)
+                    is EventType.RenamePlaylist -> playlistRepository.serverRenamedPlaylist(id = message.id, name = message.name)
                     is EventType.SeekTo -> _serverUpdates.update {it.copy(currentTime = message.time) }
                     is EventType.SongChanged -> _serverUpdates.update { it.copy(currentSongId = message.trackId) }
                     // When song is changed, update the player screen.
@@ -163,10 +162,10 @@ class MessageRepository @Inject constructor(
     }
 
     fun resetServerValues() {
-        _serverUpdates.update { ServerValues() }
+        _serverUpdates.update { ServerGuiValues() }
     }
 
-    fun updateInformation(updates: ServerValues){
+    fun updateInformation(updates: ServerGuiValues){
         _serverUpdates.value = updates
     }
 

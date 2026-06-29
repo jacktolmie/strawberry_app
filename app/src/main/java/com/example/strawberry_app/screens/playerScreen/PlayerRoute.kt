@@ -5,11 +5,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.strawberry_app.music.SongInfo
-import com.example.strawberry_app.screens.ServerValues
+import com.example.strawberry_app.screens.ServerGuiValues
 
 data class PlayerScreenState(
-    val playerValues: ServerValues = ServerValues()
+    val playerValues: ServerGuiValues = ServerGuiValues()
 )
 
 class PlayerCallbacks(

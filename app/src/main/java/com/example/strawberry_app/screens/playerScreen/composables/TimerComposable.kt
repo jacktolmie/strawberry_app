@@ -17,7 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.strawberry_app.screens.ServerValues
+import com.example.strawberry_app.screens.ServerGuiValues
 import com.example.strawberry_app.screens.playerScreen.PlayerCallbacks
 import com.example.strawberry_app.screens.playerScreen.PlayerScreenState
 
@@ -72,7 +72,7 @@ fun TimerSlider(
 fun TimerSliderPreview(){
     TimerSlider(
         PlayerCallbacks(),
-        PlayerScreenState(ServerValues()),
+        PlayerScreenState(ServerGuiValues()),
         Modifier.background(Color.White)
     )
 }
