@@ -16,10 +16,11 @@ object EventTypeSerializer : JsonContentPolymorphicSerializer<EventType>(EventTy
     override fun selectDeserializer(element: JsonElement): DeserializationStrategy<EventType> {
         return when (element.jsonObject["event"]?.jsonPrimitive?.content) {
             "active_playlist" -> EventType.ActivePlaylist.serializer()
+            "closed_playlist_with_id" -> EventType.ClosedPlaylistWithId.serializer()
             "favourite_playlist" -> EventType.FavouritePlaylist.serializer()
             "gui_updates" -> EventType.GuiUpdates.serializer()
             "make_all_playlists" -> EventType.MakeAllPlaylists.serializer()
-            "make_playlist" -> EventType.MakeCurrentPlaylist.serializer()
+            "make_playlist" -> EventType.MakePlaylist.serializer()
             "next" -> EventType.Next.serializer()
             "pause" -> EventType.Pause.serializer()
             "play" -> EventType.Play.serializer()
@@ -49,6 +50,11 @@ sealed class EventType: IncomingMessage() {
         val id: Long,
         val row: Long = -1L
     ) : EventType()
+
+    @Serializable
+    @JsonIgnoreUnknownKeys
+    @SerialName("closed_playlist_with_id")
+    data class ClosedPlaylistWithId(val id: Long = 0L): EventType()
 
     @Serializable
     @JsonIgnoreUnknownKeys
@@ -82,8 +88,8 @@ sealed class EventType: IncomingMessage() {
     @Serializable
     @JsonIgnoreUnknownKeys
     @SerialName("make_playlist")
-    data class MakeCurrentPlaylist(
-        val id: Long,
+    data class MakePlaylist(
+//        val id: Long,
         val playlist: Playlist) : EventType()
 
     @Serializable
@@ -151,6 +157,8 @@ sealed class EventType: IncomingMessage() {
     @SerialName("song_info")
     data class SongInfo(
         val id: Long = 0L,
+        @SerialName("song_url")
+        val url: String = "",
         val artist: String = "",
         val album: String = "",
         val title: String = "",

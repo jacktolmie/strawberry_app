@@ -32,6 +32,8 @@ interface PlaylistDao {
     @Query("UPDATE playlist SET name = :name WHERE id = :id")
     suspend fun updateName(id: Long, name: String)
 
-    @Update
-    suspend fun updatePlaylist(playlist: PlaylistEntity)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsertPlaylist(playlist: PlaylistEntity)
+//    @Update
+//    suspend fun updatePlaylist(playlist: PlaylistEntity)
 }

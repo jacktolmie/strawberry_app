@@ -64,6 +64,7 @@ class MessageRepository @Inject constructor(
             networkManager.serverMessages.collect{ message ->
                 when(message) {
                     // Server Event messages.
+                    is EventType.ClosedPlaylistWithId -> { playlistRepository.serverClosedPlaylist(message.id) }
                     is EventType.FavouritePlaylist -> playlistRepository.serverFavourite(id =  message.id, isFavourite = message.favourite)
                     is EventType.GuiUpdates -> {
                         when (message.playlists) {
@@ -88,7 +89,8 @@ class MessageRepository @Inject constructor(
                             )
                         }
                     }
-                    is EventType.MakeCurrentPlaylist -> playlistRepository.makeCurrentPlaylist(message.playlist)
+//                    is EventType.MakeCurrentPlaylist -> playlistRepository.makeCurrentPlaylist(message.playlist)
+                    is EventType.MakePlaylist -> playlistRepository.makePlaylist(message.playlist)
                     // If playing, update current GUI settings to match server.
                     is EventType.Play -> _serverUpdates.update {
                         it.copy(
@@ -112,6 +114,7 @@ class MessageRepository @Inject constructor(
                     is EventType.SongInfo -> _serverUpdates.update {
                         it.copy(currentSong = SongInfo(
                             id = message.id,
+                            url = message.url,
                             artist = message.artist,
                             album = message.album,
                             title = message.title,
@@ -140,7 +143,6 @@ class MessageRepository @Inject constructor(
 
                     // Server Response messages.
                     is ResponseType.ClearedPlaylist -> { serverResponseMessage("Cleared playlist ${message.name}.") }
-                    is ResponseType.ClosedPlaylistWithId -> { serverResponseMessage("Closed playlist with ID: ${message.id}.") }
                     is ResponseType.DeletedPlaylistWithId -> { serverResponseMessage("Deleted playlist with ID: ${message.id}.") }
                     is ResponseType.IsPlaylistAFavourite -> { serverResponseMessage("Is playlist ${message.id} a favourite? ${message.isFavourite}.") }
                     is ResponseType.PlaylistClosed -> { serverResponseMessage("Playlist ${message.id} closed.") }

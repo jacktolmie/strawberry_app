@@ -58,7 +58,7 @@ class PlaylistViewModel @Inject constructor(
     fun shuffleCurrentPlaylist(id: Long) = playlistRepository.shuffleCurrentPlaylist(id = id)
 
 
-    fun serverRenamedPlaylist(id: Long, name: String){
+    suspend fun serverRenamedPlaylist(id: Long, name: String){
         playlistRepository.serverRenamedPlaylist(id = id, name = name)
     }
 

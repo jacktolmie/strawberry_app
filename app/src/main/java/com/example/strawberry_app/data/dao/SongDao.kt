@@ -19,9 +19,12 @@ interface SongDao {
     @Query("DELETE FROM song WHERE id = :id")
     suspend fun deleteById(id: Long)
 
-    @Query("DELETE FROM song WHERE id NOT IN (SELECT songId FROM playlist_song)")
+    @Query("DELETE FROM song WHERE id NOT IN (SELECT songUrl FROM playlist_song)")
     suspend fun deleteOrphans()
 
-    @Query("SELECT * FROM song WHERE id = :id")
-    fun observeById(id: Long): Flow<SongEntity?>
+    @Query("SELECT * FROM song WHERE url = :url")
+    fun observeByUrl(url: String): Flow<SongEntity>
+
+//    @Query("SELECT * FROM song WHERE id = :id")
+//    fun observeById(id: Long): Flow<SongEntity?>
 }

@@ -20,7 +20,9 @@ object DatabaseModule {
             context,
             AppDatabase::class.java,
             "strawberry.db"
-        ).build()
+        )
+            .fallbackToDestructiveMigration(dropAllTables = true)
+            .build()
     }
 
     @Provides

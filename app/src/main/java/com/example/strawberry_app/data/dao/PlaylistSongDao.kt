@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.Flow
 
 data class SongWithPosition(
     val id: Long,
+    val url: String,
     val artist: String,
     val album: String,
     val length: Long,
@@ -23,17 +24,17 @@ interface PlaylistSongDao {
     suspend fun delete(playlistId: Long)
 
     @Query("""
-    SELECT song.id, song.title, song.artist, song.album, song.length, playlist_song.position
+    SELECT song.id, song.url,  song.title, song.artist, song.album, song.length, playlist_song.position
     FROM playlist_song
-    JOIN song ON song.id = playlist_song.songId
+    JOIN song ON song.id = playlist_song.songUrl
     WHERE playlist_song.playlistId = :playlistId AND playlist_song.position = :position
 """)
     fun observeSongAtPosition(playlistId: Long, position: Long): Flow<SongWithPosition?>
 
     @Query("""
-        SELECT song.id, song.title, song.artist, song.album, song.length, playlist_song.position
+        SELECT song.id, song.url, song.title, song.artist, song.album, song.length, playlist_song.position
         FROM playlist_song
-        JOIN song ON song.id = playlist_song.songId
+        JOIN song ON song.url = playlist_song.songUrl
         WHERE playlist_song.playlistId = :playlistId
     """)
     fun observeSongsForPlaylist(playlistId: Long): Flow<List<SongWithPosition>>
@@ -44,6 +45,6 @@ interface PlaylistSongDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(entities: List<PlaylistSongEntity>)
 
-    @Query("DELETE FROM playlist_song WHERE playlistId = :playlistId AND songId IN (:songsId)")
+    @Query("DELETE FROM playlist_song WHERE playlistId = :playlistId AND songUrl IN (:songsId)")
     suspend fun deleteForPlaylist(playlistId: Long, songsId: List<Long>)
 }

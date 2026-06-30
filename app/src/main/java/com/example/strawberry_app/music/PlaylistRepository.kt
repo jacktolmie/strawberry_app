@@ -75,41 +75,55 @@ class PlaylistRepository @Inject constructor(
         _playlistState.update { it.copy(currentPlaylist = playlistId, currentSongIndex = songIndex) }
     }
 
-    fun getSongById(id: Long) : Flow<SongEntity?> = songDao.observeById(id)
+    fun getSongById(url: String) : Flow<SongEntity?> = songDao.observeByUrl(url = url)
 
     // Playlist database changes.
     suspend fun makeAllPlaylists(playlists: List<Playlist>){
         playlistDao.deleteAll()
 
         playlists.forEach { playlist ->
-
+            println("playlist Writing playlist: ${playlist.name} ${playlist.id}) with ${playlist.songs.size} songs")
+            playlist.songs.forEach { song ->
+               println("playlist  song id=${song.id} title=${song.title}")
+            }
             playlistDao.insert(PlaylistEntity(id = playlist.id, favourite = playlist.favourite, name = playlist.name))
 
             val songs = playlist.songs.map { song ->
-                SongEntity(id = song.id, title = song.title, artist = song.artist, album = song.album, length = song.length)
+                SongEntity(id = song.id, url = song.url, title = song.title, artist = song.artist, album = song.album, length = song.length)
             }
             songDao.insertAll(songs)
 
             val songIndex = playlist.songs.mapIndexed { index, song ->
-                PlaylistSongEntity(playlistId = playlist.id, songId = song.id, position = index)
+                PlaylistSongEntity(
+                    playlistId = playlist.id,
+                    position = index,
+                    songUrl = song.url
+                )
             }
             playlistSongDao.insertAll(entities = songIndex)
         }
     }
 
-    suspend fun makeCurrentPlaylist(playlist: Playlist){
-        playlistDao.insert(PlaylistEntity(id = playlist.id, favourite = playlist.favourite, name = playlist.name))
-    }
+//    suspend fun makeCurrentPlaylist(playlist: Playlist){
+//        playlistDao.insert(PlaylistEntity(id = playlist.id, favourite = playlist.favourite, name = playlist.name))
+//    }
 
     suspend fun serverFavourite(id: Long, isFavourite: Boolean){
         playlistDao.updateFavourite(id = id, favourite = isFavourite)
     }
 
-    suspend fun updatePlaylist(playlist: Playlist){
+    suspend fun makePlaylist(playlist: Playlist){
+        playlistDao.upsertPlaylist(PlaylistEntity(
+            id = playlist.id,
+            favourite = playlist.favourite,
+            name = playlist.name))
+
         playlistSongDao.delete(playlistId = playlist.id)
+
         val songs = playlist.songs.map{ song ->
             SongEntity(
                 id = song.id,
+                url = song.url,
                 title = song.title,
                 artist = song.artist,
                 album = song.album,
@@ -117,20 +131,13 @@ class PlaylistRepository @Inject constructor(
         }
         songDao.insertAll(songs = songs)
 
-        val playlistEntity = PlaylistEntity(
-            id = playlist.id,
-            favourite = playlist.favourite,
-            name = playlist.name)
-
         val songIndex = playlist.songs.mapIndexed { index, song ->
             PlaylistSongEntity(
                 playlistId = playlist.id,
-                songId = song.id,
+                songUrl = song.url,
                 position = index)
         }
         playlistSongDao.insertAll( entities = songIndex)
-
-        playlistDao.updatePlaylist(playlist = playlistEntity)
     }
 
     // Functions to change/receive server playlists.
@@ -154,7 +161,13 @@ class PlaylistRepository @Inject constructor(
     fun shuffleAllPlaylists() = sendCommand(OutgoingMessage.ShuffleAllPlaylists)
     fun shuffleCurrentPlaylist(id: Long) = sendCommand(OutgoingMessage.ShuffleCurrentPlaylist(id = id))
 
-    fun serverRenamedPlaylist(id: Long, name: String) {
-        TODO() // create function to rename local name on db
+    suspend fun serverClosedPlaylist(id: Long){
+        playlistDao.deleteById(id =  id)
     }
+
+    suspend fun serverRenamedPlaylist(id: Long, name: String) {
+        playlistDao.updateName(id = id, name = name)
+    }
+
+
 }

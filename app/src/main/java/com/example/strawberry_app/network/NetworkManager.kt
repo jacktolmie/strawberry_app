@@ -214,7 +214,7 @@ var reconnectCount = 0L
 
                         try {
                             val parsedMessage = json.decodeFromString<IncomingMessage>(jsonString)
-                            Log.e("NetworkManager", "Unparsed message $jsonString") // Delete when done testing
+                            logLong("Incoming message", parsedMessage.toString())
                             _serverMessages.tryEmit(parsedMessage)
                         } catch (e: SerializationException) {
                             Log.e("NetworkManager", "Failed to parse message: $jsonString — ${e.message}")
@@ -311,5 +311,15 @@ var reconnectCount = 0L
         reconnectTimer = 0
         reconnectCount = 0
         delayTime.value = 3000
+    }
+
+    // Delete when done checking incoming messages.
+    fun logLong(tag: String, message: String) {
+        val chunkSize = 3000
+        var i = 0
+        while (i < message.length) {
+            println("networkmanager ${message.substring(i, minOf(i + chunkSize, message.length))}")
+            i += chunkSize
+        }
     }
 }

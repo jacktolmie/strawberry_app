@@ -17,7 +17,6 @@ object ResponseTypeSerializer : JsonContentPolymorphicSerializer<ResponseType>(R
     override fun selectDeserializer(element: JsonElement): DeserializationStrategy<ResponseType> {
         return when (element.jsonObject["response"]?.jsonPrimitive?.content) {
             "cleared_playlist" -> ResponseType.ClearedPlaylist.serializer()
-            "closed_playlist_with_id" -> ResponseType.ClosedPlaylistWithId.serializer()
             "deleted_playlist_with_id" -> ResponseType.DeletedPlaylistWithId.serializer()
             "is_playlist_a_favourite" -> ResponseType.IsPlaylistAFavourite.serializer()
             "playlist_closed" -> ResponseType.PlaylistClosed.serializer()
@@ -43,11 +42,6 @@ sealed  class ResponseType: IncomingMessage() {
     @Serializable
     @SerialName("cleared_playlist")
     data class ClearedPlaylist(val name: String = ""): ResponseType()
-
-    @Serializable
-    @JsonIgnoreUnknownKeys
-    @SerialName("closed_playlist_with_id")
-    data class ClosedPlaylistWithId(val id: Long = 0L): ResponseType()
 
     @Serializable
     @JsonIgnoreUnknownKeys
