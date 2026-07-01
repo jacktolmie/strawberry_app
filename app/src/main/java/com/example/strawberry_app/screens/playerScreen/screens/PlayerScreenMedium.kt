@@ -1,4 +1,4 @@
-package com.example.strawberry_app.screens.playerScreen
+package com.example.strawberry_app.screens.playerScreen.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -20,6 +20,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.strawberry_app.screens.playerScreen.PlayerCallbacks
+import com.example.strawberry_app.screens.playerScreen.PlayerScreenState
 import com.example.strawberry_app.screens.playerScreen.composables.MediaBtnComposable
 import com.example.strawberry_app.screens.playerScreen.composables.SongImageComposable
 import com.example.strawberry_app.screens.playerScreen.composables.SongInfoComposable

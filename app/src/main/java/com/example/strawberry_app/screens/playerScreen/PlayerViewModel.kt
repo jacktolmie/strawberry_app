@@ -1,8 +1,8 @@
 package com.example.strawberry_app.screens.playerScreen
 
+import androidx.compose.ui.res.pluralStringResource
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.strawberry_app.network.NetworkManager
 import com.example.strawberry_app.network.protocol.OutgoingMessage
 import com.example.strawberry_app.screens.MessageRepository
 import com.example.strawberry_app.screens.PlayState
@@ -14,51 +14,45 @@ import kotlin.time.Duration.Companion.milliseconds
 
 @HiltViewModel
 class PlayerViewModel @Inject constructor(
-    private val networkManager: NetworkManager,
+    private val playerRepository: PlayerRepository,
     private val messageRepository: MessageRepository
 ): ViewModel(){
 
-    val serverUpdates = messageRepository.serverUpdates
+    val serverUpdates = playerRepository.serverUpdates
 
     init {
         // Start timing slider increment.
         timerUpdate()
     }
 
-    fun sendMute() = sendCommand(OutgoingMessage.Mute)
-    fun sendNext() = sendCommand(OutgoingMessage.Next)
-    fun sendRestartPrevious() = sendCommand(OutgoingMessage.RestartOrPrevious)
+    fun sendMute() = playerRepository.sendCommand(OutgoingMessage.Mute)
+    fun sendNext() = playerRepository.sendCommand(OutgoingMessage.Next)
+    fun sendRestartPrevious() = playerRepository.sendCommand(OutgoingMessage.RestartOrPrevious)
     fun sendPlayPause() {
-        sendCommand(OutgoingMessage.PlayPause)
-        messageRepository.updateInformation(messageRepository.serverUpdates.value.copy(
+        playerRepository.sendCommand(OutgoingMessage.PlayPause)
+        playerRepository.getGuiUpdates(playerRepository.serverUpdates.value.copy(
             playState = if (messageRepository.serverUpdates.value.playState == PlayState.PLAYING)
                 PlayState.PAUSED else PlayState.PLAYING
         ))
     }
 
-    fun sendPrevious() = sendCommand(OutgoingMessage.Previous)
-    fun sendSeekBackward() = sendCommand(OutgoingMessage.SeekBackward)
-    fun sendSeekForward() = sendCommand(OutgoingMessage.SeekForward)
-    fun sendSeekTo(seekTo: Long) = sendCommand(OutgoingMessage.SeekTo(seekTo / 1000))
+    fun sendPrevious() = playerRepository.sendCommand(OutgoingMessage.Previous)
+    fun sendSeekBackward() = playerRepository.sendCommand(OutgoingMessage.SeekBackward)
+    fun sendSeekForward() = playerRepository.sendCommand(OutgoingMessage.SeekForward)
+    fun sendSeekTo(seekTo: Long) = playerRepository.sendCommand(OutgoingMessage.SeekTo(seekTo / 1000))
 
     fun sendStop() {
-        sendCommand(OutgoingMessage.Stop)
-        messageRepository.updateInformation(messageRepository.serverUpdates.value.copy(playState = PlayState.STOPPED))
+        playerRepository.sendCommand(OutgoingMessage.Stop)
+        playerRepository.getGuiUpdates(playerRepository.serverUpdates.value.copy(playState = PlayState.STOPPED))
     }
 
-    fun sendStopAfterCurrent() = sendCommand(OutgoingMessage.StopAfterCurrent)
-    fun sendVolume(volume: Int) = sendCommand(OutgoingMessage.Volume(volume))
-    fun sendVolumeDown() = sendCommand(OutgoingMessage.VolumeDown)
-    fun sendVolumeUp() = sendCommand(OutgoingMessage.VolumeUp)
-
-    fun sendCommand(command: OutgoingMessage) {
-        viewModelScope.launch {
-            networkManager.sendCommand(command)
-        }
-    }
+    fun sendStopAfterCurrent() = playerRepository.sendCommand(OutgoingMessage.StopAfterCurrent)
+    fun sendVolume(volume: Int) = playerRepository.sendCommand(OutgoingMessage.Volume(volume))
+    fun sendVolumeDown() = playerRepository.sendCommand(OutgoingMessage.VolumeDown)
+    fun sendVolumeUp() = playerRepository.sendCommand(OutgoingMessage.VolumeUp)
 
     fun timeChanged(time: Long){
-        messageRepository.updateInformation(messageRepository.serverUpdates.value.copy(currentTime = time))
+        playerRepository.getGuiUpdates(playerRepository.serverUpdates.value.copy(currentTime = time))
     }
 
     fun formatTime(time: Long): String {
@@ -74,9 +68,9 @@ class PlayerViewModel @Inject constructor(
         viewModelScope.launch {
             while(true) {
                 delay(1000.milliseconds)
-                if(messageRepository.serverUpdates.value.playState == PlayState.PLAYING){
-                    messageRepository.updateInformation(
-                    messageRepository.serverUpdates.value.copy(
+                if(playerRepository.serverUpdates.value.playState == PlayState.PLAYING){
+                    playerRepository.getGuiUpdates(
+                        messageRepository.serverUpdates.value.copy(
                         currentTime = messageRepository.serverUpdates.value.currentTime + 1000L)
                     )
                 }

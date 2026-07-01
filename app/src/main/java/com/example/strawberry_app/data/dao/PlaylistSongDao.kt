@@ -12,6 +12,7 @@ data class SongWithPosition(
     val url: String,
     val artist: String,
     val album: String,
+    val coverImage: String,
     val length: Long,
     val position: Long,
     val title: String
@@ -24,7 +25,7 @@ interface PlaylistSongDao {
     suspend fun delete(playlistId: Long)
 
     @Query("""
-    SELECT song.id, song.url,  song.title, song.artist, song.album, song.length, playlist_song.position
+    SELECT song.id, song.url, song.coverImage, song.title, song.artist, song.album, song.length, playlist_song.position
     FROM playlist_song
     JOIN song ON song.id = playlist_song.songUrl
     WHERE playlist_song.playlistId = :playlistId AND playlist_song.position = :position
@@ -32,7 +33,7 @@ interface PlaylistSongDao {
     fun observeSongAtPosition(playlistId: Long, position: Long): Flow<SongWithPosition?>
 
     @Query("""
-        SELECT song.id, song.url, song.title, song.artist, song.album, song.length, playlist_song.position
+        SELECT song.id, song.url, song.coverImage, song.title, song.artist, song.album, song.length, playlist_song.position
         FROM playlist_song
         JOIN song ON song.url = playlist_song.songUrl
         WHERE playlist_song.playlistId = :playlistId

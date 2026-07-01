@@ -6,6 +6,7 @@ import androidx.compose.runtime.remember
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.strawberry_app.network.ConnectionViewModel
+import com.example.strawberry_app.screens.settingsScreen.screens.SettingsScreen
 import com.example.strawberry_app.server.ServerViewModel
 
 

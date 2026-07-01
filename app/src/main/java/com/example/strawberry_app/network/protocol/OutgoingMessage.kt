@@ -41,7 +41,11 @@ sealed class OutgoingMessage {
     @SerialName("rename-playlist")
     data class RenamePlaylist(val id: Long, val name: String): OutgoingMessage()
 
-
+    @Serializable
+    @SerialName("request_cover")
+    data class RequestCover(
+        val cover: String = ""
+    ): OutgoingMessage()
     @Serializable
     @SerialName("send-active-playlist-songs")
     data class SendActivePlaylistSong(val id: Long, val songIndex: Long): OutgoingMessage()

@@ -1,4 +1,4 @@
-package com.example.strawberry_app.music
+package com.example.strawberry_app.screens.playlistScreen
 
 import com.example.strawberry_app.data.dao.PlaylistDao
 import com.example.strawberry_app.data.dao.PlaylistSongDao
@@ -7,9 +7,11 @@ import com.example.strawberry_app.data.dao.SongWithPosition
 import com.example.strawberry_app.data.entity.PlaylistEntity
 import com.example.strawberry_app.data.entity.PlaylistSongEntity
 import com.example.strawberry_app.data.entity.SongEntity
+import com.example.strawberry_app.music.Playlist
 import com.example.strawberry_app.network.ApplicationScope
 import com.example.strawberry_app.network.NetworkManager
 import com.example.strawberry_app.network.protocol.OutgoingMessage
+import com.example.strawberry_app.screens.MessageRepository
 import jakarta.inject.Inject
 import jakarta.inject.Singleton
 import kotlinx.coroutines.CoroutineScope
@@ -35,8 +37,8 @@ class PlaylistRepository @Inject constructor(
     private val playlistDao: PlaylistDao,
     private val playlistSongDao: PlaylistSongDao,
     private val songDao: SongDao,
-
-    @ApplicationScope private val scope: CoroutineScope
+    @ApplicationScope
+    private val scope: CoroutineScope
 ) {
 
     private val _playlistState = MutableStateFlow(PlaylistState())
@@ -66,16 +68,12 @@ class PlaylistRepository @Inject constructor(
     }
 
     fun sendCommand(command: OutgoingMessage) {
-        scope.launch {
-            networkManager.sendCommand(command)
-        }
+        scope.launch { networkManager.sendCommand(command) }
     }
 
     fun updateCurrentSong(playlistId: Long, songIndex: Long) {
         _playlistState.update { it.copy(currentPlaylist = playlistId, currentSongIndex = songIndex) }
     }
-
-    fun getSongById(url: String) : Flow<SongEntity?> = songDao.observeByUrl(url = url)
 
     // Playlist database changes.
     suspend fun makeAllPlaylists(playlists: List<Playlist>){
@@ -89,7 +87,15 @@ class PlaylistRepository @Inject constructor(
             playlistDao.insert(PlaylistEntity(id = playlist.id, favourite = playlist.favourite, name = playlist.name))
 
             val songs = playlist.songs.map { song ->
-                SongEntity(id = song.id, url = song.url, title = song.title, artist = song.artist, album = song.album, length = song.length)
+                SongEntity(
+                    id = song.id,
+                    url = song.url,
+                    title = song.title,
+                    artist = song.artist,
+                    album = song.album,
+                    coverImage = song.coverImage,
+                    length = song.length
+                )
             }
             songDao.insertAll(songs)
 
@@ -103,10 +109,6 @@ class PlaylistRepository @Inject constructor(
             playlistSongDao.insertAll(entities = songIndex)
         }
     }
-
-//    suspend fun makeCurrentPlaylist(playlist: Playlist){
-//        playlistDao.insert(PlaylistEntity(id = playlist.id, favourite = playlist.favourite, name = playlist.name))
-//    }
 
     suspend fun serverFavourite(id: Long, isFavourite: Boolean){
         playlistDao.updateFavourite(id = id, favourite = isFavourite)
@@ -127,6 +129,7 @@ class PlaylistRepository @Inject constructor(
                 title = song.title,
                 artist = song.artist,
                 album = song.album,
+                coverImage = song.coverImage,
                 length = song.length)
         }
         songDao.insertAll(songs = songs)

@@ -6,6 +6,7 @@ import androidx.compose.runtime.remember
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.strawberry_app.screens.ServerGuiValues
+import com.example.strawberry_app.screens.playerScreen.screens.PlayerScreen
 
 data class PlayerScreenState(
     val playerValues: ServerGuiValues = ServerGuiValues()
@@ -56,7 +57,7 @@ fun PlayerRoute(
         )
     }
 
-    val playerScreenData = PlayerScreenState(playerValues) //, currentSong)
+    val playerScreenData = PlayerScreenState(playerValues)
 
     PlayerScreen(callbacks, playerScreenData)
 }

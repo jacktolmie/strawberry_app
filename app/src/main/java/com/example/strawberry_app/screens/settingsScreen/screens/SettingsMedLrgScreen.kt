@@ -1,4 +1,4 @@
-package com.example.strawberry_app.screens.settingsScreen
+package com.example.strawberry_app.screens.settingsScreen.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -19,6 +19,7 @@ import com.example.strawberry_app.R
 import com.example.strawberry_app.network.ConnectionState
 import com.example.strawberry_app.network.ConnectionState.Connected
 import com.example.strawberry_app.network.SettingsGuiData
+import com.example.strawberry_app.screens.settingsScreen.SettingsCallbacks
 import com.example.strawberry_app.screens.settingsScreen.composables.ConnStateMedLrg
 import com.example.strawberry_app.screens.settingsScreen.composables.MedLrgScreenBtns
 import com.example.strawberry_app.screens.settingsScreen.composables.TextBox

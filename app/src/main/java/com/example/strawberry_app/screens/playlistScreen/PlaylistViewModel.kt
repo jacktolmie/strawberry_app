@@ -1,35 +1,20 @@
 package com.example.strawberry_app.screens.playlistScreen
 
 import androidx.lifecycle.ViewModel
-import com.example.strawberry_app.data.dao.PlaylistDao
-import com.example.strawberry_app.data.dao.PlaylistSongDao
 import com.example.strawberry_app.music.Playlist
-import com.example.strawberry_app.music.PlaylistRepository
-import com.example.strawberry_app.network.NetworkManager
+import com.example.strawberry_app.screens.playerScreen.PlaylistValues
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
-data class PlaylistValues(
-    val activePlaylist: Long = -1L,
-    val currentPlaylist: Long = -1L,
-    val currentSongId: Long = -1L
-)
-
 @HiltViewModel
 class PlaylistViewModel @Inject constructor(
-    private val networkManager: NetworkManager,
     private val playlistRepository: PlaylistRepository
 ): ViewModel(){
 
     private val _playlistState = MutableStateFlow(PlaylistValues())
     val playlistState = _playlistState.asStateFlow()
-
-    init {
-//        playlistRepository.
-    }
-
 
     // Functions to send playlist changes to the server.
     fun clearCurrentPlaylist(id: Long) = playlistRepository.clearCurrentPlaylist(id)
@@ -56,7 +41,6 @@ class PlaylistViewModel @Inject constructor(
     fun setCurrentPlaylist(id: Long) = playlistRepository.setCurrentPlaylist(id = id)
     fun shuffleAllPlaylists() = playlistRepository.shuffleAllPlaylists()
     fun shuffleCurrentPlaylist(id: Long) = playlistRepository.shuffleCurrentPlaylist(id = id)
-
 
     suspend fun serverRenamedPlaylist(id: Long, name: String){
         playlistRepository.serverRenamedPlaylist(id = id, name = name)

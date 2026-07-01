@@ -17,6 +17,7 @@ object EventTypeSerializer : JsonContentPolymorphicSerializer<EventType>(EventTy
         return when (element.jsonObject["event"]?.jsonPrimitive?.content) {
             "active_playlist" -> EventType.ActivePlaylist.serializer()
             "closed_playlist_with_id" -> EventType.ClosedPlaylistWithId.serializer()
+            "cover_image" -> EventType.CoverImage.serializer()
             "favourite_playlist" -> EventType.FavouritePlaylist.serializer()
             "gui_updates" -> EventType.GuiUpdates.serializer()
             "make_all_playlists" -> EventType.MakeAllPlaylists.serializer()
@@ -55,6 +56,14 @@ sealed class EventType: IncomingMessage() {
     @JsonIgnoreUnknownKeys
     @SerialName("closed_playlist_with_id")
     data class ClosedPlaylistWithId(val id: Long = 0L): EventType()
+
+    @Serializable
+    @JsonIgnoreUnknownKeys
+    @SerialName("cover_image")
+    data class CoverImage(
+        @SerialName("cover_image")
+        val coverImage: String = ""
+    ): EventType()
 
     @Serializable
     @JsonIgnoreUnknownKeys
@@ -156,14 +165,16 @@ sealed class EventType: IncomingMessage() {
     @JsonIgnoreUnknownKeys
     @SerialName("song_info")
     data class SongInfo(
-        val id: Long = 0L,
-        @SerialName("song_url")
-        val url: String = "",
         val artist: String = "",
         val album: String = "",
+        @SerialName("cover_image")
+        val coverImage: String = "",
+        val id: Long = 0L,
+        val length: Long = 0L,
         val title: String = "",
-        val length: Long = 0L
-        //val coverImage // Unknown for now.
+        @SerialName("song_url")
+        val url: String = "",
+
     ): EventType()
     @Serializable
     @JsonIgnoreUnknownKeys

@@ -1,13 +1,8 @@
-package com.example.strawberry_app.screens.playlistScreen
+package com.example.strawberry_app.screens.playlistScreen.screens
 
-import androidx.compose.material3.Button
-import androidx.compose.material3.SecondaryScrollableTabRow
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.strawberry_app.music.PlaylistRepository
-import androidx.compose.runtime.collectAsState
-import com.example.strawberry_app.network.protocol.OutgoingMessage
+import com.example.strawberry_app.screens.playlistScreen.PlaylistCallbacks
 
 @Composable
 fun PlaylistMediumScreen(

@@ -34,8 +34,9 @@ import javax.inject.Singleton
 import kotlin.time.Duration.Companion.milliseconds
 
 @Singleton
+
 class NetworkManager @Inject constructor(
-    private val repository: ServerRepository,
+    private val serverRepository: ServerRepository,
     @ApplicationScope private val scope: CoroutineScope
 ) {
     private val _connectionState = MutableStateFlow<ConnectionState>(ConnectionState.Disconnected)
@@ -63,7 +64,7 @@ var reconnectCount = 0L
     init {
 
         scope.launch {
-            repository.serverInfoFlow
+            serverRepository.serverInfoFlow
                 .distinctUntilChanged()
                 .collectLatest { info ->
                 if (info == null) {

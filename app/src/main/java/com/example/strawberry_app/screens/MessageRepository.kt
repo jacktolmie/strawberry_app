@@ -1,30 +1,31 @@
 package com.example.strawberry_app.screens
 
 import android.util.Log
-import com.example.strawberry_app.music.PlaylistRepository
 import com.example.strawberry_app.music.SongInfo
 import com.example.strawberry_app.network.ApplicationScope
 import com.example.strawberry_app.network.ConnectionState
 import com.example.strawberry_app.network.NetworkManager
 import com.example.strawberry_app.network.protocol.ErrorType
 import com.example.strawberry_app.network.protocol.EventType
+import com.example.strawberry_app.network.protocol.OutgoingMessage
 import com.example.strawberry_app.network.protocol.ResponseType
+import com.example.strawberry_app.screens.playerScreen.PlayerRepository
+import com.example.strawberry_app.screens.playlistScreen.PlaylistRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class MessageRepository @Inject constructor(
+    private val playerRepository: PlayerRepository,
     private val networkManager: NetworkManager,
     private val playlistRepository: PlaylistRepository,
     @ApplicationScope private val scope: CoroutineScope
 ){
-    private val _serverUpdates = MutableStateFlow(ServerGuiValues())
-    val serverUpdates = _serverUpdates.asStateFlow()
+//    private val _serverUpdates = MutableStateFlow(ServerGuiValues())
+//    val serverUpdates = _serverUpdates.asStateFlow()
+    val serverUpdates = playerRepository.serverUpdates
 
     private var observeJob: Job? = null
 
@@ -42,17 +43,29 @@ class MessageRepository @Inject constructor(
         scope.launch {
             playlistRepository.currentSongData.collectLatest { songWithPosition ->
                 songWithPosition?.let{
-                    _serverUpdates.update { state ->
-                        state.copy(
+                    playerRepository.getGuiUpdates(
+                        serverUpdates.value.copy(
                             currentSong = SongInfo(
                                 id = it.id,
                                 artist = it.artist,
                                 album = it.album,
+                                coverImage = it.coverImage,
                                 title = it.title,
-                                length = it.length
+                                length = it.length,
                             )
                         )
-                    }
+                    )
+//                    _serverUpdates.update { state ->
+//                        state.copy(
+//                            currentSong = SongInfo(
+//                                id = it.id,
+//                                artist = it.artist,
+//                                album = it.album,
+//                                title = it.title,
+//                                length = it.length
+//                            )
+//                        )
+//                    }
                 }
             }
         }
@@ -65,6 +78,7 @@ class MessageRepository @Inject constructor(
                 when(message) {
                     // Server Event messages.
                     is EventType.ClosedPlaylistWithId -> { playlistRepository.serverClosedPlaylist(message.id) }
+                    is EventType.CoverImage -> { playerRepository.receiveCover(message.coverImage) }
                     is EventType.FavouritePlaylist -> playlistRepository.serverFavourite(id =  message.id, isFavourite = message.favourite)
                     is EventType.GuiUpdates -> {
                         when (message.playlists) {
@@ -73,66 +87,69 @@ class MessageRepository @Inject constructor(
                                 playlistRepository.updateCurrentSong(message.activePlaylist, message.currentSong)
                             }
                         }
-                        _serverUpdates.update {
+                        playerRepository.getGuiUpdates(
                             ServerGuiValues(
                                 activePlaylist =    message.activePlaylist,
                                 currentPlaylist =   message.currentPlaylist,
-                                currentSong =       _serverUpdates.value.currentSong,
+                                currentSong =       serverUpdates.value.currentSong,
                                 currentSongId =     message.currentSong,
                                 currentTime =       message.time,
                                 playState =         when(message.playing){
-                                                        "paused" ->     PlayState.PAUSED
-                                                        "playing" ->    PlayState.PLAYING
-                                                        else ->         PlayState.STOPPED
+                                    "paused" ->     PlayState.PAUSED
+                                    "playing" ->    PlayState.PLAYING
+                                    else ->         PlayState.STOPPED
                                 },
                                 volume =            message.volume,
                             )
-                        }
+                        )
                     }
-//                    is EventType.MakeCurrentPlaylist -> playlistRepository.makeCurrentPlaylist(message.playlist)
                     is EventType.MakePlaylist -> playlistRepository.makePlaylist(message.playlist)
                     // If playing, update current GUI settings to match server.
-                    is EventType.Play -> _serverUpdates.update {
-                        it.copy(
+                    is EventType.Play -> playerRepository.getGuiUpdates(
+                        serverUpdates.value.copy(
                             activePlaylist = message.activePlaylist,
                             currentSongId = message.row,
                             currentTime = message.time,
                             playState = PlayState.PLAYING
                         )
-                    }
+                    )
                     // If paused, sync time sent from server
-                    is EventType.Pause -> _serverUpdates.update {
-                        it.copy(
+                    is EventType.Pause -> playerRepository.getGuiUpdates(
+                        serverUpdates.value.copy(
                             currentTime = message.time,
                             playState = PlayState.PAUSED
                         )
-                    }
+                    )
                     is EventType.RenamePlaylist -> playlistRepository.serverRenamedPlaylist(id = message.id, name = message.name)
-                    is EventType.SeekTo -> _serverUpdates.update {it.copy(currentTime = message.time) }
-                    is EventType.SongChanged -> _serverUpdates.update { it.copy(currentSongId = message.trackId) }
+                    is EventType.SeekTo -> playerRepository.getGuiUpdates(serverUpdates.value.copy(currentTime = message.time) )
+                    is EventType.SongChanged -> playerRepository.getGuiUpdates(serverUpdates.value.copy(currentSongId = message.trackId))
                     // When song is changed, update the player screen.
-                    is EventType.SongInfo -> _serverUpdates.update {
-                        it.copy(currentSong = SongInfo(
+                    is EventType.SongInfo ->playerRepository.getGuiUpdates(
+                        serverUpdates.value.copy(
+                            currentSong = SongInfo(
                             id = message.id,
                             url = message.url,
                             artist = message.artist,
                             album = message.album,
+                            coverImage = message.coverImage,
                             title = message.title,
                             length = message.length
-                        ))
-                    }
+                        )))
+
                     // If stopped, set player screen to defaults.
-                    is EventType.Stop -> _serverUpdates.update {
-                        val currentVolume = _serverUpdates.value.volume
-                        it.copy(
-                            currentSong = SongInfo(),
-                            currentTime = 0,
-                            volume = currentVolume,
-                            playState = PlayState.STOPPED
+                    is EventType.Stop -> {
+                        val currentVolume = serverUpdates.value.volume
+                        playerRepository.getGuiUpdates(
+                                serverUpdates.value.copy(
+                                        currentSong = SongInfo(),
+                                        currentTime = 0,
+                                        volume = currentVolume,
+                                        playState = PlayState.STOPPED
+                                    )
                         )
                     }
-                    is EventType.Time -> _serverUpdates.update { it.copy(currentTime = message.time) }
-                    is EventType.VolumeChanged -> _serverUpdates.update {it.copy(volume = message.volume) }
+                    is EventType.Time -> playerRepository.getGuiUpdates(serverUpdates.value.copy(currentTime = message.time))
+                    is EventType.VolumeChanged -> playerRepository.getGuiUpdates(serverUpdates.value.copy(volume = message.volume))
 
                     // Server Error messages.
                     is ErrorType.CommandNotFound -> { serverErrorMessage("Command not found ${message.command}") }
@@ -164,11 +181,11 @@ class MessageRepository @Inject constructor(
     }
 
     fun resetServerValues() {
-        _serverUpdates.update { ServerGuiValues() }
+        playerRepository.getGuiUpdates( ServerGuiValues() )
     }
 
-    fun updateInformation(updates: ServerGuiValues){
-        _serverUpdates.value = updates
+    fun sendCommand(command: OutgoingMessage){
+        scope.launch { networkManager.sendCommand(command = command) }
     }
 
     fun serverErrorMessage(error: String){
@@ -178,4 +195,8 @@ class MessageRepository @Inject constructor(
     fun serverResponseMessage(message: String){
         Log.i("Server Response:", message)
     }
+
+//    fun updateInformation(updates: ServerGuiValues){
+//        _serverUpdates.value = updates
+//    }
 }
