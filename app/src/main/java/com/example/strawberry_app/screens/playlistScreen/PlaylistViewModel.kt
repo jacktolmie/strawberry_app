@@ -2,7 +2,6 @@ package com.example.strawberry_app.screens.playlistScreen
 
 import androidx.lifecycle.ViewModel
 import com.example.strawberry_app.music.Playlist
-import com.example.strawberry_app.screens.playerScreen.PlaylistValues
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -13,7 +12,7 @@ class PlaylistViewModel @Inject constructor(
     private val playlistRepository: PlaylistRepository
 ): ViewModel(){
 
-    private val _playlistState = MutableStateFlow(PlaylistValues())
+    private val _playlistState = MutableStateFlow( PlaylistState())// PlaylistValues())
     val playlistState = _playlistState.asStateFlow()
 
     // Functions to send playlist changes to the server.

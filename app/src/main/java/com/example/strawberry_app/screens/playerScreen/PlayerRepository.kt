@@ -10,12 +10,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 import javax.inject.Singleton
 
-data class PlaylistValues(
-    val activePlaylist: Long = -1L,
-    val currentPlaylist: Long = -1L,
-    val currentSongId: Long = -1L
-)
-
 @Singleton
 class PlayerRepository @Inject constructor(
     private val albumArtRepository: AlbumArtRepository,
@@ -34,10 +28,11 @@ class PlayerRepository @Inject constructor(
         playlistRepository.sendCommand(command)
     }
 
-
     // Check for album cover. Make request if missing.
     fun checkAlbumArt(){
+        if(albumArtRepository.checkForCover(playlistRepository.playlistState.value.currentSongData.coverImage)){
 
+        }
     }
 
     fun receiveCover(name: String){

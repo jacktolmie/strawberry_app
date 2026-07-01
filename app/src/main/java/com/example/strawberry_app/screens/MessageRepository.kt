@@ -7,8 +7,8 @@ import com.example.strawberry_app.network.ConnectionState
 import com.example.strawberry_app.network.NetworkManager
 import com.example.strawberry_app.network.protocol.ErrorType
 import com.example.strawberry_app.network.protocol.EventType
-import com.example.strawberry_app.network.protocol.OutgoingMessage
 import com.example.strawberry_app.network.protocol.ResponseType
+import com.example.strawberry_app.screens.playerScreen.AlbumArtRepository
 import com.example.strawberry_app.screens.playerScreen.PlayerRepository
 import com.example.strawberry_app.screens.playlistScreen.PlaylistRepository
 import kotlinx.coroutines.CoroutineScope
@@ -21,10 +21,9 @@ class MessageRepository @Inject constructor(
     private val playerRepository: PlayerRepository,
     private val networkManager: NetworkManager,
     private val playlistRepository: PlaylistRepository,
+    private val albumArtRepository: AlbumArtRepository,
     @ApplicationScope private val scope: CoroutineScope
 ){
-//    private val _serverUpdates = MutableStateFlow(ServerGuiValues())
-//    val serverUpdates = _serverUpdates.asStateFlow()
     val serverUpdates = playerRepository.serverUpdates
 
     private var observeJob: Job? = null
@@ -55,17 +54,6 @@ class MessageRepository @Inject constructor(
                             )
                         )
                     )
-//                    _serverUpdates.update { state ->
-//                        state.copy(
-//                            currentSong = SongInfo(
-//                                id = it.id,
-//                                artist = it.artist,
-//                                album = it.album,
-//                                title = it.title,
-//                                length = it.length
-//                            )
-//                        )
-//                    }
                 }
             }
         }
@@ -78,7 +66,7 @@ class MessageRepository @Inject constructor(
                 when(message) {
                     // Server Event messages.
                     is EventType.ClosedPlaylistWithId -> { playlistRepository.serverClosedPlaylist(message.id) }
-                    is EventType.CoverImage -> { playerRepository.receiveCover(message.coverImage) }
+                    is EventType.CoverImage -> { albumArtRepository.receiveCover(message.coverImage) }
                     is EventType.FavouritePlaylist -> playlistRepository.serverFavourite(id =  message.id, isFavourite = message.favourite)
                     is EventType.GuiUpdates -> {
                         when (message.playlists) {
@@ -105,14 +93,17 @@ class MessageRepository @Inject constructor(
                     }
                     is EventType.MakePlaylist -> playlistRepository.makePlaylist(message.playlist)
                     // If playing, update current GUI settings to match server.
-                    is EventType.Play -> playerRepository.getGuiUpdates(
-                        serverUpdates.value.copy(
-                            activePlaylist = message.activePlaylist,
-                            currentSongId = message.row,
-                            currentTime = message.time,
-                            playState = PlayState.PLAYING
+                    is EventType.Play -> {
+                        playerRepository.getGuiUpdates(
+                            serverUpdates.value.copy(
+                                activePlaylist = message.activePlaylist,
+                                currentSongId = message.row,
+                                currentTime = message.time,
+                                playState = PlayState.PLAYING
+                            )
                         )
-                    )
+                        playerRepository.checkAlbumArt()
+                    }
                     // If paused, sync time sent from server
                     is EventType.Pause -> playerRepository.getGuiUpdates(
                         serverUpdates.value.copy(
@@ -122,7 +113,10 @@ class MessageRepository @Inject constructor(
                     )
                     is EventType.RenamePlaylist -> playlistRepository.serverRenamedPlaylist(id = message.id, name = message.name)
                     is EventType.SeekTo -> playerRepository.getGuiUpdates(serverUpdates.value.copy(currentTime = message.time) )
-                    is EventType.SongChanged -> playerRepository.getGuiUpdates(serverUpdates.value.copy(currentSongId = message.trackId))
+                    is EventType.SongChanged -> {
+                        playerRepository.getGuiUpdates(serverUpdates.value.copy(currentSongId = message.trackId))
+                        playerRepository.checkAlbumArt()
+                    }
                     // When song is changed, update the player screen.
                     is EventType.SongInfo ->playerRepository.getGuiUpdates(
                         serverUpdates.value.copy(
@@ -168,6 +162,7 @@ class MessageRepository @Inject constructor(
                     is ResponseType.RemovedSongFromPlaylist -> { serverResponseMessage("Removed song from playlist ${message.name}.") }
                     is ResponseType.RunningCommand -> { serverResponseMessage("Running command ${message.command}.") }
                     is ResponseType.SentActivePlaylist -> { serverResponseMessage("Active playlist ID: ${message.id}.") }
+                    is ResponseType.SentAlbumCover -> {serverResponseMessage("Sent album cover")}
                     is ResponseType.SendRequestedPlaylist -> { serverResponseMessage("Send requested playlist with ID: ${message.playlist.id}.") }
                     is ResponseType.SetActivePlaylistTo -> { serverResponseMessage("Set active playlist to ${message.id}.") }
                     is ResponseType.ShuffledPlaylist -> { serverResponseMessage("Shuffled playlist.") }
@@ -184,10 +179,6 @@ class MessageRepository @Inject constructor(
         playerRepository.getGuiUpdates( ServerGuiValues() )
     }
 
-    fun sendCommand(command: OutgoingMessage){
-        scope.launch { networkManager.sendCommand(command = command) }
-    }
-
     fun serverErrorMessage(error: String){
         Log.e("Server Error", error)
     }
@@ -195,8 +186,4 @@ class MessageRepository @Inject constructor(
     fun serverResponseMessage(message: String){
         Log.i("Server Response:", message)
     }
-
-//    fun updateInformation(updates: ServerGuiValues){
-//        _serverUpdates.value = updates
-//    }
 }
