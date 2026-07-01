@@ -30,12 +30,9 @@ class PlayerRepository @Inject constructor(
 
     // Check for album cover. Make request if missing.
     fun checkAlbumArt(){
-        if(albumArtRepository.checkForCover(playlistRepository.playlistState.value.currentSongData.coverImage)){
-
+        val imageName = playlistRepository.playlistState.value.currentSongData?.coverImage ?: ""
+        if(imageName.isNotEmpty() && !albumArtRepository.hasImage(imageName)){
+            playlistRepository.sendCommand(OutgoingMessage.RequestCover)
         }
-    }
-
-    fun receiveCover(name: String){
-
     }
 }

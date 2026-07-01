@@ -2,6 +2,7 @@ package com.example.strawberry_app.screens.playlistScreen
 
 import androidx.lifecycle.ViewModel
 import com.example.strawberry_app.music.Playlist
+import com.example.strawberry_app.network.protocol.OutgoingMessage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,33 +17,27 @@ class PlaylistViewModel @Inject constructor(
     val playlistState = _playlistState.asStateFlow()
 
     // Functions to send playlist changes to the server.
-    fun clearCurrentPlaylist(id: Long) = playlistRepository.clearCurrentPlaylist(id)
-    fun closeCurrentPlaylist(id: Long) = playlistRepository.closeCurrentPlaylist(id)
-    fun deleteCurrentPlaylist(id: Long) = playlistRepository.deleteCurrentPlaylist(id)
+    fun clearCurrentPlaylist(id: Long) = playlistRepository.sendCommand(OutgoingMessage.ClearPlaylist(id))
+    fun closeCurrentPlaylist(id: Long) = playlistRepository.sendCommand(OutgoingMessage.CloseCurrent(id))
+    fun deleteCurrentPlaylist(id: Long) = playlistRepository.sendCommand(OutgoingMessage.DeleteCurrentPlaylist(id))
     fun removeSongsCurrentPlaylist(id: Long, songsList: List<Long>){
-        playlistRepository.removeSongsCurrentPlaylist(id = id, songsList = songsList)
+        playlistRepository.sendCommand(OutgoingMessage.RemoveCurrentSongsFromPlaylist(id = id, songsList = songsList))
     }
-    fun removeDuplicatesInPlaylist() = playlistRepository.removeDuplicatesInPlaylist()
+    fun removeDuplicatesInPlaylist() = playlistRepository.sendCommand(OutgoingMessage.RemoveDuplicatesFromPlaylist)
     fun renameCurrentPlaylist(id: Long, name: String) {
-        playlistRepository.renameCurrentPlaylist(id = id, name = name)
+        playlistRepository.sendCommand(OutgoingMessage.RenamePlaylist(id = id, name = name))
     }
-    fun sendActivePlaylistSong(id: Long, song: Long){
-        playlistRepository.sendActivePlaylistSong(id = id, songIndex = song)
+    fun sendActivePlaylistSong(id: Long, songIndex: Long){
+        playlistRepository.sendCommand(OutgoingMessage.SendActivePlaylistSong(id = id, songIndex = songIndex))
     }
-
-    fun sendAllPlaylists(playlists: List<Playlist>) = playlistRepository.sendAllPlaylists(playlists = playlists)
+    fun sendAllPlaylists(playlists: List<Playlist>) = playlistRepository.sendCommand(OutgoingMessage.SendAllPlaylists(playlists = playlists))
     fun sendCurrentPlaylist(id: Long, playlist: Playlist){
-        playlistRepository.sendCurrentPlaylist(id = id, playlist = playlist)
+        playlistRepository.sendCommand(OutgoingMessage.SendCurrentPlaylist(id = id, playlist =  playlist))
     }
     fun sendPlaylistFavourite(id: Long, favourite: Boolean){
-        playlistRepository.sendPlaylistFavourite(id = id, favourite = favourite)
+        playlistRepository.sendCommand(OutgoingMessage.FavouritePlaylist(playlistId = id, favourite = favourite))
     }
-    fun setCurrentPlaylist(id: Long) = playlistRepository.setCurrentPlaylist(id = id)
-    fun shuffleAllPlaylists() = playlistRepository.shuffleAllPlaylists()
-    fun shuffleCurrentPlaylist(id: Long) = playlistRepository.shuffleCurrentPlaylist(id = id)
-
-    suspend fun serverRenamedPlaylist(id: Long, name: String){
-        playlistRepository.serverRenamedPlaylist(id = id, name = name)
-    }
-
+    fun setCurrentPlaylist(id: Long) = playlistRepository.sendCommand(OutgoingMessage.SetCurrentPlaylist(id = id))
+    fun shuffleAllPlaylists() = playlistRepository.sendCommand(OutgoingMessage.ShuffleAllPlaylists)
+    fun shuffleCurrentPlaylist(id: Long) = playlistRepository.sendCommand(OutgoingMessage.ShuffleCurrentPlaylist(id = id))
 }

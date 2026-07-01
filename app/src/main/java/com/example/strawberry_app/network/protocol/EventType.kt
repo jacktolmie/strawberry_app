@@ -61,6 +61,7 @@ sealed class EventType: IncomingMessage() {
     @JsonIgnoreUnknownKeys
     @SerialName("cover_image")
     data class CoverImage(
+        val name: String = "",
         @SerialName("cover_image")
         val coverImage: String = ""
     ): EventType()

@@ -57,10 +57,11 @@ class PlaylistRepository @Inject constructor(
     @OptIn(ExperimentalCoroutinesApi::class)
     private fun getCurrentSong(): Flow<SongWithPosition?> {
         return playlistState.flatMapLatest { state ->
-            if (state.currentPlaylist == -1L || state.currentSongIndex == -1L){
+            if (state.currentPlaylist == -1L || state.currentSongIndex == -1L) {
                 flowOf(null)
-            }else {
-                playlistSongDao.observeSongAtPosition(state.currentPlaylist,
+            } else {
+                playlistSongDao.observeSongAtPosition(
+                    state.currentPlaylist,
                     state.currentSongIndex
                 )
             }
@@ -72,19 +73,30 @@ class PlaylistRepository @Inject constructor(
     }
 
     fun updateCurrentSong(playlistId: Long, songIndex: Long) {
-        _playlistState.update { it.copy(currentPlaylist = playlistId, currentSongIndex = songIndex) }
+        _playlistState.update {
+            it.copy(
+                currentPlaylist = playlistId,
+                currentSongIndex = songIndex
+            )
+        }
     }
 
     // Playlist database changes.
-    suspend fun makeAllPlaylists(playlists: List<Playlist>){
+    suspend fun makeAllPlaylists(playlists: List<Playlist>) {
         playlistDao.deleteAll()
 
         playlists.forEach { playlist ->
             println("playlist Writing playlist: ${playlist.name} ${playlist.id}) with ${playlist.songs.size} songs")
             playlist.songs.forEach { song ->
-               println("playlist  song id=${song.id} title=${song.title}")
+                println("playlist  song id=${song.id} title=${song.title}")
             }
-            playlistDao.insert(PlaylistEntity(id = playlist.id, favourite = playlist.favourite, name = playlist.name))
+            playlistDao.insert(
+                PlaylistEntity(
+                    id = playlist.id,
+                    favourite = playlist.favourite,
+                    name = playlist.name
+                )
+            )
 
             val songs = playlist.songs.map { song ->
                 SongEntity(
@@ -110,19 +122,22 @@ class PlaylistRepository @Inject constructor(
         }
     }
 
-    suspend fun serverFavourite(id: Long, isFavourite: Boolean){
+    suspend fun serverFavourite(id: Long, isFavourite: Boolean) {
         playlistDao.updateFavourite(id = id, favourite = isFavourite)
     }
 
-    suspend fun makePlaylist(playlist: Playlist){
-        playlistDao.upsertPlaylist(PlaylistEntity(
-            id = playlist.id,
-            favourite = playlist.favourite,
-            name = playlist.name))
+    suspend fun makePlaylist(playlist: Playlist) {
+        playlistDao.upsertPlaylist(
+            PlaylistEntity(
+                id = playlist.id,
+                favourite = playlist.favourite,
+                name = playlist.name
+            )
+        )
 
         playlistSongDao.delete(playlistId = playlist.id)
 
-        val songs = playlist.songs.map{ song ->
+        val songs = playlist.songs.map { song ->
             SongEntity(
                 id = song.id,
                 url = song.url,
@@ -130,7 +145,8 @@ class PlaylistRepository @Inject constructor(
                 artist = song.artist,
                 album = song.album,
                 coverImage = song.coverImage,
-                length = song.length)
+                length = song.length
+            )
         }
         songDao.insertAll(songs = songs)
 
@@ -138,39 +154,17 @@ class PlaylistRepository @Inject constructor(
             PlaylistSongEntity(
                 playlistId = playlist.id,
                 songUrl = song.url,
-                position = index)
+                position = index
+            )
         }
-        playlistSongDao.insertAll( entities = songIndex)
+        playlistSongDao.insertAll(entities = songIndex)
     }
 
-    // Functions to change/receive server playlists.
-    fun clearCurrentPlaylist(id: Long) = sendCommand(OutgoingMessage.ClearPlaylist(id))
-    fun closeCurrentPlaylist(id: Long) = sendCommand(OutgoingMessage.CloseCurrent(id))
-    fun deleteCurrentPlaylist(playlistId: Long) = sendCommand(OutgoingMessage.DeleteCurrentPlaylist(playlistId))
-    fun removeSongsCurrentPlaylist(id: Long, songsList: List<Long>) =
-        sendCommand(OutgoingMessage.RemoveCurrentSongsFromPlaylist(id = id, songsList = songsList))
-    fun removeDuplicatesInPlaylist() = sendCommand(OutgoingMessage.RemoveDuplicatesFromPlaylist)
-    fun renameCurrentPlaylist(id: Long, name:String) = sendCommand(OutgoingMessage.RenamePlaylist(id = id, name = name))
-    fun sendActivePlaylistSong(id: Long, songIndex: Long) {
-        sendCommand(OutgoingMessage.SendActivePlaylistSong(id = id, songIndex = songIndex))
-    }
-    fun sendAllPlaylists(playlists: List<Playlist>) = sendCommand(OutgoingMessage.SendAllPlaylists(playlists = playlists))
-    fun sendCurrentPlaylist(id: Long, playlist: Playlist) {
-        sendCommand(OutgoingMessage.SendCurrentPlaylist(id = id, playlist =  playlist))
-    }
-    fun sendPlaylistFavourite(id: Long, favourite: Boolean) =
-        sendCommand(OutgoingMessage.FavouritePlaylist(playlistId = id, favourite = favourite))
-    fun setCurrentPlaylist(id: Long): Unit = sendCommand(OutgoingMessage.SetCurrentPlaylist(id = id))
-    fun shuffleAllPlaylists() = sendCommand(OutgoingMessage.ShuffleAllPlaylists)
-    fun shuffleCurrentPlaylist(id: Long) = sendCommand(OutgoingMessage.ShuffleCurrentPlaylist(id = id))
-
-    suspend fun serverClosedPlaylist(id: Long){
-        playlistDao.deleteById(id =  id)
+    suspend fun serverClosedPlaylist(id: Long) {
+        playlistDao.deleteById(id = id)
     }
 
     suspend fun serverRenamedPlaylist(id: Long, name: String) {
         playlistDao.updateName(id = id, name = name)
     }
-
-
 }
