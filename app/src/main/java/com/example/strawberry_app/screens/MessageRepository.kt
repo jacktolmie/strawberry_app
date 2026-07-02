@@ -66,7 +66,7 @@ class MessageRepository @Inject constructor(
                 when(message) {
                     // Server Event messages.
                     is EventType.ClosedPlaylistWithId -> { playlistRepository.serverClosedPlaylist(message.id) }
-                    is EventType.CoverImage -> { albumArtRepository.receiveCover(message.coverImage) }
+                    is EventType.CoverImage -> { albumArtRepository.receiveCover(name = message.name, image = message.coverImage) }
                     is EventType.FavouritePlaylist -> playlistRepository.serverFavourite(id =  message.id, isFavourite = message.favourite)
                     is EventType.GuiUpdates -> {
                         when (message.playlists) {

@@ -14,20 +14,17 @@ class AlbumArtRepository @Inject constructor(
     private val albumArtDir : File = File(context.filesDir, "album_art")
         .also{ if(!it.exists()) it.mkdirs()}
 
+    fun getImageFile(filename: String): File {
+        return File(albumArtDir, filename)
+    }
+
     fun hasImage(name: String): Boolean{
         return File(albumArtDir, name).exists()
     }
 
-    fun receiveCover(name: String){
-//        if(name.isEmpty())
+    fun receiveCover(name: String, image: String){
+        val bytes = android.util.Base64.decode(image, android.util.Base64.DEFAULT)
+        val file = getImageFile(name)
+        file.writeBytes(bytes)
     }
-
 }
-
-/*
-fun saveImage(filename: String, base64Data: String) {
-    val bytes = android.util.Base64.decode(base64Data, android.util.Base64.DEFAULT)
-    val file = getImageFile(filename)  // from your AlbumArtRepository
-    file.writeBytes(bytes)
-}
- */

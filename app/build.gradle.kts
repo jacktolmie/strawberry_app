@@ -55,7 +55,6 @@ dependencies {
 
     // Add fonts
     implementation(libs.androidx.compose.ui.text.google.fonts)
-    implementation(libs.androidx.compose.material3)
 
     // Hilt dependencies
     implementation(libs.hilt.android)
@@ -80,7 +79,10 @@ dependencies {
     ksp(libs.room.compiler)
 
     // For vertical sliders. Delete later when not experimental
-    implementation(libs.androidx.compose.material3.v150alpha19)
+    implementation(libs.androidx.compose.material3.v150alpha)
+
+    // For images
+    implementation(libs.coil.compose)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

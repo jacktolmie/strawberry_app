@@ -9,6 +9,7 @@ import com.example.strawberry_app.screens.PlayState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.io.File
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -19,6 +20,10 @@ class PlayerViewModel @Inject constructor(
 ): ViewModel(){
 
     val serverUpdates = playerRepository.serverUpdates
+
+    val albumArtFile: File? = currentSongData?.coverImage
+        ?.takeIf { it.isNotEmpty() && albumArtRepository.hasImage(it) }
+        ?.let { albumArtRepository.getImageFile(it) }
 
     init {
         // Start timing slider increment.

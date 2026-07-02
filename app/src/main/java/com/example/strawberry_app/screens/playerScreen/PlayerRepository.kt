@@ -35,4 +35,6 @@ class PlayerRepository @Inject constructor(
             playlistRepository.sendCommand(OutgoingMessage.RequestCover)
         }
     }
+
+    fun
 }
