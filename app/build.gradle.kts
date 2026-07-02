@@ -84,6 +84,9 @@ dependencies {
     // For images
     implementation(libs.coil.compose)
 
+    // For newer metadata. Remove if not needed
+    implementation(libs.kotlin.metadata.jvm)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

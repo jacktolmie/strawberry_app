@@ -1,6 +1,5 @@
 package com.example.strawberry_app.screens.playerScreen
 
-import androidx.compose.ui.res.pluralStringResource
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.strawberry_app.network.protocol.OutgoingMessage
@@ -8,6 +7,10 @@ import com.example.strawberry_app.screens.MessageRepository
 import com.example.strawberry_app.screens.PlayState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.io.File
 import javax.inject.Inject
@@ -20,10 +23,14 @@ class PlayerViewModel @Inject constructor(
 ): ViewModel(){
 
     val serverUpdates = playerRepository.serverUpdates
-
-    val albumArtFile: File? = currentSongData?.coverImage
-        ?.takeIf { it.isNotEmpty() && albumArtRepository.hasImage(it) }
-        ?.let { albumArtRepository.getImageFile(it) }
+    val latestCover = playerRepository.latestCover
+    val albumArtFile: StateFlow<File?> = playerRepository.latestCover
+        .map { name -> playerRepository.getAlbumArtFile(name) }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = null
+        )
 
     init {
         // Start timing slider increment.

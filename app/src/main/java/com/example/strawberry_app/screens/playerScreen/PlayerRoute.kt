@@ -7,9 +7,11 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.strawberry_app.screens.ServerGuiValues
 import com.example.strawberry_app.screens.playerScreen.screens.PlayerScreen
+import java.io.File
 
 data class PlayerScreenState(
-    val playerValues: ServerGuiValues = ServerGuiValues()
+    val playerValues: ServerGuiValues = ServerGuiValues(),
+    val albumArtFile: File? = null
 )
 
 class PlayerCallbacks(
@@ -36,6 +38,7 @@ fun PlayerRoute(
     playerViewModel: PlayerViewModel = hiltViewModel()
 ){
     val playerValues by playerViewModel.serverUpdates.collectAsStateWithLifecycle()
+    val albumArtFile by playerViewModel.albumArtFile.collectAsStateWithLifecycle()
 
     val callbacks = remember {
         PlayerCallbacks(
@@ -57,7 +60,7 @@ fun PlayerRoute(
         )
     }
 
-    val playerScreenData = PlayerScreenState(playerValues)
+    val playerScreenData = PlayerScreenState(playerValues, albumArtFile)
 
     PlayerScreen(callbacks, playerScreenData)
 }

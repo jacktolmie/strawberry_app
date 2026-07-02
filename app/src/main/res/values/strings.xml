@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">strawberry_app</string>
 
+    <string name="player_album_art">Album Art</string>
     <string name="settings_title">Settings</string>
     <string name="settings_ip">IP Address</string>
     <string name="settings_ip_info">IPv4 or IPv6</string>

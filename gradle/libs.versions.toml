@@ -3,11 +3,14 @@ agp = "9.2.1"
 coilCompose = "2.7.0"
 datastorePreferences = "1.2.1"
 hiltNavigationCompose = "1.4.0"
+#kotlin = "2.3.0"
 kotlin = "2.4.0"
 
 hilt = "2.60"
+#hilt = "2.59.2"
+kotlinMetadataJvm = "2.4.0"
 ksp = "2.3.6"
-material3Version = "1.5.0-alpha19" #Keep this at 19 for vertical slider using reverse for volume.
+material3Version = "1.5.0-alpha23" #Keep this at 19 for vertical slider using reverse for volume.
 navigationCompose = "2.9.2"
 room = "2.8.4"
 ktor = "3.5.1"
@@ -50,6 +53,7 @@ androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-
 androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
 
+kotlin-metadata-jvm = { module = "org.jetbrains.kotlin:kotlin-metadata-jvm", version.ref = "kotlinMetadataJvm" }
 navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 
 room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
