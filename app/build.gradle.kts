@@ -5,7 +5,7 @@ plugins {
     alias(libs.plugins.ksp)
     kotlin("plugin.serialization")
 
-    alias(libs.plugins.stability.analyzer) // Delete later
+//    alias(libs.plugins.stability.analyzer) // Delete later
 }
 
 android {
@@ -85,7 +85,7 @@ dependencies {
     implementation(libs.coil.compose)
 
     // For newer metadata. Remove if not needed
-    implementation(libs.kotlin.metadata.jvm)
+//    implementation(libs.kotlin.metadata.jvm)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

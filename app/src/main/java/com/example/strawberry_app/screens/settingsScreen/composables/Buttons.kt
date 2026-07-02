@@ -31,7 +31,6 @@ fun isConnected(connectionState: ConnectionState): String{
         else -> "Connect"
 
     }
-//    return connectionState == Connected
 }
 @Composable
 fun MedLrgScreenBtns(
@@ -39,8 +38,6 @@ fun MedLrgScreenBtns(
     callbacks: SettingsCallbacks,
     connectionState: ConnectionState
 ){
-//    val isConnected = connectionState == Connected
-
     Row(modifier = Modifier
         .fillMaxWidth()
         .padding(10.dp),
@@ -89,7 +86,7 @@ fun SmallScreenBtns(
     callbacks: SettingsCallbacks,
     connectionState: ConnectionState
 ){
-    val isConnected = connectionState == Connected
+//    val isConnected = connectionState == Connected
     Row(modifier = Modifier
         .fillMaxWidth()
         .padding(10.dp),
@@ -127,7 +124,8 @@ fun SmallScreenBtns(
         Text(
             modifier = Modifier.widthIn(min = 80.dp),
             textAlign = TextAlign.Center,
-            text = if(isConnected) "Disconnect" else "Connect"
+            text = "Testing 123"
+//            text = if(isConnected) "Disconnect" else "Connect"
         )
     }
 }

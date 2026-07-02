@@ -47,7 +47,6 @@ fun VolumeSliderVertComposable(
                 .fillMaxHeight(.75f)
                 .progressSemantics(volumeSliderState.value, 0f..100f),
             topToBottom = false
-//            reverseDirection = true
         )
 
         CreateButton(volume_down, "Volume down", callbacks.sendVolumeDown)
