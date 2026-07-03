@@ -6,6 +6,7 @@ import androidx.compose.runtime.remember
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.strawberry_app.screens.ServerGuiValues
+import com.example.strawberry_app.screens.formatTime
 import com.example.strawberry_app.screens.playerScreen.screens.PlayerScreen
 import java.io.File
 
@@ -15,7 +16,6 @@ data class PlayerScreenState(
 )
 
 class PlayerCallbacks(
-    val formatTime: (Long) -> String = {""},
     val sendMute: () -> Unit = {},
     val sendNext: () -> Unit = {},
     val sendRestartPrevious: () -> Unit = {},
@@ -42,7 +42,6 @@ fun PlayerRoute(
 
     val callbacks = remember {
         PlayerCallbacks(
-            formatTime = playerViewModel::formatTime,
             sendMute = playerViewModel::sendMute,
             sendNext = playerViewModel::sendNext,
             sendRestartPrevious = playerViewModel::sendRestartPrevious,

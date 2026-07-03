@@ -32,9 +32,7 @@ class PlayerRepository @Inject constructor(
         scope.launch {
             // Get updates from the server with the latest song information.
             playlistRepository.currentSongData.collectLatest { songWithPosition ->
-                println("playerrepo currentSongData emitted: $songWithPosition")
                 songWithPosition?.let{
-                    println("playerrepo coverImage: ${it.coverImage}")
                     _serverUpdates.update { state ->
                         state.copy(
                             currentSong = SongInfo(

@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.strawberry_app.screens.ServerGuiValues
+import com.example.strawberry_app.screens.formatTime
 import com.example.strawberry_app.screens.playerScreen.PlayerCallbacks
 import com.example.strawberry_app.screens.playerScreen.PlayerScreenState
 
@@ -31,7 +32,7 @@ fun TimerSlider(
     var sliderPosition by remember { mutableFloatStateOf(playerScreenValues.playerValues.currentTime.toFloat()) }
 
     Text(modifier = modifier,
-        text = if (playerScreenValues.playerValues.currentTime > 0) callbacks.formatTime(
+        text = if (playerScreenValues.playerValues.currentTime > 0) formatTime(
             playerScreenValues.playerValues.currentTime
         ) else ""
     )
@@ -60,7 +61,7 @@ fun TimerSlider(
                 .padding(start = 10.dp, end = 10.dp)
         )
         Text(
-            text = if (playerScreenValues.playerValues.currentSong.length > 0) callbacks.formatTime(
+            text = if (playerScreenValues.playerValues.currentSong.length > 0) formatTime(
                 playerScreenValues.playerValues.currentSong.length
             ) else ""
         )

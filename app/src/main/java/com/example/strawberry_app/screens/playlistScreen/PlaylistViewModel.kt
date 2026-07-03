@@ -13,7 +13,7 @@ class PlaylistViewModel @Inject constructor(
     private val playlistRepository: PlaylistRepository
 ): ViewModel(){
 
-    private val _playlistState = MutableStateFlow( PlaylistState())// PlaylistValues())
+    private val _playlistState = MutableStateFlow( PlaylistState())
     val playlistState = _playlistState.asStateFlow()
 
     // Functions to send playlist changes to the server.
@@ -23,7 +23,7 @@ class PlaylistViewModel @Inject constructor(
     fun removeSongsCurrentPlaylist(id: Long, songsList: List<Long>){
         playlistRepository.sendCommand(OutgoingMessage.RemoveCurrentSongsFromPlaylist(id = id, songsList = songsList))
     }
-    fun removeDuplicatesInPlaylist() = playlistRepository.sendCommand(OutgoingMessage.RemoveDuplicatesFromPlaylist)
+    fun removeDuplicatesInPlaylist(id: Long) = playlistRepository.sendCommand(OutgoingMessage.RemoveDuplicatesFromPlaylist)
     fun renameCurrentPlaylist(id: Long, name: String) {
         playlistRepository.sendCommand(OutgoingMessage.RenamePlaylist(id = id, name = name))
     }

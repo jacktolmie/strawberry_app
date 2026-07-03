@@ -3,10 +3,13 @@ package com.example.strawberry_app.screens.playlistScreen.screens
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.strawberry_app.screens.playlistScreen.PlaylistCallbacks
+import com.example.strawberry_app.screens.playlistScreen.PlaylistRepository
+import com.example.strawberry_app.screens.playlistScreen.PlaylistState
 
 @Composable
 fun PlaylistMediumScreen(
-    callbacks: PlaylistCallbacks
+    callbacks: PlaylistCallbacks,
+    playlistState: PlaylistState
 ){
 
 //    Button(
@@ -22,6 +25,7 @@ fun PlaylistMediumScreen(
 @Preview
 fun PlaylistPreview(){
     PlaylistMediumScreen(
-        PlaylistCallbacks()
+        PlaylistCallbacks(),
+        PlaylistState()
     )
 }
