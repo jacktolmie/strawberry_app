@@ -176,3 +176,5 @@ render.experimental.xml
 
 .ollamassist/
 gradle/gradle-daemon-jvm.properties
+
+gradle/wrapper/
