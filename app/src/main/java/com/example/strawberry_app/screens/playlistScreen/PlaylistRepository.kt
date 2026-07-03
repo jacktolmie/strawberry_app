@@ -166,4 +166,6 @@ class PlaylistRepository @Inject constructor(
     suspend fun serverRenamedPlaylist(id: Long, name: String) {
         playlistDao.updateName(id = id, name = name)
     }
+
+    
 }
