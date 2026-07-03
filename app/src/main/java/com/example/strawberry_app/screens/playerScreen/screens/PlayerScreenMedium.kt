@@ -63,7 +63,7 @@ fun PlayerScreen(
         )
         {
             //Song Image
-            SongImageComposable(callbacks, playerScreenValues)
+            SongImageComposable(playerScreenValues = playerScreenValues)
 
             Spacer(modifier = Modifier.width(10.dp).border(2.dp, Color.Blue))
 

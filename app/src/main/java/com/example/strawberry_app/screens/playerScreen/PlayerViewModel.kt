@@ -3,7 +3,6 @@ package com.example.strawberry_app.screens.playerScreen
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.strawberry_app.network.protocol.OutgoingMessage
-import com.example.strawberry_app.screens.MessageRepository
 import com.example.strawberry_app.screens.PlayState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -18,12 +17,9 @@ import kotlin.time.Duration.Companion.milliseconds
 
 @HiltViewModel
 class PlayerViewModel @Inject constructor(
-    private val playerRepository: PlayerRepository,
-    private val messageRepository: MessageRepository
+    private val playerRepository: PlayerRepository
 ): ViewModel(){
-
     val serverUpdates = playerRepository.serverUpdates
-    val latestCover = playerRepository.latestCover
     val albumArtFile: StateFlow<File?> = playerRepository.latestCover
         .map { name -> playerRepository.getAlbumArtFile(name) }
         .stateIn(
@@ -43,7 +39,7 @@ class PlayerViewModel @Inject constructor(
     fun sendPlayPause() {
         playerRepository.sendCommand(OutgoingMessage.PlayPause)
         playerRepository.getGuiUpdates(playerRepository.serverUpdates.value.copy(
-            playState = if (messageRepository.serverUpdates.value.playState == PlayState.PLAYING)
+            playState = if (playerRepository.serverUpdates.value.playState == PlayState.PLAYING)
                 PlayState.PAUSED else PlayState.PLAYING
         ))
     }
@@ -82,8 +78,8 @@ class PlayerViewModel @Inject constructor(
                 delay(1000.milliseconds)
                 if(playerRepository.serverUpdates.value.playState == PlayState.PLAYING){
                     playerRepository.getGuiUpdates(
-                        messageRepository.serverUpdates.value.copy(
-                        currentTime = messageRepository.serverUpdates.value.currentTime + 1000L)
+                        playerRepository.serverUpdates.value.copy(
+                        currentTime = playerRepository.serverUpdates.value.currentTime + 1000L)
                     )
                 }
             }

@@ -11,7 +11,6 @@ import com.example.strawberry_app.music.Playlist
 import com.example.strawberry_app.network.ApplicationScope
 import com.example.strawberry_app.network.NetworkManager
 import com.example.strawberry_app.network.protocol.OutgoingMessage
-import com.example.strawberry_app.screens.MessageRepository
 import jakarta.inject.Inject
 import jakarta.inject.Singleton
 import kotlinx.coroutines.CoroutineScope

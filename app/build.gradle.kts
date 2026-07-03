@@ -4,8 +4,6 @@ plugins {
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
     kotlin("plugin.serialization")
-
-//    alias(libs.plugins.stability.analyzer) // Delete later
 }
 
 android {
@@ -84,9 +82,7 @@ dependencies {
     // For images
     implementation(libs.coil.compose)
 
-    // For newer metadata. Remove if not needed
-//    implementation(libs.kotlin.metadata.jvm)
-
+    // For testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

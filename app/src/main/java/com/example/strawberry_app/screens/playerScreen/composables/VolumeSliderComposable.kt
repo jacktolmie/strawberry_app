@@ -37,7 +37,7 @@ fun VolumeSliderVertComposable(
         modifier = modifier
             .fillMaxHeight(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceEvenly  //spacedBy(5.dp)
+        verticalArrangement = Arrangement.SpaceEvenly
     ) {
         CreateButton(volume_up, "Volume up", callbacks.sendVolumeUp)
 
@@ -57,10 +57,9 @@ fun VolumeSliderVertComposable(
 @Preview
 @Composable
 fun VolumeSliderPreview(){
-
     VolumeSliderVertComposable(
-        PlayerCallbacks(),
-    PlayerScreenState(ServerGuiValues()),
+        callbacks = PlayerCallbacks(),
+        playerScreenValues = PlayerScreenState(ServerGuiValues()),
         Modifier.background(Color.White)
     )
 }

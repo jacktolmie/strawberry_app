@@ -56,7 +56,7 @@ class NetworkManager @Inject constructor(
         MutableSharedFlow<IncomingMessage>(replay = 1, extraBufferCapacity = 64)
 
     val serverMessages = _serverMessages.asSharedFlow()
-var reconnectCount = 0L
+    var reconnectCount = 0L
     var reconnectTimer = 0L
 
     private val delayTime = MutableStateFlow<Long>(3000)

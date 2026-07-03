@@ -1,6 +1,5 @@
 package com.example.strawberry_app.screens.playerScreen.composables
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,12 +16,10 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.strawberry_app.R
 import com.example.strawberry_app.screens.ServerGuiValues
-import com.example.strawberry_app.screens.playerScreen.PlayerCallbacks
 import com.example.strawberry_app.screens.playerScreen.PlayerScreenState
 
 @Composable
 fun SongImageComposable(
-    callbacks: PlayerCallbacks,
     playerScreenValues: PlayerScreenState
 ){
     AsyncImage(
@@ -47,7 +44,6 @@ fun SongImageComposable(
 @Composable
 fun SongImagePreview(){
     SongImageComposable(
-        PlayerCallbacks(),
         PlayerScreenState(ServerGuiValues())
     )
 }

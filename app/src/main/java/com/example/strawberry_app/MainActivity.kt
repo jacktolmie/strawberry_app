@@ -21,10 +21,6 @@ class MainActivity : ComponentActivity() {
     private val connectionViewModel: ConnectionViewModel by viewModels()
 
 
-    @Inject
-    // Testing music repository. Delete when done.
-    lateinit var playlistRepository: PlaylistRepository
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
