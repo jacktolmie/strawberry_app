@@ -18,12 +18,15 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.strawberry_app.data.dao.SongWithPosition
+import com.example.strawberry_app.data.entity.PlaylistEntity
+import com.example.strawberry_app.music.Playlist
+import com.example.strawberry_app.music.SongInfo
 import com.example.strawberry_app.screens.formatTime
 import com.example.strawberry_app.screens.playlistScreen.PlaylistState
 
 @Composable
 fun SongItem(
-    playlistState: PlaylistState
+    song: SongInfo
 ){
     Column( modifier = Modifier
         .background(Color.White)
@@ -37,12 +40,12 @@ fun SongItem(
 
         ) {
             SongText(
-                text = playlistState.currentSongData?.title ?: "",
+                text = song.title,
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.weight(1F)
             )
             SongText(
-                text = formatTime(playlistState.currentSongData?.length ?: 1000),
+                text = formatTime(song.length),
                 style = MaterialTheme.typography.bodyMedium
             )
         }
@@ -52,11 +55,11 @@ fun SongItem(
             .padding(start = 5.dp)
         ){
             SongText(
-                text = playlistState.currentSongData?.artist ?: "Artist name",
+                text = song.artist,
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.weight(1F) )
             SongText(
-                text = playlistState.currentSongData?.album ?: "Album name",
+                text = song.album,
                 style = MaterialTheme.typography.bodyMedium
             )
         }
@@ -81,21 +84,13 @@ fun SongText(
 @Preview
 @Composable
 fun SongItemPreview(){
-    SongItem(
-        PlaylistState(
-            currentPlaylist = 1,
-            activePlaylist = 1,
-            currentSongIndex = 1,
-            currentSongData = SongWithPosition(
-                id = 1,
-                url = "Some url",
-                artist = "The Amazing Band",
-                album = "The best of Amazing Band",
-                coverImage = "Some cover",
-                length = 1000L,
-                position = 1,
-                title = "Bird Madness"
-            )
-        )
+    SongInfo(
+        id = 1,
+        url = "Some url",
+        artist = "The Amazing Band",
+        album = "The best of Amazing Band",
+        coverImage = "Some cover",
+        length = 1000L,
+        title = "Bird Madness"
     )
 }

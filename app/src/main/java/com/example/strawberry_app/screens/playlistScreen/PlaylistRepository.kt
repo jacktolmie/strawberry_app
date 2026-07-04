@@ -85,9 +85,7 @@ class PlaylistRepository @Inject constructor(
         playlistDao.deleteAll()
 
         playlists.forEach { playlist ->
-            println("playlist Writing playlist: ${playlist.name} ${playlist.id}) with ${playlist.songs.size} songs")
             playlist.songs.forEach { song ->
-                println("playlist  song id=${song.id} title=${song.title}")
             }
             playlistDao.insert(
                 PlaylistEntity(
@@ -167,5 +165,12 @@ class PlaylistRepository @Inject constructor(
         playlistDao.updateName(id = id, name = name)
     }
 
-    
+    // Get information about playlists and songs in each one.
+    fun getPlaylists(): Flow<List<PlaylistEntity>>{
+        return playlistDao.observeAll()
+    }
+
+    fun getPlaylistSongs(id: Long): Flow<List<SongWithPosition>>{
+        return playlistSongDao.observeSongsForPlaylist(id)
+    }
 }

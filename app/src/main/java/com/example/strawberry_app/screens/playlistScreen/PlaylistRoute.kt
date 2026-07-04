@@ -4,8 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.strawberry_app.data.entity.PlaylistEntity
 import com.example.strawberry_app.music.Playlist
-import com.example.strawberry_app.screens.ScreenList
 import com.example.strawberry_app.screens.playlistScreen.screens.PlaylistMediumScreen
 
 data class PlaylistCallbacks(
@@ -24,11 +24,17 @@ data class PlaylistCallbacks(
     val shuffleCurrentPlaylist: (id: Long) -> Unit = {}
     )
 
+data class PlaylistsData(
+    val playlistState: PlaylistState = PlaylistState(),
+    val playlists: List<PlaylistEntity> = emptyList()
+)
+
 @Composable
 fun PlaylistRoute(
     playlistViewModel: PlaylistViewModel = hiltViewModel()
 ){
     val playlistState by playlistViewModel.playlistState.collectAsStateWithLifecycle()
+    val playlists by playlistViewModel.playlistsInfo.collectAsStateWithLifecycle()
 
     val callbacks = PlaylistCallbacks(
         clearCurrentPlaylist = playlistViewModel::clearCurrentPlaylist,
@@ -46,6 +52,11 @@ fun PlaylistRoute(
         shuffleCurrentPlaylist = playlistViewModel::shuffleCurrentPlaylist
     )
 
-    PlaylistMediumScreen(callbacks, playlistState)
+    val playlistScreenData = PlaylistsData(
+        playlistState = playlistState,
+        playlists = playlists
+        )
+
+    PlaylistMediumScreen(callbacks, playlistScreenData)
 
 }

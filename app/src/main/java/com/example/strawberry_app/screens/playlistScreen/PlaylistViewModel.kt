@@ -1,11 +1,20 @@
 package com.example.strawberry_app.screens.playlistScreen
 
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.strawberry_app.data.dao.SongWithPosition
+import com.example.strawberry_app.data.entity.PlaylistEntity
 import com.example.strawberry_app.music.Playlist
 import com.example.strawberry_app.network.protocol.OutgoingMessage
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 @HiltViewModel
@@ -15,6 +24,30 @@ class PlaylistViewModel @Inject constructor(
 
     private val _playlistState = MutableStateFlow( PlaylistState())
     val playlistState = _playlistState.asStateFlow()
+
+    val playlistsInfo : StateFlow<List<PlaylistEntity>> = playlistRepository.getPlaylists()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = emptyList()
+        )
+
+    private val _selectedPlaylistId = MutableStateFlow(playlistRepository.playlistState.value.activePlaylist)
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val playlistSongs: StateFlow<List<SongWithPosition>> = _selectedPlaylistId
+        .flatMapLatest { id ->
+            playlistRepository.getPlaylistSongs(id)
+        }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = emptyList()
+        )
+
+    fun onPlaylistSelected(id: Long) {
+        _selectedPlaylistId.value = id
+    }
 
     // Functions to send playlist changes to the server.
     fun clearCurrentPlaylist(id: Long) = playlistRepository.sendCommand(OutgoingMessage.ClearPlaylist(id))
