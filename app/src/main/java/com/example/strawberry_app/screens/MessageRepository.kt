@@ -49,7 +49,6 @@ class MessageRepository @Inject constructor(
                     // Server Event messages.
                     is EventType.ClosedPlaylistWithId -> { playlistRepository.serverClosedPlaylist(message.id) }
                     is EventType.CoverImage -> {
-                        println("messagerepo CoverImage received: ${message.name}")
                         albumArtRepository.receiveCover(name = message.name, image = message.coverImage)
                         playerRepository.notifyAlbumArtReady(message.name)
                     }
@@ -58,12 +57,13 @@ class MessageRepository @Inject constructor(
                         when (message.playlists) {
                             is EventType.MakeAllPlaylists -> {
                                 playlistRepository.makeAllPlaylists(message.playlists.playlists)
-                                playlistRepository.updateCurrentSong(
-                                    playlistId = message.activePlaylist,
-                                    songIndex = message.currentSong
-                                )
                             }
                         }
+                        playlistRepository.updateCurrentSong(
+                            playlistId = message.activePlaylist,
+                            songIndex = message.currentSong
+                        )
+
                         playlistRepository.updatePlaylistState(
                             activePlaylist = message.activePlaylist,
                             currentPlaylist = message.currentPlaylist

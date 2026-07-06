@@ -1,18 +1,17 @@
 package com.example.strawberry_app.screens.playlistScreen.composables
 
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SecondaryScrollableTabRow
+import androidx.compose.material3.SecondaryTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,7 +21,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.strawberry_app.data.dao.SongWithPosition
@@ -57,37 +55,76 @@ fun MedLrgScreenTabs(
 @Composable
 fun TabListing(
     callbacks: PlaylistCallbacks,
-    playlistsData: PlaylistsData
+    playlistsData: PlaylistsData,
 ){
     var selectedTabIndex by remember { mutableIntStateOf(0) }
     val scrollState = rememberScrollState()
 
+    if ( playlistsData.playlists.size > 3) {
+        ScrollableTabs(
+            callbacks = callbacks,
+            playlistsData = playlistsData,
+            selectedTabIndex = selectedTabIndex,
+            onTabSelected = { selectedTabIndex = it },
+            scrollState = scrollState
+            )
+    }else{
+        StaticTabs(
+            callbacks = callbacks,
+            playlistsData = playlistsData,
+            selectedTabIndex = selectedTabIndex,
+            onTabSelected = { selectedTabIndex = it}
+        )
+    }
+}
+
+@Composable
+fun ScrollableTabs(
+    callbacks: PlaylistCallbacks,
+    playlistsData: PlaylistsData,
+    selectedTabIndex: Int,
+    onTabSelected: (Int) -> Unit,
+    scrollState: ScrollState
+    ){
     SecondaryScrollableTabRow( modifier = Modifier
         .fillMaxWidth(),
         selectedTabIndex = selectedTabIndex,
         scrollState = scrollState,
-        containerColor = MaterialTheme.colorScheme.surface,  // default anyway
+        containerColor = MaterialTheme.colorScheme.surface,
         contentColor = MaterialTheme.colorScheme.onSurface,
         divider = {},
     ) {
-        playlistsData.playlists.forEachIndexed { index, entity ->
-            Tab(modifier = Modifier,
-                text = { Text(entity.name, color = MaterialTheme.colorScheme.primary) },
-                selected = selectedTabIndex == index,
-                onClick = {
-                    selectedTabIndex = index
-                    callbacks.onPlaylistSelected(playlistsData.playlistState.currentPlaylist)
-                },
-                icon = {
-                    if(entity.favourite) {
-                        Icon(
-                            imageVector = favorite,
-                            contentDescription = "Favourite",
-                            tint = MaterialTheme.colorScheme.primary)
-                    }
-                }
-            )
-        }
+        MakeTabs(
+            callbacks = callbacks,
+            playlistsData = playlistsData,
+            selectedTabIndex = selectedTabIndex,
+            onTabSelected = onTabSelected
+        )
+    }
+}
+
+@Composable
+fun StaticTabs(
+    callbacks: PlaylistCallbacks,
+    playlistsData: PlaylistsData,
+    selectedTabIndex: Int,
+    onTabSelected: (Int) -> Unit
+){
+    SecondaryTabRow(
+        modifier = Modifier
+            .fillMaxWidth(),
+        selectedTabIndex = selectedTabIndex,
+        containerColor = MaterialTheme.colorScheme.surface,
+        contentColor = MaterialTheme.colorScheme.onSurface,
+        divider = {}
+
+    ) {
+        MakeTabs(
+            callbacks = callbacks,
+            playlistsData = playlistsData,
+            selectedTabIndex = selectedTabIndex,
+            onTabSelected = onTabSelected
+        )
     }
 }
 
@@ -104,6 +141,32 @@ fun CurrentPlaylist(playlist: List<SongWithPosition>){
     }
 }
 
+@Composable
+fun MakeTabs(
+    callbacks: PlaylistCallbacks,
+    playlistsData: PlaylistsData,
+    selectedTabIndex: Int,
+    onTabSelected: (Int) -> Unit,
+){
+    playlistsData.playlists.forEachIndexed { index, entity ->
+        Tab(modifier = Modifier,
+            text = { Text(entity.name, color = MaterialTheme.colorScheme.primary) },
+            selected = selectedTabIndex == index,
+            onClick = {
+                onTabSelected(index)
+                callbacks.onPlaylistSelected(playlistsData.playlistState.currentPlaylist)
+            },
+            icon = {
+                if(entity.favourite) {
+                    Icon(
+                        imageVector = favorite,
+                        contentDescription = "Favourite",
+                        tint = MaterialTheme.colorScheme.primary)
+                }
+            }
+        )
+    }
+}
 fun samplePlaylists() = listOf(
     PlaylistEntity(id = 1L, name = "Rock Classics", favourite = false),
     PlaylistEntity(id = 2L, name = "Jazz Favourites", favourite = true),
@@ -206,3 +269,54 @@ fun MedLrgPreview(){
         Modifier.background(Color.White),
     )
 }
+
+//    var selectedTabIndex by remember { mutableIntStateOf(0) }
+//    val scrollState = rememberScrollState()
+//
+//    SecondaryScrollableTabRow( modifier = Modifier
+//        .fillMaxWidth(),
+//        selectedTabIndex = selectedTabIndex,
+//        scrollState = scrollState,
+//        containerColor = MaterialTheme.colorScheme.surface,  // default anyway
+//        contentColor = MaterialTheme.colorScheme.onSurface,
+//        divider = {},
+//    ) {
+//        playlistsData.playlists.forEachIndexed { index, entity ->
+//            Tab(modifier = Modifier,
+//                text = { Text(entity.name, color = MaterialTheme.colorScheme.primary) },
+//                selected = selectedTabIndex == index,
+//                onClick = {
+//                    selectedTabIndex = index
+//                    callbacks.onPlaylistSelected(playlistsData.playlistState.currentPlaylist)
+//                },
+//                icon = {
+//                    if(entity.favourite) {
+//                        Icon(
+//                            imageVector = favorite,
+//                            contentDescription = "Favourite",
+//                            tint = MaterialTheme.colorScheme.primary)
+//                    }
+//                }
+//            )
+//        }
+//    }
+
+
+//        playlistsData.playlists.forEachIndexed { index, entity ->
+//            Tab(modifier = Modifier,
+//                text = { Text(entity.name, color = MaterialTheme.colorScheme.primary) },
+//                selected = selectedTabIndex == index,
+//                onClick = {
+//                    selectedTabIndex = index
+//                    callbacks.onPlaylistSelected(playlistsData.playlistState.currentPlaylist)
+//                },
+//                icon = {
+//                    if(entity.favourite) {
+//                        Icon(
+//                            imageVector = favorite,
+//                            contentDescription = "Favourite",
+//                            tint = MaterialTheme.colorScheme.primary)
+//                    }
+//                }
+//            )
+//        }
