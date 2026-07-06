@@ -13,9 +13,16 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
+
+data class PlaylistsData(
+    val playlistState: PlaylistState = PlaylistState(),
+    val playlists: List<PlaylistEntity> = emptyList(),
+    val playlistSongs: List<SongWithPosition> = emptyList()
+)
 
 @HiltViewModel
 class PlaylistViewModel @Inject constructor(
@@ -44,6 +51,18 @@ class PlaylistViewModel @Inject constructor(
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = emptyList()
         )
+
+    val playlistsData: StateFlow<PlaylistsData> = combine(
+        playlistState,
+        playlistsInfo,
+        playlistSongs
+    ) { state, playlists, songs ->
+        PlaylistsData(state, playlists, songs)
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = PlaylistsData()
+    )
 
     fun onPlaylistSelected(id: Long) {
         _selectedPlaylistId.value = id

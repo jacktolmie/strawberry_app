@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.strawberry_app.R
 import com.example.strawberry_app.network.ConnectionState
@@ -29,9 +30,9 @@ fun isConnected(connectionState: ConnectionState): String{
         is ConnectionState.Connecting -> "Disconnect"
         is ConnectionState.Reconnecting -> "Disconnect"
         else -> "Connect"
-
     }
 }
+
 @Composable
 fun MedLrgScreenBtns(
     serverUiState: SettingsUiState,
@@ -45,39 +46,13 @@ fun MedLrgScreenBtns(
         horizontalArrangement = Arrangement.Center
     )
     {
-        Button(
-            onClick = { callbacks.onSaveClicked() },
-            enabled = serverUiState.enableSaveButton
-        )
-        {
-            TextBox(R.string.settings_save, MaterialTheme.typography.bodySmall)
-        }
-
+        SaveButton(callback = callbacks.onSaveClicked, enableBtn = serverUiState.enableSaveButton)
         Spacer(modifier = Modifier.width(8.dp))
-
-        Button(
-            onClick = { callbacks.onCancelClicked() }
-        )
-        {
-            TextBox(R.string.settings_cancel, MaterialTheme.typography.bodySmall)
-        }
+        CancelButton(callbacks.onCancelClicked )
     }
 
     Spacer(modifier = Modifier.height(10.dp))
-
-
-    Button(
-        onClick ={
-            if (isConnected(connectionState) == "Connect") callbacks.onConnectClicked() else callbacks.onDisconnectClicked()
-        }
-    )
-    {
-        Text(
-            modifier = Modifier.widthIn(min = 80.dp),
-            textAlign = TextAlign.Center,
-            text = isConnected(connectionState)
-        )
-    }
+    ConnectButton(callbacks = callbacks, connectionState)
 }
 
 @Composable
@@ -128,4 +103,55 @@ fun SmallScreenBtns(
 //            text = if(isConnected) "Disconnect" else "Connect"
         )
     }
+}
+
+@Composable
+fun CancelButton(
+    callback: () -> Unit
+){
+    Button(
+        onClick = { callback() }
+    )
+    {
+        ButtonText(R.string.settings_cancel, MaterialTheme.typography.bodySmall)
+    }
+}
+
+@Composable
+fun ConnectButton(
+    callbacks: SettingsCallbacks,
+    connectionState: ConnectionState
+){
+    Button(
+        onClick ={
+            if (isConnected(connectionState) == "Connect") callbacks.onConnectClicked() else callbacks.onDisconnectClicked()
+        }
+    )
+    {
+        ButtonText( text = isConnected(connectionState), textStyle = MaterialTheme.typography.bodySmall )
+    }
+}
+
+@Composable
+fun SaveButton(
+    callback: () -> Unit,
+    enableBtn: Boolean
+){
+    Button(
+        onClick = { callback() },
+        enabled = enableBtn
+    )
+    {
+        ButtonText(R.string.settings_save, MaterialTheme.typography.bodySmall)
+    }
+}
+
+@Preview
+@Composable
+fun ButtonsPreview(){
+    MedLrgScreenBtns(
+        SettingsUiState(),
+        SettingsCallbacks(),
+        connectionState = ConnectionState.Connected
+    )
 }

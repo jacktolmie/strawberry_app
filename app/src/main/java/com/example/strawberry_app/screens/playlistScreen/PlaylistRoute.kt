@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.strawberry_app.data.dao.SongWithPosition
 import com.example.strawberry_app.data.entity.PlaylistEntity
 import com.example.strawberry_app.music.Playlist
 import com.example.strawberry_app.screens.playlistScreen.screens.PlaylistMediumScreen
@@ -12,6 +13,7 @@ data class PlaylistCallbacks(
     val clearCurrentPlaylist: (id: Long) -> Unit = {},
     val closeCurrentPlaylist: (id: Long) -> Unit = {},
     val deleteCurrentPlaylist: (id: Long) -> Unit = {},
+    val onPlaylistSelected: (id: Long) -> Unit = {},
     val removeSongsCurrentPlaylist: (id: Long, songsList: List<Long>) -> Unit = { _,_ ->},
     val removeDuplicatesInPlaylist: (id: Long) -> Unit = {},
     val renameCurrentPlaylist: (id: Long, name: String) -> Unit = { _,_ ->},
@@ -24,22 +26,17 @@ data class PlaylistCallbacks(
     val shuffleCurrentPlaylist: (id: Long) -> Unit = {}
     )
 
-data class PlaylistsData(
-    val playlistState: PlaylistState = PlaylistState(),
-    val playlists: List<PlaylistEntity> = emptyList()
-)
-
 @Composable
 fun PlaylistRoute(
     playlistViewModel: PlaylistViewModel = hiltViewModel()
 ){
-    val playlistState by playlistViewModel.playlistState.collectAsStateWithLifecycle()
-    val playlists by playlistViewModel.playlistsInfo.collectAsStateWithLifecycle()
+    val playlistsData by playlistViewModel.playlistsData.collectAsStateWithLifecycle()
 
     val callbacks = PlaylistCallbacks(
         clearCurrentPlaylist = playlistViewModel::clearCurrentPlaylist,
         closeCurrentPlaylist = playlistViewModel::closeCurrentPlaylist,
         deleteCurrentPlaylist = playlistViewModel::deleteCurrentPlaylist,
+        onPlaylistSelected = playlistViewModel::onPlaylistSelected,
         removeSongsCurrentPlaylist = playlistViewModel::removeSongsCurrentPlaylist,
         removeDuplicatesInPlaylist = playlistViewModel::removeDuplicatesInPlaylist,
         renameCurrentPlaylist = playlistViewModel::renameCurrentPlaylist,
@@ -50,13 +47,12 @@ fun PlaylistRoute(
         setCurrentPlaylist = playlistViewModel::setCurrentPlaylist,
         shuffleAllPlaylists = playlistViewModel::shuffleAllPlaylists,
         shuffleCurrentPlaylist = playlistViewModel::shuffleCurrentPlaylist
+
     )
 
-    val playlistScreenData = PlaylistsData(
-        playlistState = playlistState,
-        playlists = playlists
-        )
-
-    PlaylistMediumScreen(callbacks, playlistScreenData)
+    PlaylistMediumScreen(
+        callbacks,
+        playlistsData
+    )
 
 }

@@ -29,7 +29,7 @@ import com.example.strawberry_app.screens.settingsScreen.composables.TextboxPort
 import com.example.strawberry_app.server.SettingsUiState
 
 @Composable
-fun SettingsScreen(
+fun SettingsMedLrgScreen(
     serverUiState: SettingsUiState,
     connectionState: ConnectionState,
     callbacks: SettingsCallbacks,
@@ -73,8 +73,8 @@ fun SettingsScreen(
 
 @Preview
 @Composable
-fun SettingsPreview(){
-    SettingsScreen(
+fun SettingsMedLrgPreview(){
+    SettingsMedLrgScreen(
         serverUiState = SettingsUiState(
             ip = "192.168.1.201",
             port = "5000",

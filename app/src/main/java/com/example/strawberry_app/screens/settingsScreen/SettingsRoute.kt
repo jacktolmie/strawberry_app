@@ -6,18 +6,18 @@ import androidx.compose.runtime.remember
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.strawberry_app.network.ConnectionViewModel
-import com.example.strawberry_app.screens.settingsScreen.screens.SettingsScreen
+import com.example.strawberry_app.screens.settingsScreen.screens.SettingsMedLrgScreen
 import com.example.strawberry_app.server.ServerViewModel
 
 
 class SettingsCallbacks(
-    val onIpChanged: (String) -> Unit,
-    val onPortChanged: (String) -> Unit,
-    val onPasswordChanged: (String) -> Unit,
-    val onSaveClicked: () -> Unit,
-    val onCancelClicked: () -> Unit,
-    val onDisconnectClicked: () -> Unit,
-    val onConnectClicked: () -> Unit
+    val onIpChanged: (String) -> Unit = {},
+    val onPortChanged: (String) -> Unit = {},
+    val onPasswordChanged: (String) -> Unit = {},
+    val onSaveClicked: () -> Unit = {},
+    val onCancelClicked: () -> Unit = {},
+    val onDisconnectClicked: () -> Unit = {},
+    val onConnectClicked: () -> Unit = {}
 )
 
 @Composable
@@ -29,8 +29,6 @@ fun SettingsRoute(
     val connectionState by connectionViewModel
         .connectionState
         .collectAsStateWithLifecycle()
-
-
 
     val callbacks = remember {
         SettingsCallbacks(
@@ -46,10 +44,10 @@ fun SettingsRoute(
 
     val routeData by connectionViewModel.routeData.collectAsStateWithLifecycle()
 
-    SettingsScreen(
+    SettingsMedLrgScreen(
         serverUiState = uiState,
         connectionState = connectionState,
         callbacks = callbacks,
-        routeData
+        settingsGuiData = routeData
     )
 }

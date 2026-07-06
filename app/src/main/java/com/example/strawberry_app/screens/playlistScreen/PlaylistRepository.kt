@@ -51,6 +51,14 @@ class PlaylistRepository @Inject constructor(
                 _playlistState.update { it.copy(currentSongData = songData) }
             }
         }
+        scope.launch {
+            _playlistState.update {
+                it.copy(
+                    activePlaylist = it.activePlaylist,
+                    currentPlaylist = it.currentPlaylist
+                )
+            }
+        }
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -172,5 +180,13 @@ class PlaylistRepository @Inject constructor(
 
     fun getPlaylistSongs(id: Long): Flow<List<SongWithPosition>>{
         return playlistSongDao.observeSongsForPlaylist(id)
+    }
+
+    fun updatePlaylistState(activePlaylist: Long, currentPlaylist: Long) {
+        println("playlistrepo updatePlaylistState: active=$activePlaylist current=$currentPlaylist")
+        _playlistState.update {
+            it.copy(activePlaylist = activePlaylist, currentPlaylist = currentPlaylist)
+        }
+        println("playlistrepo playlistState after update: ${_playlistState.value}")
     }
 }

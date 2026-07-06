@@ -26,11 +26,12 @@ import com.example.strawberry_app.screens.playlistScreen.PlaylistState
 
 @Composable
 fun SongItem(
-    song: SongInfo
+    song: SongWithPosition
 ){
     Column( modifier = Modifier
         .background(Color.White)
-        .fillMaxWidth(),
+        .fillMaxWidth()
+        .padding(2.dp),
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
