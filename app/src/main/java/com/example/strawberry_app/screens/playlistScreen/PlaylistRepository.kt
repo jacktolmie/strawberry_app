@@ -61,32 +61,12 @@ class PlaylistRepository @Inject constructor(
         }
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    private fun getCurrentSong(): Flow<SongWithPosition?> {
-        return playlistState.flatMapLatest { state ->
-            if (state.currentPlaylist == -1L || state.currentSongIndex == -1L) {
-                flowOf(null)
-            } else {
-                playlistSongDao.observeSongAtPosition(
-                    state.currentPlaylist,
-                    state.currentSongIndex
-                )
-            }
-        }
-    }
-
+    // Send playlist commands to network manager.
     fun sendCommand(command: OutgoingMessage) {
         scope.launch { networkManager.sendCommand(command) }
     }
 
-    fun updateCurrentSong(playlistId: Long, songIndex: Long) {
-        _playlistState.update {
-            it.copy(
-                currentPlaylist = playlistId,
-                currentSongIndex = songIndex
-            )
-        }
-    }
+
 
     // Playlist database changes.
     suspend fun makeAllPlaylists(playlists: List<Playlist>) {
@@ -188,5 +168,28 @@ class PlaylistRepository @Inject constructor(
             it.copy(activePlaylist = activePlaylist, currentPlaylist = currentPlaylist)
         }
         println("playlistrepo playlistState after update: ${_playlistState.value}")
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private fun getCurrentSong(): Flow<SongWithPosition?> {
+        return playlistState.flatMapLatest { state ->
+            if (state.currentPlaylist == -1L || state.currentSongIndex == -1L) {
+                flowOf(null)
+            } else {
+                playlistSongDao.observeSongAtPosition(
+                    state.currentPlaylist,
+                    state.currentSongIndex
+                )
+            }
+        }
+    }
+
+    fun updateCurrentSong(playlistId: Long, songIndex: Long) {
+        _playlistState.update {
+            it.copy(
+                currentPlaylist = playlistId,
+                currentSongIndex = songIndex
+            )
+        }
     }
 }

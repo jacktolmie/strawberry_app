@@ -2,7 +2,11 @@ package com.example.strawberry_app.screens.playlistScreen.composables
 
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -21,6 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.strawberry_app.data.dao.SongWithPosition
@@ -45,10 +50,9 @@ fun MedLrgScreenTabs(
             TabListing(callbacks, playlistsData)
         }
         // Create the playlists for each tab.
-        if (playlistsData.playlistSongs.isNotEmpty()){
-            println("playerrepo playlistsongs not empty")
+        if (playlistsData.playlistSongs.isNotEmpty()) {
             CurrentPlaylist(playlistsData.playlistSongs)
-        }else println("playerrepo playlistsongs is empty")
+        }
     }
 }
 
@@ -60,7 +64,7 @@ fun TabListing(
     var selectedTabIndex by remember { mutableIntStateOf(0) }
     val scrollState = rememberScrollState()
 
-    if ( playlistsData.playlists.size > 3) {
+    if ( playlistsData.playlists.size > 4) {
         ScrollableTabs(
             callbacks = callbacks,
             playlistsData = playlistsData,
@@ -149,12 +153,12 @@ fun MakeTabs(
     onTabSelected: (Int) -> Unit,
 ){
     playlistsData.playlists.forEachIndexed { index, entity ->
-        Tab(modifier = Modifier,
+        Tab(
             text = { Text(entity.name, color = MaterialTheme.colorScheme.primary) },
             selected = selectedTabIndex == index,
             onClick = {
                 onTabSelected(index)
-                callbacks.onPlaylistSelected(playlistsData.playlistState.currentPlaylist)
+                callbacks.sendPlaylistFavourite(entity.id, !entity.favourite)
             },
             icon = {
                 if(entity.favourite) {
