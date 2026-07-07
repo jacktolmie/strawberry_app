@@ -57,12 +57,13 @@ class MessageRepository @Inject constructor(
                         when (message.playlists) {
                             is EventType.MakeAllPlaylists -> {
                                 playlistRepository.makeAllPlaylists(message.playlists.playlists)
+
+                                playlistRepository.updateCurrentSong(
+                                    playlistId = message.activePlaylist,
+                                    songIndex = message.currentSong
+                                )
                             }
                         }
-                        playlistRepository.updateCurrentSong(
-                            playlistId = message.activePlaylist,
-                            songIndex = message.currentSong
-                        )
 
                         playlistRepository.updatePlaylistState(
                             activePlaylist = message.activePlaylist,
@@ -164,7 +165,7 @@ class MessageRepository @Inject constructor(
                     is ResponseType.PlaylistClosed -> { serverResponseMessage("Playlist ${message.id} closed.") }
                     is ResponseType.RemovedDuplicatesFromPlaylist -> { serverResponseMessage("Removed duplicates from playlist.") }
                     is ResponseType.RenamePlaylist -> { serverResponseMessage("Renamed playlist ${message.id} to ${message.name}.") }
-                    is ResponseType.RemovedSongFromPlaylist -> { serverResponseMessage("Removed song from playlist ${message.name}.") }
+                    is ResponseType.RemovedSongFromPlaylist -> { serverResponseMessage("Removed songs from playlist ${message.id}.") }
                     is ResponseType.RunningCommand -> { serverResponseMessage("Running command ${message.command}.") }
                     is ResponseType.SentActivePlaylist -> { serverResponseMessage("Active playlist ID: ${message.id}.") }
                     is ResponseType.SentAlbumCover -> {serverResponseMessage("Sent album cover")}

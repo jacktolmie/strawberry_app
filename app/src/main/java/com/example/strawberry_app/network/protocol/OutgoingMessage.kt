@@ -107,7 +107,7 @@ sealed class OutgoingMessage {
 
     @Serializable
     @SerialName("seek-to")
-    data class SeekTo(val seekTo: Long): OutgoingMessage()
+    data class SeekTo(@SerialName("seek-to")val seekTo: Long): OutgoingMessage()
 
     @Serializable
     @SerialName("stop")
