@@ -69,6 +69,7 @@ class MessageRepository @Inject constructor(
                             activePlaylist = message.activePlaylist,
                             currentPlaylist = message.currentPlaylist
                         )
+
                         playerRepository.getGuiUpdates(
                             ServerGuiValues(
                                 activePlaylist =    message.activePlaylist,
