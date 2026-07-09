@@ -10,14 +10,14 @@ import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
 @Suppress("CheckReturnValue")
-public val queue_music: ImageVector
+public val clear_all: ImageVector
   get() {
-    if (_queue_music != null) {
-      return _queue_music!!
+    if (_clear_all != null) {
+      return _clear_all!!
     }
-    _queue_music =
+    _clear_all =
       ImageVector.Builder(
-          name = "queue_music",
+          name = "clear_all",
           defaultWidth = 24.dp,
           defaultHeight = 24.dp,
           viewportWidth = 24f,
@@ -35,43 +35,28 @@ public val queue_music: ImageVector
             strokeLineMiter = 1f,
             pathFillType = PathFillType.Companion.NonZero,
           ) {
-            moveTo(16f, 20f)
-            quadToRelative(-1.25f, 0f, -2.13f, -0.88f)
-            reflectiveQuadTo(13f, 17f)
-            reflectiveQuadToRelative(0.88f, -2.13f)
-            reflectiveQuadTo(16f, 14f)
-            quadToRelative(0.28f, 0f, 0.53f, 0.04f)
-            reflectiveQuadTo(17f, 14.2f)
-            verticalLineTo(6f)
-            horizontalLineToRelative(5f)
-            verticalLineTo(8f)
+            moveTo(3f, 17f)
+            verticalLineTo(15f)
+            horizontalLineTo(17f)
+            verticalLineToRelative(2f)
+            horizontalLineTo(3f)
+            close()
+            moveTo(5f, 13f)
+            verticalLineTo(11f)
             horizontalLineTo(19f)
-            verticalLineToRelative(9f)
-            quadToRelative(0f, 1.25f, -0.88f, 2.13f)
-            reflectiveQuadTo(16f, 20f)
-            close()
-            moveTo(3f, 16f)
-            verticalLineTo(14f)
-            horizontalLineToRelative(8f)
             verticalLineToRelative(2f)
-            horizontalLineTo(3f)
+            horizontalLineTo(5f)
             close()
-            moveTo(3f, 12f)
-            verticalLineTo(10f)
-            horizontalLineTo(15f)
-            verticalLineToRelative(2f)
-            horizontalLineTo(3f)
-            close()
-            moveTo(3f, 8f)
-            verticalLineTo(6f)
-            horizontalLineTo(15f)
-            verticalLineTo(8f)
-            horizontalLineTo(3f)
+            moveTo(7f, 9f)
+            verticalLineTo(7f)
+            horizontalLineTo(21f)
+            verticalLineTo(9f)
+            horizontalLineTo(7f)
             close()
           }
         }
         .build()
-    return _queue_music!!
+    return _clear_all!!
   }
 
-private var _queue_music: ImageVector? = null
+private var _clear_all: ImageVector? = null

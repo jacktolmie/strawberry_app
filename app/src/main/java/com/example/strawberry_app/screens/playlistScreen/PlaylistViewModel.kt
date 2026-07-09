@@ -75,7 +75,7 @@ class PlaylistViewModel @Inject constructor(
     fun removeSongsCurrentPlaylist(id: Long, songsList: List<Long>){
         playlistRepository.sendCommand(OutgoingMessage.RemoveCurrentSongsFromPlaylist(id = id, songsList = songsList))
     }
-    fun removeDuplicatesInPlaylist(id: Long) = playlistRepository.sendCommand(OutgoingMessage.RemoveDuplicatesFromPlaylist)
+    fun removeDuplicatesInPlaylist(id: Long) = playlistRepository.sendCommand(OutgoingMessage.RemoveDuplicatesFromPlaylist(id = id))
     fun renameCurrentPlaylist(id: Long, name: String) {
         playlistRepository.sendCommand(OutgoingMessage.RenamePlaylist(id = id, name = name))
     }
@@ -84,10 +84,10 @@ class PlaylistViewModel @Inject constructor(
     }
     fun sendAllPlaylists(playlists: List<Playlist>) = playlistRepository.sendCommand(OutgoingMessage.SendAllPlaylists(playlists = playlists))
     fun sendCurrentPlaylist(id: Long, playlist: Playlist){
-        playlistRepository.sendCommand(OutgoingMessage.SendCurrentPlaylist(id = id, playlist =  playlist))
+        playlistRepository.sendCommand(OutgoingMessage.SendCurrentPlaylist(id = id))
     }
     fun sendPlaylistFavourite(id: Long, favourite: Boolean){
-        playlistRepository.sendCommand(OutgoingMessage.FavouritePlaylist(playlistId = id, favourite = favourite))
+        playlistRepository.sendCommand(OutgoingMessage.FavouritePlaylist(id = id, favourite = favourite))
     }
     fun setCurrentPlaylist(id: Long) = playlistRepository.sendCommand(OutgoingMessage.SetCurrentPlaylist(id = id))
     fun shuffleAllPlaylists() = playlistRepository.sendCommand(OutgoingMessage.ShuffleAllPlaylists)

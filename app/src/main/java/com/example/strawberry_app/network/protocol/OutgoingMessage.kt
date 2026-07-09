@@ -26,26 +26,28 @@ sealed class OutgoingMessage {
 
     @Serializable
     @SerialName("favourite-playlist")
-    data class FavouritePlaylist(val playlistId: Long, val favourite: Boolean): OutgoingMessage()
-
+    data class FavouritePlaylist(val id: Long, val favourite: Boolean): OutgoingMessage()
 
     @Serializable
     @SerialName("remove-duplicates-playlist")
-    data object RemoveDuplicatesFromPlaylist: OutgoingMessage()
+    data class RemoveDuplicatesFromPlaylist(val id: Long): OutgoingMessage()
 
     @Serializable
     @SerialName("remove-songs-playlist")
-    data class RemoveCurrentSongsFromPlaylist(val id: Long, val songsList: List<Long>): OutgoingMessage()
+    data class RemoveCurrentSongsFromPlaylist(
+        val id: Long,
+        @SerialName("songs_list")
+        val songsList: List<Long>): OutgoingMessage()
 
     @Serializable
     @SerialName("rename-playlist")
     data class RenamePlaylist(val id: Long, val name: String): OutgoingMessage()
 
     @Serializable
-    @SerialName("request_cover")
+    @SerialName("request-cover")
     data object RequestCover: OutgoingMessage()
     @Serializable
-    @SerialName("send-active-playlist-songs")
+    @SerialName("send-playlist-song")
     data class SendActivePlaylistSong(val id: Long, val songIndex: Long): OutgoingMessage()
 
     @Serializable
@@ -54,7 +56,7 @@ sealed class OutgoingMessage {
 
     @Serializable
     @SerialName("send-playlist")
-    data class SendCurrentPlaylist(val id: Long, val playlist: Playlist): OutgoingMessage()
+    data class SendCurrentPlaylist(val id: Long): OutgoingMessage()
 
     @Serializable
     @SerialName("set-current-playlist")

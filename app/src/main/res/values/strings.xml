@@ -2,6 +2,14 @@
     <string name="app_name">strawberry_app</string>
 
     <string name="player_album_art">Album Art</string>
+
+    <string name="playlist_favourites">Favourite</string>
+    <string name="playlist_clear">Clear</string>
+    <string name="playlist_delete">Delete</string>
+    <string name="playlist_length">Length</string>
+    <string name="playlist_shuffle">Shuffle</string>
+    <string name="playlist_song_count">Songs</string>
+
     <string name="settings_title">Settings</string>
     <string name="settings_ip">IP Address</string>
     <string name="settings_ip_info">IPv4 or IPv6</string>

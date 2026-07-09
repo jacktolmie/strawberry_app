@@ -62,13 +62,12 @@ class MessageRepository @Inject constructor(
                                     playlistId = message.activePlaylist,
                                     songIndex = message.currentSong
                                 )
+//                                playlistRepository.updatePlaylistState(
+//                                    activePlaylist = message.activePlaylist,
+//                                    currentPlaylist = message.currentPlaylist
+//                                )
                             }
                         }
-
-                        playlistRepository.updatePlaylistState(
-                            activePlaylist = message.activePlaylist,
-                            currentPlaylist = message.currentPlaylist
-                        )
 
                         playerRepository.getGuiUpdates(
                             ServerGuiValues(
@@ -84,6 +83,11 @@ class MessageRepository @Inject constructor(
                                 },
                                 volume =            message.volume,
                             )
+                        )
+
+                        playlistRepository.updatePlaylistState(
+                            activePlaylist = message.activePlaylist,
+                            currentPlaylist = message.currentPlaylist
                         )
                     }
                     is EventType.MakePlaylist -> playlistRepository.makePlaylist(message.playlist)
