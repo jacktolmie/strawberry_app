@@ -42,9 +42,11 @@ import com.example.strawberry_app.screens.formatTime
 import com.example.strawberry_app.screens.playlistScreen.PlaylistCallbacks
 import com.example.strawberry_app.screens.playlistScreen.PlaylistState
 import com.example.strawberry_app.screens.playlistScreen.PlaylistsData
+import com.example.strawberry_app.ui.theme.icons.clear_all
 import com.example.strawberry_app.ui.theme.icons.favorite
 import com.example.strawberry_app.ui.theme.icons.more_vert
 import com.example.strawberry_app.ui.theme.icons.shuffle
+import com.example.strawberry_app.ui.theme.icons.playlist_remove
 
 @Composable
 fun MedLrgScreenTabs(
@@ -229,6 +231,7 @@ fun MakePlaylistMenu(
             onConfirm = {
                 pendingAction?.invoke()
                 showDialog = false
+                expanded = false
             },
             onDismiss = { showDialog = false }
         )
@@ -239,46 +242,23 @@ fun MakePlaylistMenu(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Box(){
-            IconButton(onClick = { expanded = !expanded }) {
-                Icon(
-                    imageVector = more_vert,
-                    contentDescription = "Menu"
-                )
-            }
-            DropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false}
-            ) {
-                DropdownMenuItem(
-                    text = { Text(text = stringResource(R.string.playlist_favourites)) },
-                    leadingIcon = {
-                        Icon(
-                            imageVector =  favorite,
-                            contentDescription = stringResource(R.string.playlist_favourites)
-                        )
-                    },
-                    onClick = { callbacks.sendPlaylistFavourite(
-                        playlistId,
-                        !playlistsData.playlists[selectedTabIndex].favourite
-                        ) }
-                )
-                DropdownMenuItem(
-                    text = { Text( text = stringResource(R.string.playlist_shuffle))},
-                    leadingIcon = {
-                        Icon(
-                            imageVector = shuffle,
-                            contentDescription = stringResource(R.string.playlist_shuffle)
-                        )
-                    },
-                    onClick = {
-                            expanded = false
-                            pendingAction = { callbacks.shuffleCurrentPlaylist(playlistId) }
-                            showDialog = true
-                    }
-                )
-            }
-        }
+        DropDownMenuComposable(
+            callbacks = callbacks,
+            playlistId = playlistId,
+            playlistsData = playlistsData,
+            selectedTabIndex = selectedTabIndex,
+            onConfirm = { action, dialog, expand ->
+                pendingAction = action
+                if(dialog){
+                    showDialog = true
+                }else {
+                    action.invoke()
+                }
+                showDialog = dialog
+                expanded = expand
+            },
+            expanded = expanded
+        )
 
         val length = "${stringResource(R.string.playlist_length)}: ${formatTime(playlistsData.playlists[selectedTabIndex].playlistLength)}"
         Text(text = length, color = MaterialTheme.colorScheme.secondary)
@@ -310,6 +290,86 @@ fun Alert(
         }
     )
 }
+
+@Composable
+fun DropDownMenuComposable(
+    callbacks: PlaylistCallbacks,
+    expanded: Boolean,
+    playlistId: Long,
+    playlistsData: PlaylistsData,
+    selectedTabIndex: Int,
+    onConfirm: (()->Unit, Boolean, Boolean) -> Unit,
+    modifier: Modifier = Modifier
+){
+    Box(){
+        IconButton(onClick = {
+            onConfirm({}, false, !expanded)
+        }){
+            Icon(
+                imageVector = more_vert,
+                contentDescription = "Menu"
+            )
+        }
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { onConfirm({}, false, false)} //expanded = false}
+        ) {
+            DropdownMenuItem(
+                text = { Text(text = stringResource(R.string.playlist_favourites)) },
+                leadingIcon = {
+                    Icon(
+                        imageVector =  favorite,
+                        contentDescription = stringResource(R.string.playlist_favourites)
+                    )
+                },
+                onClick = {
+                    onConfirm(
+                        { callbacks.sendPlaylistFavourite(
+                                playlistId,
+                                !playlistsData.playlists[selectedTabIndex].favourite
+                            )
+                        }, false, false
+                    )
+                }
+            )
+            DropdownMenuItem(
+                text = { Text( text = stringResource(R.string.playlist_shuffle))},
+                leadingIcon = {
+                    Icon(
+                        imageVector = shuffle,
+                        contentDescription = stringResource(R.string.playlist_shuffle)
+                    )
+                },
+                onClick = { onConfirm({ callbacks.shuffleCurrentPlaylist(playlistId) }, true, false)
+//                    expanded = false
+//                    pendingAction = { callbacks.shuffleCurrentPlaylist(playlistId) }
+//                    showDialog = true
+                }
+            )
+            DropdownMenuItem(
+                text = { Text( text = stringResource(R.string.playlist_clear))},
+                leadingIcon = {
+                    Icon(
+                        imageVector = clear_all,
+                        contentDescription = stringResource(R.string.playlist_clear)
+                    )
+                },
+                onClick = { onConfirm({ callbacks.clearCurrentPlaylist(playlistId) }, true, false)}
+            )
+            DropdownMenuItem(
+                text = { Text( text = stringResource(R.string.playlist_delete))},
+                leadingIcon = {
+                    Icon(
+                        imageVector = playlist_remove,
+                        contentDescription = stringResource(R.string.playlist_delete)
+                    )
+                },
+                onClick = { onConfirm({ callbacks.deleteCurrentPlaylist(playlistId) }, true, false )}
+            )
+        }
+    }
+}
+
 fun samplePlaylists() = listOf(
     PlaylistEntity(id = 1L, name = "Rock Classics", favourite = false, playlistLength = 1000L, playlistSize = 2L),
     PlaylistEntity(id = 2L, name = "Jazz Favourites", favourite = true, playlistLength = 1000L, playlistSize = 2L),
@@ -412,3 +472,44 @@ fun MedLrgPreview(){
         Modifier.background(Color.White),
     )
 }
+
+//        Box(){
+//            IconButton(onClick = { expanded = !expanded }) {
+//                Icon(
+//                    imageVector = more_vert,
+//                    contentDescription = "Menu"
+//                )
+//            }
+//            DropdownMenu(
+//                expanded = expanded,
+//                onDismissRequest = { expanded = false}
+//            ) {
+//                DropdownMenuItem(
+//                    text = { Text(text = stringResource(R.string.playlist_favourites)) },
+//                    leadingIcon = {
+//                        Icon(
+//                            imageVector =  favorite,
+//                            contentDescription = stringResource(R.string.playlist_favourites)
+//                        )
+//                    },
+//                    onClick = { callbacks.sendPlaylistFavourite(
+//                        playlistId,
+//                        !playlistsData.playlists[selectedTabIndex].favourite
+//                        ) }
+//                )
+//                DropdownMenuItem(
+//                    text = { Text( text = stringResource(R.string.playlist_shuffle))},
+//                    leadingIcon = {
+//                        Icon(
+//                            imageVector = shuffle,
+//                            contentDescription = stringResource(R.string.playlist_shuffle)
+//                        )
+//                    },
+//                    onClick = {
+//                            expanded = false
+//                            pendingAction = { callbacks.shuffleCurrentPlaylist(playlistId) }
+//                            showDialog = true
+//                    }
+//                )
+//            }
+//        }

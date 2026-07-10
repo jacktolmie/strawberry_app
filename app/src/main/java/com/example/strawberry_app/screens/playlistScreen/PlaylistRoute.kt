@@ -54,5 +54,17 @@ fun PlaylistRoute(
         callbacks,
         playlistsData
     )
-
 }
+
+/*
+onConfirm = { action, dialog, expand ->
+    pendingAction = action
+    expanded = expand
+    if (dialog) {
+        showDialog = true
+    } else {
+        action?.invoke()
+    }
+}
+
+ */
