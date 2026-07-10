@@ -79,7 +79,9 @@ class PlaylistRepository @Inject constructor(
                 PlaylistEntity(
                     id = playlist.id,
                     favourite = playlist.favourite,
-                    name = playlist.name
+                    name = playlist.name,
+                    playlistLength = playlist.playlistLength,
+                    playlistSize = playlist.playlistSize
                 )
             )
 
@@ -116,7 +118,9 @@ class PlaylistRepository @Inject constructor(
             PlaylistEntity(
                 id = playlist.id,
                 favourite = playlist.favourite,
-                name = playlist.name
+                name = playlist.name,
+                playlistLength = playlist.playlistLength,
+                playlistSize = playlist.playlistSize
             )
         )
 

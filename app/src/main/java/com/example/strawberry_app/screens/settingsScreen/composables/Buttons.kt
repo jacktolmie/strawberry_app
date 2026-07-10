@@ -83,7 +83,7 @@ fun SmallScreenBtns(
             onClick = { callbacks.onCancelClicked() }
         )
         {
-            TextBox(R.string.settings_cancel, MaterialTheme.typography.bodySmall)
+            TextBox(R.string.cancel, MaterialTheme.typography.bodySmall)
         }
     }
 
@@ -113,7 +113,7 @@ fun CancelButton(
         onClick = { callback() }
     )
     {
-        ButtonText(R.string.settings_cancel, MaterialTheme.typography.bodySmall)
+        ButtonText(R.string.cancel, MaterialTheme.typography.bodySmall)
     }
 }
 

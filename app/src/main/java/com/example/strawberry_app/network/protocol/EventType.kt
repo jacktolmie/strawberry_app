@@ -99,7 +99,6 @@ sealed class EventType: IncomingMessage() {
     @JsonIgnoreUnknownKeys
     @SerialName("make_playlist")
     data class MakePlaylist(
-//        val id: Long,
         val playlist: Playlist) : EventType()
 
     @Serializable

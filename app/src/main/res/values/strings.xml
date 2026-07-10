@@ -4,10 +4,11 @@
     <string name="player_album_art">Album Art</string>
 
     <string name="playlist_favourites">Favourite</string>
-    <string name="playlist_clear">Clear</string>
-    <string name="playlist_delete">Delete</string>
+    <string name="playlist_clear">Clear Playlist</string>
+    <string name="playlist_confirm">Confirm</string>
+    <string name="playlist_delete">Delete Playlist</string>
     <string name="playlist_length">Length</string>
-    <string name="playlist_shuffle">Shuffle</string>
+    <string name="playlist_shuffle">Shuffle Playlist</string>
     <string name="playlist_song_count">Songs</string>
 
     <string name="settings_title">Settings</string>
@@ -31,5 +32,5 @@
     <string name="settings_reconnecting">Reconnecting</string>
 
     <string name="settings_save">Save</string>
-    <string name="settings_cancel">Cancel</string>
+    <string name="cancel">Cancel</string>
 </resources>

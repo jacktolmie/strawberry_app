@@ -2,6 +2,8 @@ package com.example.strawberry_app.screens.playlistScreen.composables
 
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -9,20 +11,25 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SecondaryScrollableTabRow
 import androidx.compose.material3.SecondaryTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -31,14 +38,13 @@ import androidx.compose.ui.unit.dp
 import com.example.strawberry_app.R
 import com.example.strawberry_app.data.dao.SongWithPosition
 import com.example.strawberry_app.data.entity.PlaylistEntity
+import com.example.strawberry_app.screens.formatTime
 import com.example.strawberry_app.screens.playlistScreen.PlaylistCallbacks
 import com.example.strawberry_app.screens.playlistScreen.PlaylistState
 import com.example.strawberry_app.screens.playlistScreen.PlaylistsData
 import com.example.strawberry_app.ui.theme.icons.favorite
-import com.example.strawberry_app.ui.theme.icons.playlist_remove
-import com.example.strawberry_app.ui.theme.icons.clear_all
+import com.example.strawberry_app.ui.theme.icons.more_vert
 import com.example.strawberry_app.ui.theme.icons.shuffle
-import com.example.strawberry_app.ui.theme.icons.queue_music
 
 @Composable
 fun MedLrgScreenTabs(
@@ -53,7 +59,6 @@ fun MedLrgScreenTabs(
         // Create the scrollable tab
         if (playlistsData.playlists.isNotEmpty()) {
             TabListing(callbacks, playlistsData)
-            MakePlaylistMenu(callbacks, playlistsData)
         }
 
         // Create the playlists for each tab.
@@ -67,35 +72,54 @@ fun MedLrgScreenTabs(
 fun TabListing(
     callbacks: PlaylistCallbacks,
     playlistsData: PlaylistsData,
+    modifier: Modifier = Modifier
 ){
     var selectedTabIndex by remember { mutableIntStateOf(0) }
     val scrollState = rememberScrollState()
+    var playlistId by remember { mutableLongStateOf(playlistsData.playlistState.currentPlaylist) }
 
     if ( playlistsData.playlists.size > 4) {
         ScrollableTabs(
             callbacks = callbacks,
             playlistsData = playlistsData,
             selectedTabIndex = selectedTabIndex,
-            onTabSelected = { selectedTabIndex = it },
+            playlistId = playlistId,
+            onTabSelected = { tabIndex: Int, id: Long ->
+                selectedTabIndex = tabIndex
+                playlistId = id
+            },
             scrollState = scrollState
-            )
+        )
     }else{
         StaticTabs(
             callbacks = callbacks,
             playlistsData = playlistsData,
+            playlistId = playlistId,
             selectedTabIndex = selectedTabIndex,
-            onTabSelected = { selectedTabIndex = it}
+            onTabSelected = { tabIndex: Int, id: Long ->
+                selectedTabIndex = tabIndex
+                playlistId = id
+            }
         )
     }
+
+    MakePlaylistMenu(
+        callbacks = callbacks,
+        playlistId = playlistId,
+        playlistsData = playlistsData,
+        selectedTabIndex = selectedTabIndex,
+        modifier)
 }
 
 @Composable
 fun ScrollableTabs(
     callbacks: PlaylistCallbacks,
     playlistsData: PlaylistsData,
+    playlistId: Long,
     selectedTabIndex: Int,
-    onTabSelected: (Int) -> Unit,
-    scrollState: ScrollState
+    onTabSelected: (Int, Long) -> Unit,
+    scrollState: ScrollState,
+    modifier: Modifier = Modifier
     ){
     SecondaryScrollableTabRow( modifier = Modifier
         .fillMaxWidth(),
@@ -108,6 +132,7 @@ fun ScrollableTabs(
         MakeTabs(
             callbacks = callbacks,
             playlistsData = playlistsData,
+            playlistId = playlistId,
             selectedTabIndex = selectedTabIndex,
             onTabSelected = onTabSelected
         )
@@ -118,8 +143,10 @@ fun ScrollableTabs(
 fun StaticTabs(
     callbacks: PlaylistCallbacks,
     playlistsData: PlaylistsData,
+    playlistId: Long,
     selectedTabIndex: Int,
-    onTabSelected: (Int) -> Unit
+    onTabSelected: (Int, Long) -> Unit,
+    modifier: Modifier = Modifier
 ){
     SecondaryTabRow(
         modifier = Modifier
@@ -134,13 +161,17 @@ fun StaticTabs(
             callbacks = callbacks,
             playlistsData = playlistsData,
             selectedTabIndex = selectedTabIndex,
-            onTabSelected = onTabSelected
+            onTabSelected = onTabSelected,
+            playlistId = playlistId
         )
     }
 }
 
 @Composable
-fun CurrentPlaylist(playlist: List<SongWithPosition>){
+fun CurrentPlaylist(
+    playlist: List<SongWithPosition>,
+    modifier: Modifier = Modifier
+){
     LazyColumn(modifier = Modifier
         .fillMaxWidth()
         .padding(5.dp)
@@ -156,16 +187,17 @@ fun CurrentPlaylist(playlist: List<SongWithPosition>){
 fun MakeTabs(
     callbacks: PlaylistCallbacks,
     playlistsData: PlaylistsData,
+    playlistId: Long,
     selectedTabIndex: Int,
-    onTabSelected: (Int) -> Unit,
+    onTabSelected: (Int, Long) -> Unit,
+    modifier: Modifier = Modifier
 ){
     playlistsData.playlists.forEachIndexed { index, entity ->
         Tab(
             text = { Text(entity.name, color = MaterialTheme.colorScheme.primary) },
             selected = selectedTabIndex == index,
             onClick = {
-                onTabSelected(index)
-                callbacks.sendPlaylistFavourite(entity.id, !entity.favourite)
+                onTabSelected(index, entity.id)
             },
             icon = {
                 if(entity.favourite) {
@@ -182,39 +214,106 @@ fun MakeTabs(
 @Composable
 fun MakePlaylistMenu(
     callbacks: PlaylistCallbacks,
+    playlistId: Long,
     playlistsData: PlaylistsData,
+    selectedTabIndex: Int,
     modifier: Modifier = Modifier
 ){
     var expanded by remember { mutableStateOf(false) }
+    var pendingAction by remember { mutableStateOf<(() -> Unit)?>(null) }
+    var showDialog by remember { mutableStateOf(false) }
 
-    Row(
-
-    ) {
-        val length = "${R.string.playlist_length}: "
-        Text(text = stringResource(R.string.playlist_length), color = MaterialTheme.colorScheme.secondary)
-        DropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false}
-        ) {
-            DropdownMenuItem(
-                text = { Text(text = stringResource(R.string.playlist_favourites)) },
-                leadingIcon = {
-                    Icon(
-                        imageVector =  favorite,
-                        contentDescription = stringResource(R.string.playlist_favourites)
-                    )
-                },
-                onClick = {  }
-            )
-        }
+    if (showDialog) {
+        Alert(
+            action = R.string.playlist_shuffle,
+            onConfirm = {
+                pendingAction?.invoke()
+                showDialog = false
+            },
+            onDismiss = { showDialog = false }
+        )
     }
 
+    Row(modifier = modifier
+        .fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(){
+            IconButton(onClick = { expanded = !expanded }) {
+                Icon(
+                    imageVector = more_vert,
+                    contentDescription = "Menu"
+                )
+            }
+            DropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false}
+            ) {
+                DropdownMenuItem(
+                    text = { Text(text = stringResource(R.string.playlist_favourites)) },
+                    leadingIcon = {
+                        Icon(
+                            imageVector =  favorite,
+                            contentDescription = stringResource(R.string.playlist_favourites)
+                        )
+                    },
+                    onClick = { callbacks.sendPlaylistFavourite(
+                        playlistId,
+                        !playlistsData.playlists[selectedTabIndex].favourite
+                        ) }
+                )
+                DropdownMenuItem(
+                    text = { Text( text = stringResource(R.string.playlist_shuffle))},
+                    leadingIcon = {
+                        Icon(
+                            imageVector = shuffle,
+                            contentDescription = stringResource(R.string.playlist_shuffle)
+                        )
+                    },
+                    onClick = {
+                            expanded = false
+                            pendingAction = { callbacks.shuffleCurrentPlaylist(playlistId) }
+                            showDialog = true
+                    }
+                )
+            }
+        }
 
+        val length = "${stringResource(R.string.playlist_length)}: ${formatTime(playlistsData.playlists[selectedTabIndex].playlistLength)}"
+        Text(text = length, color = MaterialTheme.colorScheme.secondary)
+
+        val tracks = "${stringResource(R.string.playlist_song_count)}: ${playlistsData.playlists[selectedTabIndex].playlistSize}"
+        Text(text = tracks, color = MaterialTheme.colorScheme.secondary)
+    }
+}
+
+@Composable
+fun Alert(
+    action: Int,
+    onConfirm: () -> Unit,
+    onDismiss: () -> Unit
+){
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(text = stringResource(action)) },
+        text = { Text(text = stringResource(action)) },
+        confirmButton = {
+            TextButton(onClick = onConfirm) {
+                Text(text = stringResource(R.string.playlist_confirm))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(text = stringResource(R.string.cancel))
+            }
+        }
+    )
 }
 fun samplePlaylists() = listOf(
-    PlaylistEntity(id = 1L, name = "Rock Classics", favourite = false),
-    PlaylistEntity(id = 2L, name = "Jazz Favourites", favourite = true),
-    PlaylistEntity(id = 3L, name = "Pop Hits", favourite = false)
+    PlaylistEntity(id = 1L, name = "Rock Classics", favourite = false, playlistLength = 1000L, playlistSize = 2L),
+    PlaylistEntity(id = 2L, name = "Jazz Favourites", favourite = true, playlistLength = 1000L, playlistSize = 2L),
+    PlaylistEntity(id = 3L, name = "Pop Hits", favourite = false, playlistLength = 1000L, playlistSize = 2L)
 )
 
 fun sampleSongList() = listOf(
@@ -313,54 +412,3 @@ fun MedLrgPreview(){
         Modifier.background(Color.White),
     )
 }
-
-//    var selectedTabIndex by remember { mutableIntStateOf(0) }
-//    val scrollState = rememberScrollState()
-//
-//    SecondaryScrollableTabRow( modifier = Modifier
-//        .fillMaxWidth(),
-//        selectedTabIndex = selectedTabIndex,
-//        scrollState = scrollState,
-//        containerColor = MaterialTheme.colorScheme.surface,  // default anyway
-//        contentColor = MaterialTheme.colorScheme.onSurface,
-//        divider = {},
-//    ) {
-//        playlistsData.playlists.forEachIndexed { index, entity ->
-//            Tab(modifier = Modifier,
-//                text = { Text(entity.name, color = MaterialTheme.colorScheme.primary) },
-//                selected = selectedTabIndex == index,
-//                onClick = {
-//                    selectedTabIndex = index
-//                    callbacks.onPlaylistSelected(playlistsData.playlistState.currentPlaylist)
-//                },
-//                icon = {
-//                    if(entity.favourite) {
-//                        Icon(
-//                            imageVector = favorite,
-//                            contentDescription = "Favourite",
-//                            tint = MaterialTheme.colorScheme.primary)
-//                    }
-//                }
-//            )
-//        }
-//    }
-
-
-//        playlistsData.playlists.forEachIndexed { index, entity ->
-//            Tab(modifier = Modifier,
-//                text = { Text(entity.name, color = MaterialTheme.colorScheme.primary) },
-//                selected = selectedTabIndex == index,
-//                onClick = {
-//                    selectedTabIndex = index
-//                    callbacks.onPlaylistSelected(playlistsData.playlistState.currentPlaylist)
-//                },
-//                icon = {
-//                    if(entity.favourite) {
-//                        Icon(
-//                            imageVector = favorite,
-//                            contentDescription = "Favourite",
-//                            tint = MaterialTheme.colorScheme.primary)
-//                    }
-//                }
-//            )
-//        }
