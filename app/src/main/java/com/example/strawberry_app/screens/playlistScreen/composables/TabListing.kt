@@ -2,6 +2,7 @@ package com.example.strawberry_app.screens.playlistScreen.composables
 
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableLongStateOf
@@ -19,6 +20,15 @@ fun TabListing(
     modifier: Modifier = Modifier
 ){
     var selectedTabIndex by remember { mutableIntStateOf(0) }
+
+    LaunchedEffect(playlistsData.playlistState.currentPlaylist) {
+
+        val index = playlistsData.playlists.indexOfFirst {
+            it.id == playlistsData.playlistState.currentPlaylist
+        }.takeIf { it >= 0 } ?: 0
+
+        selectedTabIndex = index
+    }
     val scrollState = rememberScrollState()
     var playlistId by remember { mutableLongStateOf(playlistsData.playlistState.currentPlaylist) }
 
@@ -52,5 +62,5 @@ fun TabListing(
         playlistId = playlistId,
         playlistsData = playlistsData,
         selectedTabIndex = selectedTabIndex,
-        modifier)
+        modifier = modifier)
 }

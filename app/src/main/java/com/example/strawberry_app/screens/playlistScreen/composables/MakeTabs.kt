@@ -25,6 +25,7 @@ fun MakeTabs(
             selected = selectedTabIndex == index,
             onClick = {
                 onTabSelected(index, entity.id)
+                callbacks.onPlaylistSelected(entity.id)
             },
             icon = {
                 if(entity.favourite) {

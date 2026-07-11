@@ -10,12 +10,13 @@ import com.example.strawberry_app.R
 @Composable
 fun Alert(
     action: Int,
+    question: Int,
     onConfirm: () -> Unit,
     onDismiss: () -> Unit
 ){
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(text = stringResource(action)) },
+        title = { Text(text = stringResource(question)) },
         text = { Text(text = stringResource(action)) },
         confirmButton = {
             TextButton(onClick = onConfirm) {

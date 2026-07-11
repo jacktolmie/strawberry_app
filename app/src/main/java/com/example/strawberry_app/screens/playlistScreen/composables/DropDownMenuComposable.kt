@@ -20,17 +20,18 @@ import com.example.strawberry_app.ui.theme.icons.shuffle
 
 @Composable
 fun DropDownMenuComposable(
+    actionString: Int,
     callbacks: PlaylistCallbacks,
     expanded: Boolean,
     playlistId: Long,
     playlistsData: PlaylistsData,
     selectedTabIndex: Int,
-    onConfirm: (()->Unit, Boolean, Boolean) -> Unit,
+    onConfirm: (()->Unit, Boolean, Boolean, Int) -> Unit,
     modifier: Modifier = Modifier
 ){
     Box(){
         IconButton(onClick = {
-            onConfirm({}, false, !expanded)
+            onConfirm({}, false, !expanded, actionString)
         }){
             Icon(
                 imageVector = more_vert,
@@ -39,7 +40,7 @@ fun DropDownMenuComposable(
         }
         DropdownMenu(
             expanded = expanded,
-            onDismissRequest = { onConfirm({}, false, false)} //expanded = false}
+            onDismissRequest = { onConfirm({}, false, false, actionString)}
         ) {
             DropdownMenuItem(
                 text = { Text(text = stringResource(R.string.playlist_favourites)) },
@@ -55,7 +56,7 @@ fun DropDownMenuComposable(
                             playlistId,
                             !playlistsData.playlists[selectedTabIndex].favourite
                         )
-                        }, false, false
+                        }, false, false, actionString
                     )
                 }
             )
@@ -67,7 +68,9 @@ fun DropDownMenuComposable(
                         contentDescription = stringResource(R.string.playlist_shuffle)
                     )
                 },
-                onClick = { onConfirm({ callbacks.shuffleCurrentPlaylist(playlistId) }, true, false)
+                onClick = {
+                    onConfirm({ callbacks.shuffleCurrentPlaylist(playlistId) },
+                        true, false, R.string.playlist_shuffle)
                 }
             )
             DropdownMenuItem(
@@ -78,7 +81,9 @@ fun DropDownMenuComposable(
                         contentDescription = stringResource(R.string.playlist_clear)
                     )
                 },
-                onClick = { onConfirm({ callbacks.clearCurrentPlaylist(playlistId) }, true, false)}
+                onClick = {
+                    onConfirm({ callbacks.clearCurrentPlaylist(playlistId) },
+                        true, false, R.string.playlist_clear)}
             )
             DropdownMenuItem(
                 text = { Text( text = stringResource(R.string.playlist_delete))},
@@ -88,7 +93,9 @@ fun DropDownMenuComposable(
                         contentDescription = stringResource(R.string.playlist_delete)
                     )
                 },
-                onClick = { onConfirm({ callbacks.deleteCurrentPlaylist(playlistId) }, true, false )}
+                onClick = {
+                    onConfirm({ callbacks.deleteCurrentPlaylist(playlistId) },
+                        true, false, R.string.playlist_delete )}
             )
         }
     }

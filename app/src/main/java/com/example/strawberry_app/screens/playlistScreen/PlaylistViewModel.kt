@@ -29,8 +29,7 @@ class PlaylistViewModel @Inject constructor(
     private val playlistRepository: PlaylistRepository
 ): ViewModel(){
 
-    private val _playlistState = MutableStateFlow( PlaylistState())
-    val playlistState = _playlistState.asStateFlow()
+    val playlistState = playlistRepository.playlistState
 
     val playlistsInfo : StateFlow<List<PlaylistEntity>> = playlistRepository.getPlaylists()
         .stateIn(

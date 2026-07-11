@@ -10,6 +10,7 @@
     <string name="playlist_length">Length</string>
     <string name="playlist_shuffle">Shuffle Playlist</string>
     <string name="playlist_song_count">Songs</string>
+    <string name="playlist_question">Would you like to</string>
 
     <string name="settings_title">Settings</string>
     <string name="settings_ip">IP Address</string>

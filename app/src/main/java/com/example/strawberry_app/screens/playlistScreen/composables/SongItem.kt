@@ -13,16 +13,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.strawberry_app.data.dao.SongWithPosition
-import com.example.strawberry_app.data.entity.PlaylistEntity
-import com.example.strawberry_app.music.Playlist
 import com.example.strawberry_app.music.SongInfo
 import com.example.strawberry_app.screens.formatTime
-import com.example.strawberry_app.screens.playlistScreen.PlaylistState
 
 @Composable
 fun SongItem(

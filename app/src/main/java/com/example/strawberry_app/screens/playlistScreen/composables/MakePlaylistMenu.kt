@@ -7,6 +7,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -30,10 +31,12 @@ fun MakePlaylistMenu(
     var expanded by remember { mutableStateOf(false) }
     var pendingAction by remember { mutableStateOf<(() -> Unit)?>(null) }
     var showDialog by remember { mutableStateOf(false) }
+    var actionString by remember { mutableIntStateOf(-1) }
 
     if (showDialog) {
         Alert(
-            action = R.string.playlist_shuffle,
+            action = actionString,
+            question = R.string.playlist_question,
             onConfirm = {
                 pendingAction?.invoke()
                 showDialog = false
@@ -49,11 +52,12 @@ fun MakePlaylistMenu(
         verticalAlignment = Alignment.CenterVertically
     ) {
         DropDownMenuComposable(
+            actionString = actionString,
             callbacks = callbacks,
             playlistId = playlistId,
             playlistsData = playlistsData,
             selectedTabIndex = selectedTabIndex,
-            onConfirm = { action, dialog, expand ->
+            onConfirm = { action, dialog, expand, actionText ->
                 pendingAction = action
                 if(dialog){
                     showDialog = true
@@ -62,6 +66,7 @@ fun MakePlaylistMenu(
                 }
                 showDialog = dialog
                 expanded = expand
+                actionString =actionText
             },
             expanded = expanded
         )

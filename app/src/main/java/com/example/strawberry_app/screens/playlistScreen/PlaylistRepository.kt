@@ -1,9 +1,11 @@
 package com.example.strawberry_app.screens.playlistScreen
 
+import androidx.room.withTransaction
 import com.example.strawberry_app.data.dao.PlaylistDao
 import com.example.strawberry_app.data.dao.PlaylistSongDao
 import com.example.strawberry_app.data.dao.SongDao
 import com.example.strawberry_app.data.dao.SongWithPosition
+import com.example.strawberry_app.data.db.AppDatabase
 import com.example.strawberry_app.data.entity.PlaylistEntity
 import com.example.strawberry_app.data.entity.PlaylistSongEntity
 import com.example.strawberry_app.data.entity.SongEntity
@@ -36,6 +38,7 @@ class PlaylistRepository @Inject constructor(
     private val playlistDao: PlaylistDao,
     private val playlistSongDao: PlaylistSongDao,
     private val songDao: SongDao,
+    private val db: AppDatabase,
     @ApplicationScope
     private val scope: CoroutineScope
 ) {
@@ -70,43 +73,46 @@ class PlaylistRepository @Inject constructor(
 
     // Playlist database changes.
     suspend fun makeAllPlaylists(playlists: List<Playlist>) {
-        playlistDao.deleteAll()
+        db.withTransaction {
+            playlistDao.deleteAll()
 
-        playlists.forEach { playlist ->
-            playlist.songs.forEach { song ->
-            }
-            playlistDao.insert(
-                PlaylistEntity(
-                    id = playlist.id,
-                    favourite = playlist.favourite,
-                    name = playlist.name,
-                    playlistLength = playlist.playlistLength,
-                    playlistSize = playlist.playlistSize
+            playlists.forEach { playlist ->
+                playlist.songs.forEach { song ->
+                }
+                playlistDao.insert(
+                    PlaylistEntity(
+                        id = playlist.id,
+                        favourite = playlist.favourite,
+                        name = playlist.name,
+                        playlistLength = playlist.playlistLength,
+                        playlistSize = playlist.playlistSize
+                    )
                 )
-            )
 
-            val songs = playlist.songs.map { song ->
-                SongEntity(
-                    id = song.id,
-                    url = song.url,
-                    title = song.title,
-                    artist = song.artist,
-                    album = song.album,
-                    coverImage = song.coverImage,
-                    length = song.length
-                )
-            }
-            songDao.insertAll(songs)
+                val songs = playlist.songs.map { song ->
+                    SongEntity(
+                        id = song.id,
+                        url = song.url,
+                        title = song.title,
+                        artist = song.artist,
+                        album = song.album,
+                        coverImage = song.coverImage,
+                        length = song.length
+                    )
+                }
+                songDao.insertAll(songs)
 
-            val songIndex = playlist.songs.mapIndexed { index, song ->
-                PlaylistSongEntity(
-                    playlistId = playlist.id,
-                    position = index,
-                    songUrl = song.url
-                )
+                val songIndex = playlist.songs.mapIndexed { index, song ->
+                    PlaylistSongEntity(
+                        playlistId = playlist.id,
+                        position = index,
+                        songUrl = song.url
+                    )
+                }
+                playlistSongDao.insertAll(entities = songIndex)
             }
-            playlistSongDao.insertAll(entities = songIndex)
         }
+
     }
 
     suspend fun serverFavourite(id: Long, isFavourite: Boolean) {
@@ -167,11 +173,9 @@ class PlaylistRepository @Inject constructor(
     }
 
     fun updatePlaylistState(activePlaylist: Long, currentPlaylist: Long) {
-        println("playlistrepo updatePlaylistState: active=$activePlaylist current=$currentPlaylist")
         _playlistState.update {
             it.copy(activePlaylist = activePlaylist, currentPlaylist = currentPlaylist)
         }
-        println("playlistrepo playlistState after update: ${_playlistState.value}")
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
