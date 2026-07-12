@@ -24,9 +24,10 @@ import com.example.strawberry_app.screens.TextBox
 
 @Composable
 fun ConnStateMedLrg(
-    settingsGuiData: SettingsGuiData
+    settingsGuiData: SettingsGuiData,
+    modifier: Modifier = Modifier
 ){
-    Row(modifier = Modifier
+    Row(modifier = modifier
         .fillMaxWidth()
         .padding(10.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -36,10 +37,10 @@ fun ConnStateMedLrg(
     {
         TextBox(R.string.settings_connection_status, MaterialTheme.typography.bodyLarge)
 
-        Spacer(modifier = Modifier.width(5.dp))
+        Spacer(modifier = modifier.width(5.dp))
 
         Icon(
-            modifier = Modifier.size(18.dp),
+            modifier = modifier.size(18.dp),
             painter = painterResource(R.drawable.circle_24dp_e3e3e3_fill1_wght400_grad0_opsz24),
             contentDescription = null,
             tint = when(settingsGuiData.connectionColour){
@@ -49,7 +50,7 @@ fun ConnStateMedLrg(
             }
         )
 
-        Spacer(modifier = Modifier.width(5.dp))
+        Spacer(modifier = modifier.width(5.dp))
 
         TextBox(
             text = settingsGuiData.connectionState,
@@ -60,9 +61,10 @@ fun ConnStateMedLrg(
 
 @Composable
 fun ConnStateSmall(
-    settingsGuiData: SettingsGuiData
+    settingsGuiData: SettingsGuiData,
+    modifier: Modifier = Modifier
 ){
-    Row(modifier = Modifier
+    Row(modifier = modifier
         .fillMaxWidth()
         .padding(10.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -72,10 +74,10 @@ fun ConnStateSmall(
     {
         TextBox(R.string.settings_connection_status, MaterialTheme.typography.bodyLarge)
 
-        Spacer(modifier = Modifier.width(5.dp))
+        Spacer(modifier = modifier.width(5.dp))
 
         Icon(
-            modifier = Modifier.size(18.dp),
+            modifier = modifier.size(18.dp),
             painter = painterResource(R.drawable.circle_24dp_e3e3e3_fill1_wght400_grad0_opsz24),
             contentDescription = null,
             tint = when(settingsGuiData.connectionColour){
@@ -85,7 +87,7 @@ fun ConnStateSmall(
             }
         )
 
-        Spacer(modifier = Modifier.width(5.dp))
+        Spacer(modifier = modifier.width(5.dp))
 
         TextBox(
             text = settingsGuiData.connectionState,

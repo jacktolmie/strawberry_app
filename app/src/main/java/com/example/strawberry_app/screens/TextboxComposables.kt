@@ -64,10 +64,10 @@ fun TextBox(
 fun TextFieldBox(
     valueField: String,
     onValue: (String) -> Unit,
+    modifier: Modifier = Modifier,
     label: Int? = null,
     keyboard: KeyboardType = KeyboardType.Text,
-    error: Int? = null,
-    modifier: Modifier = Modifier
+    error: Int? = null
 ){
     TextField(modifier = modifier
         .fillMaxWidth()

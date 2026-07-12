@@ -30,7 +30,10 @@ fun DropDownMenuComposable(
     onConfirm: (()->Unit, Boolean, Boolean, Int) -> Unit,
     modifier: Modifier = Modifier
 ){
-    Box{
+    Box(
+        modifier = modifier
+    )
+    {
         IconButton(onClick = {
             onConfirm({}, false, !expanded, actionString)
         }){
