@@ -69,8 +69,6 @@ class PlaylistRepository @Inject constructor(
         scope.launch { networkManager.sendCommand(command) }
     }
 
-
-
     // Playlist database changes.
     suspend fun makeAllPlaylists(playlists: List<Playlist>) {
         db.withTransaction {

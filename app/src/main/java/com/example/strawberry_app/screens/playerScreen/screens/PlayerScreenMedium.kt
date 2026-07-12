@@ -31,10 +31,11 @@ import com.example.strawberry_app.screens.playerScreen.composables.VolumeSliderV
 @Composable
 fun PlayerScreen(
     callbacks: PlayerCallbacks,
-    playerScreenValues: PlayerScreenState
+    playerScreenValues: PlayerScreenState,
+    modifier: Modifier = Modifier
 )
 {
-    Column(modifier = Modifier
+    Column(modifier = modifier
         .fillMaxSize()
         .statusBarsPadding()
         .navigationBarsPadding()
@@ -43,7 +44,7 @@ fun PlayerScreen(
         verticalArrangement = Arrangement.Center
     )
     {
-        Column(modifier = Modifier
+        Column(modifier = modifier
             .fillMaxWidth(.75f)
         )
         {
@@ -51,10 +52,10 @@ fun PlayerScreen(
             SongInfoComposable( playerScreenValues)
         }
 
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = modifier.height(10.dp))
 
         // Row for cover image and volume controls
-        Row(modifier = Modifier
+        Row(modifier = modifier
             .fillMaxWidth()
             .fillMaxHeight(.70f)
             .padding(10.dp),
@@ -65,13 +66,13 @@ fun PlayerScreen(
             //Song Image
             SongImageComposable(playerScreenValues = playerScreenValues)
 
-            Spacer(modifier = Modifier.width(10.dp).border(2.dp, Color.Blue))
+            Spacer(modifier = modifier.width(10.dp).border(2.dp, Color.Blue))
 
             // Vertical volume slider
             VolumeSliderVertComposable(callbacks, playerScreenValues)
         }
 
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = modifier.height(10.dp))
 
         // Time slider
         TimerSlider(callbacks, playerScreenValues)

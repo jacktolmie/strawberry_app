@@ -1,4 +1,4 @@
-package com.example.strawberry_app.screens.settingsScreen.composables
+package com.example.strawberry_app.screens
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -13,23 +13,50 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun TextBox(textRes: Int, textStyle: TextStyle){
+fun SongText(
+    text: String,
+    style: TextStyle,
+    modifier: Modifier = Modifier
+){
     Text(
-        text = stringResource(textRes),
-        style = textStyle,
+        modifier = modifier,
+        text = text,
+        overflow = TextOverflow.Ellipsis,
+        style = style,
+        maxLines = 1,
         color = MaterialTheme.colorScheme.primary
     )
 }
 
 @Composable
-fun TextBox(text: String, textStyle: TextStyle){
+fun TextBox(
+    textRes: Int,
+    textStyle: TextStyle,
+    modifier: Modifier = Modifier
+){
+    Text(
+        text = stringResource(textRes),
+        style = textStyle,
+        color = MaterialTheme.colorScheme.primary,
+        modifier = modifier
+    )
+}
+
+@Composable
+fun TextBox(
+    text: String,
+    textStyle: TextStyle,
+    modifier: Modifier = Modifier
+){
     Text(
         text = text,
         style = textStyle,
-        color = MaterialTheme.colorScheme.primary
+        color = MaterialTheme.colorScheme.primary,
+        modifier = modifier
     )
 }
 
@@ -39,9 +66,10 @@ fun TextFieldBox(
     onValue: (String) -> Unit,
     label: Int? = null,
     keyboard: KeyboardType = KeyboardType.Text,
-    error: Int? = null
+    error: Int? = null,
+    modifier: Modifier = Modifier
 ){
-    TextField(modifier = Modifier
+    TextField(modifier = modifier
         .fillMaxWidth()
         .padding(start = 10.dp, end = 10.dp),
         value = valueField,
@@ -58,21 +86,24 @@ fun TextFieldBox(
 @Composable
 fun ButtonText(
     textRes: Int,
-    textStyle: TextStyle
+    textStyle: TextStyle,
+    modifier: Modifier = Modifier
 ){
     Text(
         text = stringResource(textRes),
-        style = textStyle
+        style = textStyle,
+        modifier = modifier
     )
 }
 
 @Composable
 fun ButtonText(
     text: String,
-    textStyle: TextStyle
+    textStyle: TextStyle,
+    modifier: Modifier = Modifier
 ){
     Text(
-        modifier = Modifier.widthIn(min = 80.dp),
+        modifier = modifier.widthIn(min = 80.dp),
         text = text,
         style = textStyle,
         textAlign = TextAlign.Center

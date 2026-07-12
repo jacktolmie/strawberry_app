@@ -22,7 +22,7 @@ import com.example.strawberry_app.network.SettingsGuiData
 import com.example.strawberry_app.screens.settingsScreen.SettingsCallbacks
 import com.example.strawberry_app.screens.settingsScreen.composables.ConnStateMedLrg
 import com.example.strawberry_app.screens.settingsScreen.composables.MedLrgScreenBtns
-import com.example.strawberry_app.screens.settingsScreen.composables.TextBox
+import com.example.strawberry_app.screens.TextBox
 import com.example.strawberry_app.screens.settingsScreen.composables.TextboxIp
 import com.example.strawberry_app.screens.settingsScreen.composables.TextboxPassword
 import com.example.strawberry_app.screens.settingsScreen.composables.TextboxPort
@@ -33,10 +33,11 @@ fun SettingsMedLrgScreen(
     serverUiState: SettingsUiState,
     connectionState: ConnectionState,
     callbacks: SettingsCallbacks,
-    settingsGuiData: SettingsGuiData
+    settingsGuiData: SettingsGuiData,
+    modifier: Modifier = Modifier
 ) {
 
-    Column(modifier = Modifier
+    Column(modifier = modifier
         .statusBarsPadding()
         .fillMaxWidth()
         .navigationBarsPadding()
@@ -48,19 +49,19 @@ fun SettingsMedLrgScreen(
     {
         TextBox(R.string.settings_title, MaterialTheme.typography.headlineLarge)
 
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = modifier.height(10.dp))
 
         TextboxIp(serverUiState, callbacks)
 
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = modifier.height(10.dp))
 
         TextboxPort(serverUiState, callbacks)
 
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = modifier.height(10.dp))
 
         TextboxPassword(serverUiState, callbacks)
 
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = modifier.height(10.dp))
 
         MedLrgScreenBtns(serverUiState, callbacks, connectionState)
 

@@ -20,6 +20,8 @@ import androidx.compose.ui.unit.dp
 import com.example.strawberry_app.R
 import com.example.strawberry_app.network.ConnectionState
 import com.example.strawberry_app.network.ConnectionState.Connected
+import com.example.strawberry_app.screens.ButtonText
+import com.example.strawberry_app.screens.TextBox
 import com.example.strawberry_app.screens.settingsScreen.SettingsCallbacks
 import com.example.strawberry_app.server.SettingsUiState
 
@@ -37,9 +39,10 @@ fun isConnected(connectionState: ConnectionState): String{
 fun MedLrgScreenBtns(
     serverUiState: SettingsUiState,
     callbacks: SettingsCallbacks,
-    connectionState: ConnectionState
+    connectionState: ConnectionState,
+    modifier: Modifier = Modifier
 ){
-    Row(modifier = Modifier
+    Row(modifier = modifier
         .fillMaxWidth()
         .padding(10.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -47,11 +50,11 @@ fun MedLrgScreenBtns(
     )
     {
         SaveButton(callback = callbacks.onSaveClicked, enableBtn = serverUiState.enableSaveButton)
-        Spacer(modifier = Modifier.width(8.dp))
+        Spacer(modifier = modifier.width(8.dp))
         CancelButton(callbacks.onCancelClicked )
     }
 
-    Spacer(modifier = Modifier.height(10.dp))
+    Spacer(modifier = modifier.height(10.dp))
     ConnectButton(callbacks = callbacks, connectionState)
 }
 
@@ -59,10 +62,11 @@ fun MedLrgScreenBtns(
 fun SmallScreenBtns(
     serverUiState: SettingsUiState,
     callbacks: SettingsCallbacks,
-    connectionState: ConnectionState
+    connectionState: ConnectionState,
+    modifier: Modifier = Modifier
 ){
 //    val isConnected = connectionState == Connected
-    Row(modifier = Modifier
+    Row(modifier = modifier
         .fillMaxWidth()
         .padding(10.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -77,7 +81,7 @@ fun SmallScreenBtns(
             TextBox(R.string.settings_save, MaterialTheme.typography.bodySmall)
         }
 
-        Spacer(modifier = Modifier.width(8.dp))
+        Spacer(modifier = modifier.width(8.dp))
 
         Button(
             onClick = { callbacks.onCancelClicked() }
@@ -87,7 +91,7 @@ fun SmallScreenBtns(
         }
     }
 
-    Spacer(modifier = Modifier.height(10.dp))
+    Spacer(modifier = modifier.height(10.dp))
 
 
     Button(
@@ -97,7 +101,7 @@ fun SmallScreenBtns(
     )
     {
         Text(
-            modifier = Modifier.widthIn(min = 80.dp),
+            modifier = modifier.widthIn(min = 80.dp),
             textAlign = TextAlign.Center,
             text = "Testing 123"
 //            text = if(isConnected) "Disconnect" else "Connect"
@@ -107,20 +111,27 @@ fun SmallScreenBtns(
 
 @Composable
 fun CancelButton(
-    callback: () -> Unit
+    callback: () -> Unit,
+    modifier: Modifier = Modifier
 ){
     Button(
-        onClick = { callback() }
+        onClick = { callback() },
+        modifier = modifier
     )
     {
-        ButtonText(R.string.cancel, MaterialTheme.typography.bodySmall)
+        ButtonText(
+            textRes = R.string.cancel,
+            textStyle = MaterialTheme.typography.bodySmall,
+            modifier = modifier
+        )
     }
 }
 
 @Composable
 fun ConnectButton(
     callbacks: SettingsCallbacks,
-    connectionState: ConnectionState
+    connectionState: ConnectionState,
+    modifier: Modifier = Modifier
 ){
     Button(
         onClick ={
@@ -128,7 +139,11 @@ fun ConnectButton(
         }
     )
     {
-        ButtonText( text = isConnected(connectionState), textStyle = MaterialTheme.typography.bodySmall )
+        ButtonText(
+            text = isConnected(connectionState),
+            textStyle = MaterialTheme.typography.bodySmall,
+            modifier = modifier
+        )
     }
 }
 
@@ -152,6 +167,6 @@ fun ButtonsPreview(){
     MedLrgScreenBtns(
         SettingsUiState(),
         SettingsCallbacks(),
-        connectionState = ConnectionState.Connected
+        connectionState = Connected
     )
 }

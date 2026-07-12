@@ -14,7 +14,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import com.example.strawberry_app.R
+import com.example.strawberry_app.screens.TextBox
 import com.example.strawberry_app.screens.formatTime
 import com.example.strawberry_app.screens.playlistScreen.PlaylistCallbacks
 import com.example.strawberry_app.screens.playlistScreen.PlaylistsData
@@ -72,9 +74,9 @@ fun MakePlaylistMenu(
         )
 
         val length = "${stringResource(R.string.playlist_length)}: ${formatTime(playlistsData.playlists[selectedTabIndex].playlistLength)}"
-        Text(text = length, color = MaterialTheme.colorScheme.secondary)
+        TextBox(text = length, textStyle = MaterialTheme.typography.bodyMedium)
 
         val tracks = "${stringResource(R.string.playlist_song_count)}: ${playlistsData.playlists[selectedTabIndex].playlistSize}"
-        Text(text = tracks, color = MaterialTheme.colorScheme.secondary)
+        TextBox(text = tracks, textStyle = MaterialTheme.typography.bodyMedium)
     }
 }

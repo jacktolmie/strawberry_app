@@ -20,6 +20,7 @@ import com.example.strawberry_app.network.ConnectionColour.GREEN
 import com.example.strawberry_app.network.ConnectionColour.RED
 import com.example.strawberry_app.network.ConnectionColour.YELLOW
 import com.example.strawberry_app.network.SettingsGuiData
+import com.example.strawberry_app.screens.TextBox
 
 @Composable
 fun ConnStateMedLrg(

@@ -21,9 +21,14 @@ import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
-fun CreateButton(image: ImageVector, description: String, control: () -> Unit) {
+fun CreateButton(
+    image: ImageVector,
+    description: String,
+    control: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     IconButton(
-        modifier = Modifier.size(48.dp),
+        modifier = modifier.size(48.dp),
         onClick = { control() }
     ) {
         Icon(
@@ -36,8 +41,14 @@ fun CreateButton(image: ImageVector, description: String, control: () -> Unit) {
 }
 
 @Composable
-fun CreateLongPressButton(image: ImageVector, description: String, shortPress: () -> Unit, longPress: () -> Unit) {
-    Box(modifier = Modifier
+fun CreateLongPressButton(
+    image: ImageVector,
+    description: String,
+    shortPress: () -> Unit,
+    longPress: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Box(modifier = modifier
         .combinedClickable(
             enabled = true,
             onClick = { shortPress() },
@@ -49,8 +60,13 @@ fun CreateLongPressButton(image: ImageVector, description: String, shortPress: (
 }
 
 @Composable
-fun CreateRepeatButton(image: ImageVector, description: String, control: () -> Unit){
-    Box( modifier = Modifier
+fun CreateRepeatButton(
+    image: ImageVector,
+    description: String,
+    control: () -> Unit,
+    modifier: Modifier = Modifier
+){
+    Box( modifier = modifier
         .onTouchHeld { control() }
     ) {
         Icon(imageVector = image, contentDescription = description)

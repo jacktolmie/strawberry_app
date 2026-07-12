@@ -5,6 +5,7 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -29,7 +30,7 @@ fun DropDownMenuComposable(
     onConfirm: (()->Unit, Boolean, Boolean, Int) -> Unit,
     modifier: Modifier = Modifier
 ){
-    Box(){
+    Box{
         IconButton(onClick = {
             onConfirm({}, false, !expanded, actionString)
         }){
@@ -43,7 +44,7 @@ fun DropDownMenuComposable(
             onDismissRequest = { onConfirm({}, false, false, actionString)}
         ) {
             DropdownMenuItem(
-                text = { Text(text = stringResource(R.string.playlist_favourites)) },
+                text = { Text(text = stringResource(R.string.playlist_favourites), color = MaterialTheme.colorScheme.secondary) },
                 leadingIcon = {
                     Icon(
                         imageVector =  favorite,
@@ -61,7 +62,7 @@ fun DropDownMenuComposable(
                 }
             )
             DropdownMenuItem(
-                text = { Text( text = stringResource(R.string.playlist_shuffle))},
+                text = { Text( text = stringResource(R.string.playlist_shuffle), color = MaterialTheme.colorScheme.secondary)},
                 leadingIcon = {
                     Icon(
                         imageVector = shuffle,
@@ -74,7 +75,7 @@ fun DropDownMenuComposable(
                 }
             )
             DropdownMenuItem(
-                text = { Text( text = stringResource(R.string.playlist_clear))},
+                text = { Text( text = stringResource(R.string.playlist_clear), color = MaterialTheme.colorScheme.secondary)},
                 leadingIcon = {
                     Icon(
                         imageVector = clear_all,
@@ -86,7 +87,7 @@ fun DropDownMenuComposable(
                         true, false, R.string.playlist_clear)}
             )
             DropdownMenuItem(
-                text = { Text( text = stringResource(R.string.playlist_delete))},
+                text = { Text( text = stringResource(R.string.playlist_delete), color = MaterialTheme.colorScheme.secondary)},
                 leadingIcon = {
                     Icon(
                         imageVector = playlist_remove,

@@ -20,7 +20,8 @@ import com.example.strawberry_app.screens.playerScreen.PlayerScreenState
 
 @Composable
 fun SongImageComposable(
-    playerScreenValues: PlayerScreenState
+    playerScreenValues: PlayerScreenState,
+    modifier: Modifier = Modifier
 ){
     AsyncImage(
         model = ImageRequest.Builder(LocalContext.current)
@@ -32,7 +33,7 @@ fun SongImageComposable(
         error = painterResource(R.drawable.strawberry),
         contentDescription = stringResource(R.string.player_album_art),
         contentScale = ContentScale.Crop,
-        modifier = Modifier
+        modifier = modifier
             .fillMaxHeight()
             .fillMaxWidth(.75f)
             .aspectRatio(1f)
