@@ -49,19 +49,19 @@ fun SettingsMedLrgScreen(
     {
         TextBox(R.string.settings_title, MaterialTheme.typography.headlineLarge)
 
-        Spacer(modifier = modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(10.dp))
 
         TextboxIp(serverUiState, callbacks)
 
-        Spacer(modifier = modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(10.dp))
 
         TextboxPort(serverUiState, callbacks)
 
-        Spacer(modifier = modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(10.dp))
 
         TextboxPassword(serverUiState, callbacks)
 
-        Spacer(modifier = modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(10.dp))
 
         MedLrgScreenBtns(serverUiState, callbacks, connectionState)
 

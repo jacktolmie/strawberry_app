@@ -21,7 +21,8 @@ fun MakeTabs(
 ){
     playlistsData.playlists.forEachIndexed { index, entity ->
         Tab(
-            text = { Text(entity.name, color = MaterialTheme.colorScheme.primary) },
+            modifier = modifier,
+            text = { Text(entity.name, color = MaterialTheme.colorScheme.onSurface) },
             selected = selectedTabIndex == index,
             onClick = {
                 onTabSelected(index, entity.id)
@@ -32,7 +33,7 @@ fun MakeTabs(
                     Icon(
                         imageVector = favorite,
                         contentDescription = "Favourite",
-                        tint = MaterialTheme.colorScheme.primary)
+                        tint = MaterialTheme.colorScheme.onSurface)
                 }
             }
         )

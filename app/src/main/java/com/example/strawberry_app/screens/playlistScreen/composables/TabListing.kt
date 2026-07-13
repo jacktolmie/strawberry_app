@@ -62,5 +62,6 @@ fun TabListing(
         playlistId = playlistId,
         playlistsData = playlistsData,
         selectedTabIndex = selectedTabIndex,
-        modifier = modifier)
+        modifier = modifier
+    )
 }

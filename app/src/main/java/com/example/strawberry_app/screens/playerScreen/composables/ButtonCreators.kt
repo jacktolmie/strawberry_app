@@ -28,7 +28,7 @@ fun CreateButton(
     modifier: Modifier = Modifier
 ) {
     IconButton(
-        modifier = modifier.size(48.dp),
+        modifier = Modifier.size(48.dp),
         onClick = { control() }
     ) {
         Icon(
@@ -55,7 +55,11 @@ fun CreateLongPressButton(
             onLongClick = { longPress()}
         )
     ){
-        Icon(imageVector = image, contentDescription = description)
+        Icon(
+            imageVector = image,
+            contentDescription = description,
+            tint = MaterialTheme.colorScheme.onSurface
+        )
     }
 }
 
@@ -69,7 +73,11 @@ fun CreateRepeatButton(
     Box( modifier = modifier
         .onTouchHeld { control() }
     ) {
-        Icon(imageVector = image, contentDescription = description)
+        Icon(
+            imageVector = image,
+            contentDescription = description,
+            tint = MaterialTheme.colorScheme.onSurface
+        )
     }
 }
 

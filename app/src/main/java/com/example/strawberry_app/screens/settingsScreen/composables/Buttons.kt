@@ -50,11 +50,11 @@ fun MedLrgScreenBtns(
     )
     {
         SaveButton(callback = callbacks.onSaveClicked, enableBtn = serverUiState.enableSaveButton)
-        Spacer(modifier = modifier.width(8.dp))
+        Spacer(modifier = Modifier.width(8.dp))
         CancelButton(callbacks.onCancelClicked )
     }
 
-    Spacer(modifier = modifier.height(10.dp))
+    Spacer(modifier = Modifier.height(10.dp))
     ConnectButton(callbacks = callbacks, connectionState)
 }
 
@@ -81,7 +81,7 @@ fun SmallScreenBtns(
             TextBox(R.string.settings_save, MaterialTheme.typography.bodySmall)
         }
 
-        Spacer(modifier = modifier.width(8.dp))
+        Spacer(modifier = Modifier.width(8.dp))
 
         Button(
             onClick = { callbacks.onCancelClicked() }
@@ -91,7 +91,7 @@ fun SmallScreenBtns(
         }
     }
 
-    Spacer(modifier = modifier.height(10.dp))
+    Spacer(modifier = Modifier.height(10.dp))
 
 
     Button(
@@ -101,7 +101,7 @@ fun SmallScreenBtns(
     )
     {
         Text(
-            modifier = modifier.widthIn(min = 80.dp),
+            modifier = Modifier.widthIn(min = 80.dp),
             textAlign = TextAlign.Center,
             text = "Testing 123"
 //            text = if(isConnected) "Disconnect" else "Connect"
@@ -121,8 +121,7 @@ fun CancelButton(
     {
         ButtonText(
             textRes = R.string.cancel,
-            textStyle = MaterialTheme.typography.bodySmall,
-            modifier = modifier
+            textStyle = MaterialTheme.typography.bodySmall
         )
     }
 }
@@ -134,6 +133,7 @@ fun ConnectButton(
     modifier: Modifier = Modifier
 ){
     Button(
+        modifier = modifier,
         onClick ={
             if (isConnected(connectionState) == "Connect") callbacks.onConnectClicked() else callbacks.onDisconnectClicked()
         }
@@ -141,8 +141,7 @@ fun ConnectButton(
     {
         ButtonText(
             text = isConnected(connectionState),
-            textStyle = MaterialTheme.typography.bodySmall,
-            modifier = modifier
+            textStyle = MaterialTheme.typography.bodySmall
         )
     }
 }
@@ -150,11 +149,13 @@ fun ConnectButton(
 @Composable
 fun SaveButton(
     callback: () -> Unit,
-    enableBtn: Boolean
+    enableBtn: Boolean,
+    modifier: Modifier = Modifier
 ){
     Button(
         onClick = { callback() },
-        enabled = enableBtn
+        enabled = enableBtn,
+        modifier = modifier
     )
     {
         ButtonText(R.string.settings_save, MaterialTheme.typography.bodySmall)

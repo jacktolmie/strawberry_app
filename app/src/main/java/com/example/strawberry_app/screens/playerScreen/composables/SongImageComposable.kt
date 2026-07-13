@@ -17,16 +17,18 @@ import coil.request.ImageRequest
 import com.example.strawberry_app.R
 import com.example.strawberry_app.screens.ServerGuiValues
 import com.example.strawberry_app.screens.playerScreen.PlayerScreenState
+import java.io.File
 
 @Composable
 fun SongImageComposable(
-    playerScreenValues: PlayerScreenState,
-    modifier: Modifier = Modifier
+    imageArt: File? = null,
+    crossfade: Boolean,
+    modifier: Modifier// = Modifier Force them to pass a modifier.
 ){
     AsyncImage(
         model = ImageRequest.Builder(LocalContext.current)
-            .data(playerScreenValues.albumArtFile)
-            .crossfade(true)
+            .data(imageArt?: R.drawable.strawberry)
+            .crossfade(crossfade) //(true)
             .build(),
         placeholder = painterResource(R.drawable.strawberry),
         fallback = painterResource(R.drawable.strawberry),
@@ -34,10 +36,10 @@ fun SongImageComposable(
         contentDescription = stringResource(R.string.player_album_art),
         contentScale = ContentScale.Crop,
         modifier = modifier
-            .fillMaxHeight()
-            .fillMaxWidth(.75f)
-            .aspectRatio(1f)
-            .padding(10.dp)
+//            .fillMaxHeight()
+//            .fillMaxWidth(.75f)
+//            .aspectRatio(1f)
+//            .padding(10.dp)
     )
 }
 
@@ -45,6 +47,10 @@ fun SongImageComposable(
 @Composable
 fun SongImagePreview(){
     SongImageComposable(
-        PlayerScreenState(ServerGuiValues())
+        crossfade = true,
+        modifier = Modifier.fillMaxHeight()
+            .fillMaxWidth(.75f)
+            .aspectRatio(1f)
+            .padding(10.dp)
     )
 }

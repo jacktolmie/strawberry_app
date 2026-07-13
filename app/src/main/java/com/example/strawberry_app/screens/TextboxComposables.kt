@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -20,7 +21,8 @@ import androidx.compose.ui.unit.dp
 fun SongText(
     text: String,
     style: TextStyle,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    fontWeight: FontWeight = FontWeight.Normal
 ){
     Text(
         modifier = modifier,
@@ -28,7 +30,8 @@ fun SongText(
         overflow = TextOverflow.Ellipsis,
         style = style,
         maxLines = 1,
-        color = MaterialTheme.colorScheme.primary
+        color = MaterialTheme.colorScheme.onSurface,
+        fontWeight = fontWeight
     )
 }
 
@@ -41,7 +44,7 @@ fun TextBox(
     Text(
         text = stringResource(textRes),
         style = textStyle,
-        color = MaterialTheme.colorScheme.primary,
+        color = MaterialTheme.colorScheme.onSurface,
         modifier = modifier
     )
 }
@@ -55,7 +58,7 @@ fun TextBox(
     Text(
         text = text,
         style = textStyle,
-        color = MaterialTheme.colorScheme.primary,
+        color = MaterialTheme.colorScheme.onSurface,
         modifier = modifier
     )
 }

@@ -69,15 +69,14 @@ fun ConnStateSmall(
         .padding(10.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
-
     )
     {
         TextBox(R.string.settings_connection_status, MaterialTheme.typography.bodyLarge)
 
-        Spacer(modifier = modifier.width(5.dp))
+        Spacer(modifier = Modifier.width(5.dp))
 
         Icon(
-            modifier = modifier.size(18.dp),
+            modifier = Modifier.size(18.dp),
             painter = painterResource(R.drawable.circle_24dp_e3e3e3_fill1_wght400_grad0_opsz24),
             contentDescription = null,
             tint = when(settingsGuiData.connectionColour){
@@ -87,7 +86,7 @@ fun ConnStateSmall(
             }
         )
 
-        Spacer(modifier = modifier.width(5.dp))
+        Spacer(modifier = Modifier.width(5.dp))
 
         TextBox(
             text = settingsGuiData.connectionState,

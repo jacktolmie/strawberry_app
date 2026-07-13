@@ -18,7 +18,7 @@ fun StaticTabs(
     modifier: Modifier = Modifier
 ){
     SecondaryTabRow(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth(),
         selectedTabIndex = selectedTabIndex,
         containerColor = MaterialTheme.colorScheme.surface,

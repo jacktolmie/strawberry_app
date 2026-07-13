@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -44,7 +45,7 @@ fun PlayerScreen(
         verticalArrangement = Arrangement.Center
     )
     {
-        Column(modifier = modifier
+        Column(modifier = Modifier
             .fillMaxWidth(.75f)
         )
         {
@@ -52,10 +53,10 @@ fun PlayerScreen(
             SongInfoComposable( playerScreenValues)
         }
 
-        Spacer(modifier = modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(10.dp))
 
         // Row for cover image and volume controls
-        Row(modifier = modifier
+        Row(modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight(.70f)
             .padding(10.dp),
@@ -64,15 +65,23 @@ fun PlayerScreen(
         )
         {
             //Song Image
-            SongImageComposable(playerScreenValues = playerScreenValues)
+            SongImageComposable(
+                imageArt = playerScreenValues.albumArtFile,
+                crossfade = true,
+                Modifier
+                    .fillMaxHeight()
+                    .fillMaxWidth(.75f)
+                    .aspectRatio(1f)
+                    .padding(10.dp)
+            )
 
-            Spacer(modifier = modifier.width(10.dp).border(2.dp, Color.Blue))
+            Spacer(modifier = Modifier.width(10.dp).border(2.dp, Color.Blue))
 
             // Vertical volume slider
             VolumeSliderVertComposable(callbacks, playerScreenValues)
         }
 
-        Spacer(modifier = modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(10.dp))
 
         // Time slider
         TimerSlider(callbacks, playerScreenValues)

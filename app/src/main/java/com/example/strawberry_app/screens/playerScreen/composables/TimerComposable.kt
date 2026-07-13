@@ -31,7 +31,7 @@ fun TimerSlider(
 ) {
     var sliderPosition by remember { mutableFloatStateOf(playerScreenValues.playerValues.currentTime.toFloat()) }
 
-    Text(modifier = modifier,
+    Text(
         text = if (playerScreenValues.playerValues.currentTime > 0) formatTime(
             playerScreenValues.playerValues.currentTime
         ) else ""

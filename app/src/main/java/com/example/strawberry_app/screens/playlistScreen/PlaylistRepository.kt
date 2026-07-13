@@ -39,7 +39,7 @@ class PlaylistRepository @Inject constructor(
     private val playlistSongDao: PlaylistSongDao,
     private val songDao: SongDao,
     private val db: AppDatabase,
-    @ApplicationScope
+    @param:ApplicationScope
     private val scope: CoroutineScope
 ) {
 

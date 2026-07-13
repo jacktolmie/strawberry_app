@@ -4,6 +4,7 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.example.strawberry_app.R
 
@@ -12,9 +13,11 @@ fun Alert(
     action: Int,
     question: Int,
     onConfirm: () -> Unit,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    modifier: Modifier = Modifier
 ){
     AlertDialog(
+        modifier = modifier,
         onDismissRequest = onDismiss,
         title = { Text(text = stringResource(question)) },
         text = { Text(text = stringResource(action)) },

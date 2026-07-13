@@ -19,7 +19,7 @@ fun ScrollableTabs(
     scrollState: ScrollState,
     modifier: Modifier = Modifier
 ){
-    SecondaryScrollableTabRow( modifier = Modifier
+    SecondaryScrollableTabRow( modifier = modifier
         .fillMaxWidth(),
         selectedTabIndex = selectedTabIndex,
         scrollState = scrollState,

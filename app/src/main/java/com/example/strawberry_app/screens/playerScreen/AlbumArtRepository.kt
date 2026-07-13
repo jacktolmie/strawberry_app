@@ -7,7 +7,7 @@ import javax.inject.Inject
 
 
 class AlbumArtRepository @Inject constructor(
-    @ApplicationContext
+    @param:ApplicationContext
     private val context: Context
 ) {
 
