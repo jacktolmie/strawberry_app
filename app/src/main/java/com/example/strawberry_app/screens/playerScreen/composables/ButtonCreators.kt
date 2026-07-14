@@ -24,8 +24,7 @@ import kotlin.time.Duration.Companion.milliseconds
 fun CreateButton(
     image: ImageVector,
     description: String,
-    control: () -> Unit,
-    modifier: Modifier = Modifier
+    control: () -> Unit
 ) {
     IconButton(
         modifier = Modifier.size(48.dp),

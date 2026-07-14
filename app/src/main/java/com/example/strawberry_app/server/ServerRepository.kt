@@ -13,9 +13,11 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import okio.IOException
 import javax.inject.Inject
+import javax.inject.Singleton
 
 private val Context.serverDataStore by preferencesDataStore("server_prefs")
 
+@Singleton
 class ServerRepository @Inject constructor(
     @param:ApplicationContext private val context: Context
 ) {

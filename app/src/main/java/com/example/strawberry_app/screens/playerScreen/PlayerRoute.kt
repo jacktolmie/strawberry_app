@@ -31,7 +31,6 @@ class PlayerCallbacks(
     val timeChanged: (Long) -> Unit = {},
 )
 
-//@Suppress("ParamsComparedByRef")
 @Composable
 fun PlayerRoute(
     playerViewModel: PlayerViewModel = hiltViewModel()

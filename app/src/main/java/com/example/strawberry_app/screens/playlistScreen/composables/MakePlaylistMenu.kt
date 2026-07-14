@@ -19,7 +19,6 @@ import com.example.strawberry_app.screens.formatTime
 import com.example.strawberry_app.screens.playlistScreen.PlaylistCallbacks
 import com.example.strawberry_app.screens.playlistScreen.PlaylistsData
 
-
 @Composable
 fun MakePlaylistMenu(
     callbacks: PlaylistCallbacks,

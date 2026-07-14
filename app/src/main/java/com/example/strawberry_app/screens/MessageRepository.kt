@@ -47,7 +47,6 @@ class MessageRepository @Inject constructor(
                     // Server Event messages.
                     is EventType.ClosedPlaylistWithId -> { playlistRepository.serverClosedPlaylist(message.id) }
                     is EventType.CoverImage -> {
-                        println("testingsonginfo inside eventtype.coverimage")
                         albumArtRepository.receiveCover(name = message.name, image = message.coverImage)
                         albumArtRepository.notifyAlbumArtReady(message.name)
                     }
@@ -63,7 +62,9 @@ class MessageRepository @Inject constructor(
                                 )
                                 playlistRepository.updatePlaylistState(
                                     activePlaylist = message.activePlaylist,
-                                    currentPlaylist = message.currentPlaylist
+                                    currentPlaylist = message.currentPlaylist,
+                                    currentSongIndex = message.currentSong,
+                                    currentCoverImage = message.coverImage
                                 )
                             }
                         }
@@ -71,6 +72,7 @@ class MessageRepository @Inject constructor(
                         playerRepository.getGuiUpdates(
                             ServerGuiValues(
                                 activePlaylist =    message.activePlaylist,
+                                coverImage =        message.coverImage,
                                 currentPlaylist =   message.currentPlaylist,
                                 currentSong =       serverUpdates.value.currentSong,
                                 currentSongId =     message.currentSong,
@@ -106,7 +108,6 @@ class MessageRepository @Inject constructor(
                     is EventType.RenamePlaylist -> playlistRepository.serverRenamedPlaylist(id = message.id, name = message.name)
                     is EventType.SeekTo -> playerRepository.getGuiUpdates(serverUpdates.value.copy(currentTime = message.time) )
                     is EventType.SongChanged -> {
-                        albumArtRepository.checkAlbumArt(serverUpdates.value.currentSong)
                         playerRepository.getGuiUpdates(serverUpdates.value.copy(currentSongId = message.row))
                     }
                     // When song is changed, update the player screen.
@@ -122,6 +123,7 @@ class MessageRepository @Inject constructor(
                                     title = message.title,
                                     length = message.length
                                 )))
+                        albumArtRepository.checkAlbumArt(message.coverImage)
                     }
 
                     // If stopped, set player screen to defaults.
@@ -135,7 +137,7 @@ class MessageRepository @Inject constructor(
                                         playState = PlayState.STOPPED,
                                     )
                         )
-                        albumArtRepository.checkAlbumArt(SongInfo())
+                        albumArtRepository.checkAlbumArt("")
                     }
                     is EventType.Time -> playerRepository.getGuiUpdates(serverUpdates.value.copy(currentTime = message.time))
                     is EventType.VolumeChanged -> playerRepository.getGuiUpdates(serverUpdates.value.copy(volume = message.volume))
@@ -172,6 +174,7 @@ class MessageRepository @Inject constructor(
 
     fun resetServerValues() {
         playerRepository.getGuiUpdates( ServerGuiValues() )
+        albumArtRepository.notifyAlbumArtReady("")
     }
 
     fun serverErrorMessage(error: String){

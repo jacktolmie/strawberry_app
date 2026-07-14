@@ -1,6 +1,7 @@
 package com.example.strawberry_app.screens.playlistScreen.composables
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -32,6 +33,7 @@ fun CurrentPlaylist(
                 song = song,
                 imageArt = playlistScreenState.albumArtFile,
                 modifier = Modifier
+                    .fillMaxHeight()
                     .size(48.dp) // Absolute size anchor for a clean row
                     .clip(RoundedCornerShape(4.dp))
             )

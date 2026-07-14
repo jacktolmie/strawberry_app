@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -31,7 +32,7 @@ fun SongItem(
 
 ) {
     Column(
-        modifier = modifier
+        modifier = Modifier
             .background(MaterialTheme.colorScheme.surface)
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 10.dp),
@@ -43,11 +44,9 @@ fun SongItem(
             verticalAlignment = Alignment.CenterVertically
         ) {
             SongImageComposable(
-                imageArt = imageArt ,
+                imageArt = imageArt,
                 crossfade = false,
-                modifier = Modifier
-                    .size(48.dp) // Absolute size anchor for a clean row
-                    .clip(RoundedCornerShape(4.dp))
+                modifier = modifier
             )
 
             SongText(
@@ -96,7 +95,9 @@ fun SongItemPreview(){
             title = "Bird Madness",
             position = 1L
         ),
-        modifier = Modifier.size(48.dp) // Absolute size anchor for a clean row
+        modifier = Modifier
+            .fillMaxHeight()
+            .size(48.dp) // Absolute size anchor for a clean row
             .clip(RoundedCornerShape(4.dp))
     )
 }

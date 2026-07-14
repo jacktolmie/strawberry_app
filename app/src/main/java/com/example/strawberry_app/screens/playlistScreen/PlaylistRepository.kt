@@ -31,7 +31,8 @@ data class PlaylistState(
     val currentPlaylist: Long = -1,
     val activePlaylist: Long = -1,
     val currentSongIndex: Long = -1,
-    val currentSongData: SongWithPosition? = null
+    val currentCoverImage: String = "",
+    val currentSongWithPosition: SongWithPosition? = null
 )
 
 @Singleton
@@ -57,7 +58,7 @@ class PlaylistRepository @Inject constructor(
     init {
         scope.launch {
             getCurrentSong().collect { songData ->
-                _playlistState.update { it.copy(currentSongData = songData) }
+                _playlistState.update { it.copy(currentSongWithPosition = songData) }
             }
         }
         scope.launch {
@@ -81,7 +82,7 @@ class PlaylistRepository @Inject constructor(
             playlistDao.deleteAll()
 
             playlists.forEach { playlist ->
-                playlist.songs.forEach {
+                playlist.songs.forEach { _ ->
                 }
                 playlistDao.insert(
                     PlaylistEntity(
@@ -176,9 +177,19 @@ class PlaylistRepository @Inject constructor(
         return playlistSongDao.observeSongsForPlaylist(id)
     }
 
-    fun updatePlaylistState(activePlaylist: Long, currentPlaylist: Long) {
+    fun updatePlaylistState(
+        activePlaylist: Long,
+        currentPlaylist: Long,
+        currentSongIndex: Long,
+        currentCoverImage: String,
+    ) {
         _playlistState.update {
-            it.copy(activePlaylist = activePlaylist, currentPlaylist = currentPlaylist)
+            it.copy(
+                activePlaylist = activePlaylist,
+                currentPlaylist = currentPlaylist,
+                currentSongIndex = currentSongIndex,
+                currentCoverImage = currentCoverImage
+            )
         }
     }
 

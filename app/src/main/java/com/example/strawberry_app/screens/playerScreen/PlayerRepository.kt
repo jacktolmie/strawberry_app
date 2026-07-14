@@ -40,19 +40,13 @@ class PlayerRepository @Inject constructor(
                                 artist = it.artist,
                                 album = it.album,
                                 title = it.title,
-                                length = it.length
+                                length = it.length,
+                                coverImage = it.coverImage,
+                                url = it.url
                             )
                         )
                     }
-                    albumArtRepository.checkAlbumArt(SongInfo(
-                        artist = it.artist,
-                        album = it.album,
-                        coverImage = it.coverImage,
-                        id = it.id,
-                        length = it.length,
-                        title = it.title,
-                        url = it.url
-                    ))
+                    albumArtRepository.checkAlbumArt(it.coverImage)
                 }
             }
         }

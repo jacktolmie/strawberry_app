@@ -21,7 +21,9 @@ class PlayerViewModel @Inject constructor(
 ): ViewModel(){
     val serverUpdates = playerRepository.serverUpdates
     val albumArtFile: StateFlow<File?> = playerRepository.latestCover
-        .map { name -> playerRepository.getAlbumArtFile(name) }
+        .map { name ->
+            playerRepository.getAlbumArtFile(name)
+        }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),

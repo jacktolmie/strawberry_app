@@ -34,7 +34,6 @@ import javax.inject.Singleton
 import kotlin.time.Duration.Companion.milliseconds
 
 @Singleton
-
 class NetworkManager @Inject constructor(
     private val serverRepository: ServerRepository,
     @param:ApplicationScope private val scope: CoroutineScope
@@ -101,6 +100,7 @@ class NetworkManager @Inject constructor(
 
             if (socket?.isConnected == true && socket?.isClosed == false) {
                 disconnect(updateStatus = false)
+
             }
 
             _connectionState.value = ConnectionState.Connecting
@@ -233,6 +233,7 @@ class NetworkManager @Inject constructor(
             } catch (e: Exception) {
                 // This will catch read errors, like the server closing the connection
                 Log.e("NetworkManager", "Listener error: ${e.message}")
+                _connectionState.value = ConnectionState.Disconnected
             } finally {
                 Log.d("NetworkManager", "Listener coroutine exiting")
                 if (_connectionState.value !is ConnectionState.Disconnected) {

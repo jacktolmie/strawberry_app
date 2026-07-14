@@ -13,7 +13,10 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.io.File
 import javax.inject.Inject
+import javax.inject.Singleton
 
+
+@Singleton
 class AlbumArtRepository @Inject constructor(
     @param:ApplicationContext
     private val context: Context,
@@ -50,19 +53,18 @@ class AlbumArtRepository @Inject constructor(
     }
 
     fun notifyAlbumArtReady(name: String){
-        println("testingsonginfo inside album repo notify album with name: $name")
         _latestCover.value = name
     }
 
-    fun checkAlbumArt(songInfo: SongInfo){  //(songInfo: SongWithPosition){
-        if (songInfo.coverImage.isEmpty()){
+    fun checkAlbumArt(name: String){
+        if (name.isEmpty()){
             notifyAlbumArtReady("")
             return
         }
-        if (!hasImage(songInfo.coverImage)) {
+        if (!hasImage(name)){
             scope.launch { networkManager.sendCommand(OutgoingMessage.RequestCover) }
-        } else {
-            notifyAlbumArtReady(songInfo.coverImage)
+            return
         }
+        notifyAlbumArtReady(name)
     }
 }

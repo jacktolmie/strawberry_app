@@ -93,6 +93,8 @@ sealed class EventType: IncomingMessage() {
         val title: String = "",
         val artist: String = "",
         val album: String = "",
+        @SerialName("cover_image")
+        val coverImage: String = ""
     ) : EventType()
 
     @Serializable
