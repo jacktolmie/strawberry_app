@@ -1,9 +1,11 @@
 package com.example.strawberry_app.network.protocol
 
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonClassDiscriminator
 
+@OptIn(ExperimentalSerializationApi::class)
 @Serializable
 @JsonClassDiscriminator("auth")
 sealed class AuthType: IncomingMessage() {

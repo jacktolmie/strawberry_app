@@ -17,7 +17,7 @@ import javax.inject.Inject
 private val Context.serverDataStore by preferencesDataStore("server_prefs")
 
 class ServerRepository @Inject constructor(
-    @ApplicationContext private val context: Context
+    @param:ApplicationContext private val context: Context
 ) {
     companion object{
         private val KEY_IP = stringPreferencesKey("server_ip")

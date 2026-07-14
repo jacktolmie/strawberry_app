@@ -10,32 +10,32 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.example.strawberry_app.screens.playlistScreen.PlaylistCallbacks
-import com.example.strawberry_app.screens.playlistScreen.PlaylistsData
+import com.example.strawberry_app.screens.playlistScreen.PlaylistScreenState
 
 
 @Composable
 fun TabListing(
     callbacks: PlaylistCallbacks,
-    playlistsData: PlaylistsData,
+    playlistScreenState: PlaylistScreenState,
     modifier: Modifier = Modifier
 ){
     var selectedTabIndex by remember { mutableIntStateOf(0) }
 
-    LaunchedEffect(playlistsData.playlistState.currentPlaylist) {
+    LaunchedEffect(playlistScreenState.playlistsData.playlistState.currentPlaylist) {
 
-        val index = playlistsData.playlists.indexOfFirst {
-            it.id == playlistsData.playlistState.currentPlaylist
+        val index = playlistScreenState.playlistsData.playlists.indexOfFirst {
+            it.id == playlistScreenState.playlistsData.playlistState.currentPlaylist
         }.takeIf { it >= 0 } ?: 0
 
         selectedTabIndex = index
     }
     val scrollState = rememberScrollState()
-    var playlistId by remember { mutableLongStateOf(playlistsData.playlistState.currentPlaylist) }
+    var playlistId by remember { mutableLongStateOf(playlistScreenState.playlistsData.playlistState.currentPlaylist) }
 
-    if ( playlistsData.playlists.size > 4) {
+    if ( playlistScreenState.playlistsData.playlists.size > 4) {
         ScrollableTabs(
             callbacks = callbacks,
-            playlistsData = playlistsData,
+            playlistsData = playlistScreenState.playlistsData,
             selectedTabIndex = selectedTabIndex,
             playlistId = playlistId,
             onTabSelected = { tabIndex: Int, id: Long ->
@@ -47,7 +47,7 @@ fun TabListing(
     }else{
         StaticTabs(
             callbacks = callbacks,
-            playlistsData = playlistsData,
+            playlistsData = playlistScreenState.playlistsData,
             playlistId = playlistId,
             selectedTabIndex = selectedTabIndex,
             onTabSelected = { tabIndex: Int, id: Long ->
@@ -60,7 +60,7 @@ fun TabListing(
     MakePlaylistMenu(
         callbacks = callbacks,
         playlistId = playlistId,
-        playlistsData = playlistsData,
+        playlistsData = playlistScreenState.playlistsData,
         selectedTabIndex = selectedTabIndex,
         modifier = modifier
     )

@@ -37,7 +37,7 @@ import kotlin.time.Duration.Companion.milliseconds
 
 class NetworkManager @Inject constructor(
     private val serverRepository: ServerRepository,
-    @ApplicationScope private val scope: CoroutineScope
+    @param:ApplicationScope private val scope: CoroutineScope
 ) {
     private val _connectionState = MutableStateFlow<ConnectionState>(ConnectionState.Disconnected)
     val connectionStateFlow: StateFlow<ConnectionState> = _connectionState.asStateFlow()

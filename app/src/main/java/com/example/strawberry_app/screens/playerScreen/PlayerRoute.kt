@@ -6,7 +6,6 @@ import androidx.compose.runtime.remember
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.strawberry_app.screens.ServerGuiValues
-import com.example.strawberry_app.screens.formatTime
 import com.example.strawberry_app.screens.playerScreen.screens.PlayerScreen
 import java.io.File
 
@@ -32,7 +31,7 @@ class PlayerCallbacks(
     val timeChanged: (Long) -> Unit = {},
 )
 
-@Suppress("ParamsComparedByRef")
+//@Suppress("ParamsComparedByRef")
 @Composable
 fun PlayerRoute(
     playerViewModel: PlayerViewModel = hiltViewModel()

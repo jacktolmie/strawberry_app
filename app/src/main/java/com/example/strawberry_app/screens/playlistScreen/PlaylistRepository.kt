@@ -13,6 +13,7 @@ import com.example.strawberry_app.music.Playlist
 import com.example.strawberry_app.network.ApplicationScope
 import com.example.strawberry_app.network.NetworkManager
 import com.example.strawberry_app.network.protocol.OutgoingMessage
+import com.example.strawberry_app.screens.AlbumArtRepository
 import jakarta.inject.Inject
 import jakarta.inject.Singleton
 import kotlinx.coroutines.CoroutineScope
@@ -24,6 +25,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.io.File
 
 data class PlaylistState(
     val currentPlaylist: Long = -1,
@@ -34,11 +36,13 @@ data class PlaylistState(
 
 @Singleton
 class PlaylistRepository @Inject constructor(
+    private val albumArtRepository: AlbumArtRepository,
+    private val db: AppDatabase,
     private val networkManager: NetworkManager,
     private val playlistDao: PlaylistDao,
     private val playlistSongDao: PlaylistSongDao,
     private val songDao: SongDao,
-    private val db: AppDatabase,
+
     @param:ApplicationScope
     private val scope: CoroutineScope
 ) {
@@ -47,6 +51,8 @@ class PlaylistRepository @Inject constructor(
     val playlistState = _playlistState.asStateFlow()
 
     val currentSongData: Flow<SongWithPosition?> = getCurrentSong()
+
+    val latestCover = albumArtRepository.latestCover
 
     init {
         scope.launch {
@@ -75,7 +81,7 @@ class PlaylistRepository @Inject constructor(
             playlistDao.deleteAll()
 
             playlists.forEach { playlist ->
-                playlist.songs.forEach { song ->
+                playlist.songs.forEach {
                 }
                 playlistDao.insert(
                     PlaylistEntity(
@@ -197,5 +203,9 @@ class PlaylistRepository @Inject constructor(
                 currentSongIndex = songIndex
             )
         }
+    }
+
+    fun getAlbumArtFile(name: String): File? {
+        return albumArtRepository.getAlbumArtFile(name)
     }
 }

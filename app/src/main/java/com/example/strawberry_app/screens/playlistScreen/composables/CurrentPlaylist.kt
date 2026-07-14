@@ -14,12 +14,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.example.strawberry_app.data.dao.SongWithPosition
-import com.example.strawberry_app.screens.playerScreen.PlayerScreenState
+import com.example.strawberry_app.screens.playlistScreen.PlaylistScreenState
 
 @Composable
 fun CurrentPlaylist(
     playlist: List<SongWithPosition>,
-//    playerScreenState: PlayerScreenState,
+    playlistScreenState: PlaylistScreenState,
     modifier: Modifier = Modifier
 ){
     LazyColumn(modifier = modifier
@@ -30,7 +30,7 @@ fun CurrentPlaylist(
         items(playlist){ song ->
             SongItem(
                 song = song,
-//                playerScreenState = playerScreenState,
+                imageArt = playlistScreenState.albumArtFile,
                 modifier = Modifier
                     .size(48.dp) // Absolute size anchor for a clean row
                     .clip(RoundedCornerShape(4.dp))

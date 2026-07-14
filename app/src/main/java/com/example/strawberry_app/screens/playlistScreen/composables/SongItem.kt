@@ -1,7 +1,6 @@
 package com.example.strawberry_app.screens.playlistScreen.composables
 
 
-import android.R
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -21,16 +20,14 @@ import androidx.compose.ui.unit.dp
 import com.example.strawberry_app.data.dao.SongWithPosition
 import com.example.strawberry_app.screens.SongText
 import com.example.strawberry_app.screens.formatTime
-import com.example.strawberry_app.screens.playerScreen.PlayerScreenState
-import com.example.strawberry_app.screens.playerScreen.composables.SongImageComposable
+import com.example.strawberry_app.screens.SongImageComposable
 import java.io.File
 
 @Composable
 fun SongItem(
     song: SongWithPosition,
     modifier: Modifier = Modifier,
-    imageArt: File? = null,
-//    playerScreenState: PlayerScreenState,
+    imageArt: File? = null
 
 ) {
     Column(
@@ -46,12 +43,13 @@ fun SongItem(
             verticalAlignment = Alignment.CenterVertically
         ) {
             SongImageComposable(
-                imageArt = imageArt , //playerScreenState.albumArtFile,
+                imageArt = imageArt ,
                 crossfade = false,
                 modifier = Modifier
                     .size(48.dp) // Absolute size anchor for a clean row
                     .clip(RoundedCornerShape(4.dp))
             )
+
             SongText(
                 text = song.title,
                 style = MaterialTheme.typography.bodyMedium,
@@ -84,6 +82,24 @@ fun SongItem(
     }
 }
 
+@Preview
+@Composable
+fun SongItemPreview(){
+    SongItem(
+        song = SongWithPosition(
+            id = 1,
+            url = "Some url",
+            artist = "The Amazing Band",
+            album = "The best of Amazing Band",
+            coverImage = "Some cover",
+            length = 1000L,
+            title = "Bird Madness",
+            position = 1L
+        ),
+        modifier = Modifier.size(48.dp) // Absolute size anchor for a clean row
+            .clip(RoundedCornerShape(4.dp))
+    )
+}
 
 /*
 @Composable
@@ -127,22 +143,3 @@ fun SongItem(
     }
 }
 */
-@Preview
-@Composable
-fun SongItemPreview(){
-    SongItem(
-        song = SongWithPosition(
-            id = 1,
-            url = "Some url",
-            artist = "The Amazing Band",
-            album = "The best of Amazing Band",
-            coverImage = "Some cover",
-            length = 1000L,
-            title = "Bird Madness",
-            position = 1L
-        ),
-        modifier = Modifier.size(48.dp) // Absolute size anchor for a clean row
-            .clip(RoundedCornerShape(4.dp))
-    )
-}
-

@@ -10,13 +10,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.strawberry_app.screens.playlistScreen.PlaylistCallbacks
-import com.example.strawberry_app.screens.playlistScreen.PlaylistState
-import com.example.strawberry_app.screens.playlistScreen.PlaylistsData
+import com.example.strawberry_app.screens.playlistScreen.PlaylistScreenState
 
 @Composable
 fun MedLrgScreenTabs(
     callbacks: PlaylistCallbacks,
-    playlistsData: PlaylistsData,
+    playlistScreenState: PlaylistScreenState,
     modifier: Modifier = Modifier
 ){
     Column(modifier = modifier
@@ -24,15 +23,14 @@ fun MedLrgScreenTabs(
         .padding(5.dp)
     ){
         // Create the scrollable tab
-        if (playlistsData.playlists.isNotEmpty()) {
-            TabListing(callbacks, playlistsData)
+        if (playlistScreenState.playlistsData.playlists.isNotEmpty()) {
+            TabListing(callbacks, playlistScreenState)
         }
-
         // Create the playlists for each tab.
-        if (playlistsData.playlistSongs.isNotEmpty()) {
+        if (playlistScreenState.playlistsData.playlistSongs.isNotEmpty()) {
             CurrentPlaylist(
-                playlist = playlistsData.playlistSongs,
-//                playerScreenState = playlistsData.playlistState
+                playlist = playlistScreenState.playlistsData.playlistSongs,
+                playlistScreenState = playlistScreenState
             )
         }
     }
@@ -42,12 +40,8 @@ fun MedLrgScreenTabs(
 @Composable
 fun MedLrgPreview(){
     MedLrgScreenTabs(
-        PlaylistCallbacks(),
-        PlaylistsData(
-            playlistState = PlaylistState(),
-            samplePlaylists(),
-            sampleSongList()
-        ),
-        Modifier.background(Color.White),
+        callbacks = PlaylistCallbacks(),
+        playlistScreenState = PlaylistScreenState(),
+        modifier = Modifier.background(Color.White)
     )
 }

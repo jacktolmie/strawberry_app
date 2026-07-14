@@ -1,6 +1,5 @@
 package com.example.strawberry_app.screens.playlistScreen
 
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.strawberry_app.data.dao.SongWithPosition
@@ -12,10 +11,11 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import java.io.File
 import javax.inject.Inject
 
 data class PlaylistsData(
@@ -28,6 +28,14 @@ data class PlaylistsData(
 class PlaylistViewModel @Inject constructor(
     private val playlistRepository: PlaylistRepository
 ): ViewModel(){
+
+    val albumArtFile: StateFlow<File?> = playlistRepository.latestCover
+        .map { name -> playlistRepository.getAlbumArtFile(name) }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = null
+        )
 
     val playlistState = playlistRepository.playlistState
 

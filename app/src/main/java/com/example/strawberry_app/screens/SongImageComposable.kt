@@ -1,4 +1,4 @@
-package com.example.strawberry_app.screens.playerScreen.composables
+package com.example.strawberry_app.screens
 
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -15,15 +15,13 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.strawberry_app.R
-import com.example.strawberry_app.screens.ServerGuiValues
-import com.example.strawberry_app.screens.playerScreen.PlayerScreenState
 import java.io.File
 
 @Composable
 fun SongImageComposable(
     imageArt: File? = null,
     crossfade: Boolean,
-    modifier: Modifier// = Modifier Force them to pass a modifier.
+    modifier: Modifier // Force them to pass a modifier.
 ){
     AsyncImage(
         model = ImageRequest.Builder(LocalContext.current)
@@ -36,10 +34,6 @@ fun SongImageComposable(
         contentDescription = stringResource(R.string.player_album_art),
         contentScale = ContentScale.Crop,
         modifier = modifier
-//            .fillMaxHeight()
-//            .fillMaxWidth(.75f)
-//            .aspectRatio(1f)
-//            .padding(10.dp)
     )
 }
 

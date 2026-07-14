@@ -79,17 +79,17 @@ sealed class OutgoingMessage {
     @SerialName("next")
     data object Next: OutgoingMessage()
 
-    @Serializable
-    @SerialName("pause")
-    data object Pause: OutgoingMessage()
+//    @Serializable
+//    @SerialName("pause")
+//    data object Pause: OutgoingMessage()
 
     @Serializable
     @SerialName("play-pause")
     data object PlayPause: OutgoingMessage()
 
-    @Serializable
-    @SerialName("play")
-    data object Play: OutgoingMessage()
+//    @Serializable
+//    @SerialName("play")
+//    data object Play: OutgoingMessage()
 
     @Serializable
     @SerialName("previous")

@@ -4,11 +4,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.strawberry_app.data.dao.SongWithPosition
-import com.example.strawberry_app.data.entity.PlaylistEntity
 import com.example.strawberry_app.music.Playlist
 import com.example.strawberry_app.screens.playlistScreen.screens.PlaylistMediumScreen
+import java.io.File
 
+data class PlaylistScreenState(
+    val playlistsData: PlaylistsData = PlaylistsData(),
+    val albumArtFile: File? = null
+)
 data class PlaylistCallbacks(
     val clearCurrentPlaylist: (id: Long) -> Unit = {},
     val closeCurrentPlaylist: (id: Long) -> Unit = {},
@@ -31,6 +34,7 @@ fun PlaylistRoute(
     playlistViewModel: PlaylistViewModel = hiltViewModel()
 ){
     val playlistsData by playlistViewModel.playlistsData.collectAsStateWithLifecycle()
+    val albumArtFile by playlistViewModel.albumArtFile.collectAsStateWithLifecycle()
 
     val callbacks = PlaylistCallbacks(
         clearCurrentPlaylist = playlistViewModel::clearCurrentPlaylist,
@@ -50,8 +54,13 @@ fun PlaylistRoute(
 
     )
 
+    val playlistScreenState = PlaylistScreenState(
+        playlistsData = playlistsData,
+        albumArtFile = albumArtFile
+    )
+
     PlaylistMediumScreen(
-        callbacks,
-        playlistsData
+        callbacks = callbacks,
+        playlistScreenState = playlistScreenState
     )
 }

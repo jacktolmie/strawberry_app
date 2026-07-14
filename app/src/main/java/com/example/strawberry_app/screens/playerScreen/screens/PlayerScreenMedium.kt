@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import com.example.strawberry_app.screens.playerScreen.PlayerCallbacks
 import com.example.strawberry_app.screens.playerScreen.PlayerScreenState
 import com.example.strawberry_app.screens.playerScreen.composables.MediaBtnComposable
-import com.example.strawberry_app.screens.playerScreen.composables.SongImageComposable
+import com.example.strawberry_app.screens.SongImageComposable
 import com.example.strawberry_app.screens.playerScreen.composables.SongInfoComposable
 import com.example.strawberry_app.screens.playerScreen.composables.TimerSlider
 import com.example.strawberry_app.screens.playerScreen.composables.VolumeSliderVertComposable

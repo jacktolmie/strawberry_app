@@ -158,8 +158,10 @@ sealed class EventType: IncomingMessage() {
     @JsonIgnoreUnknownKeys
     @SerialName("song_changed")
     data class SongChanged(
-        @SerialName("track_id")
-        val trackId: Long = 0L) : EventType()
+        val row: Long
+//        @SerialName("track_id")
+//        val trackId: Long = 0L
+    ) : EventType()
 
     @Serializable
     @JsonIgnoreUnknownKeys
