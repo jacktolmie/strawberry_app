@@ -131,7 +131,7 @@ class PlaylistRepository @Inject constructor(
                 favourite = playlist.favourite,
                 name = playlist.name,
                 playlistLength = playlist.playlistLength,
-                playlistSize = playlist.playlistSize
+                playlistSize = playlist.playlistSize,
             )
         )
 
@@ -217,6 +217,7 @@ class PlaylistRepository @Inject constructor(
     }
 
     fun getAlbumArtFile(name: String): File? {
+        println("currentplaylist.kt item song art: $name")
         return albumArtRepository.getAlbumArtFile(name)
     }
 }

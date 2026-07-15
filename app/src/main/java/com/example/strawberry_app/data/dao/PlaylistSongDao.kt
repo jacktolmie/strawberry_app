@@ -37,6 +37,7 @@ interface PlaylistSongDao {
         FROM playlist_song
         JOIN song ON song.url = playlist_song.songUrl
         WHERE playlist_song.playlistId = :playlistId
+        ORDER BY playlist_song.position
     """)
     fun observeSongsForPlaylist(playlistId: Long): Flow<List<SongWithPosition>>
 

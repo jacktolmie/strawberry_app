@@ -75,6 +75,10 @@ class PlaylistViewModel @Inject constructor(
         _selectedPlaylistId.value = id
     }
 
+    fun getAlbumArtFile(name: String): File? {
+        return playlistRepository.getAlbumArtFile(name)
+    }
+
     // Functions to send playlist changes to the server.
     fun clearCurrentPlaylist(id: Long) = playlistRepository.sendCommand(OutgoingMessage.ClearPlaylist(id))
     fun closeCurrentPlaylist(id: Long) = playlistRepository.sendCommand(OutgoingMessage.CloseCurrent(id))
