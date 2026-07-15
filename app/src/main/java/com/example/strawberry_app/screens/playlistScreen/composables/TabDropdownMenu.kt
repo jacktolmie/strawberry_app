@@ -20,7 +20,7 @@ import com.example.strawberry_app.ui.theme.icons.playlist_remove
 import com.example.strawberry_app.ui.theme.icons.shuffle
 
 @Composable
-fun DropDownMenuComposable(
+fun TabDropdownMenu(
     actionString: Int,
     callbacks: PlaylistCallbacks,
     expanded: Boolean,

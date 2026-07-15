@@ -50,7 +50,7 @@ fun MakePlaylistMenu(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        DropDownMenuComposable(
+        TabDropdownMenu(
             actionString = actionString,
             callbacks = callbacks,
             playlistId = playlistId,

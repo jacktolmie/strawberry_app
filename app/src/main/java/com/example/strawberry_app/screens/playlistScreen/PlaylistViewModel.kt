@@ -79,6 +79,12 @@ class PlaylistViewModel @Inject constructor(
         return playlistRepository.getAlbumArtFile(name)
     }
 
+    fun isCurrentPlaying(id: Long): Boolean {
+        println("currentsongid ${playlistState.value.currentSongWithPosition?.id}")
+        return id == playlistState.value.currentSongWithPosition?.id
+    }
+
+
     // Functions to send playlist changes to the server.
     fun clearCurrentPlaylist(id: Long) = playlistRepository.sendCommand(OutgoingMessage.ClearPlaylist(id))
     fun closeCurrentPlaylist(id: Long) = playlistRepository.sendCommand(OutgoingMessage.CloseCurrent(id))

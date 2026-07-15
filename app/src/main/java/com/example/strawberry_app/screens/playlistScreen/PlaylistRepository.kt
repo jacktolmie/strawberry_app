@@ -23,6 +23,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.io.File
@@ -117,7 +118,6 @@ class PlaylistRepository @Inject constructor(
                 playlistSongDao.insertAll(entities = songIndex)
             }
         }
-
     }
 
     suspend fun serverFavourite(id: Long, isFavourite: Boolean) {
@@ -169,6 +169,25 @@ class PlaylistRepository @Inject constructor(
     }
 
     // Get information about playlists and songs in each one.
+    fun getAlbumArtFile(name: String): File? {
+        println("currentplaylist.kt item song art: $name")
+        return albumArtRepository.getAlbumArtFile(name)
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private fun getCurrentSong(): Flow<SongWithPosition?> {
+        return playlistState.flatMapLatest { state ->
+            if (state.currentPlaylist == -1L || state.currentSongIndex == -1L) {
+                flowOf(null)
+            } else {
+                playlistSongDao.observeSongAtPosition(
+                    state.currentPlaylist,
+                    state.currentSongIndex
+                )
+            }
+        }
+    }
+
     fun getPlaylists(): Flow<List<PlaylistEntity>>{
         return playlistDao.observeAll()
     }
@@ -193,20 +212,6 @@ class PlaylistRepository @Inject constructor(
         }
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    private fun getCurrentSong(): Flow<SongWithPosition?> {
-        return playlistState.flatMapLatest { state ->
-            if (state.currentPlaylist == -1L || state.currentSongIndex == -1L) {
-                flowOf(null)
-            } else {
-                playlistSongDao.observeSongAtPosition(
-                    state.currentPlaylist,
-                    state.currentSongIndex
-                )
-            }
-        }
-    }
-
     fun updateCurrentSong(playlistId: Long, songIndex: Long) {
         _playlistState.update {
             it.copy(
@@ -214,10 +219,5 @@ class PlaylistRepository @Inject constructor(
                 currentSongIndex = songIndex
             )
         }
-    }
-
-    fun getAlbumArtFile(name: String): File? {
-        println("currentplaylist.kt item song art: $name")
-        return albumArtRepository.getAlbumArtFile(name)
     }
 }

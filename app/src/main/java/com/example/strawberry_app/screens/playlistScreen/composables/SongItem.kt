@@ -30,16 +30,21 @@ import com.example.strawberry_app.ui.theme.icons.more_horiz
 fun SongItem(
     song: SongWithPosition,
     modifier: Modifier = Modifier,
-    imageArt: File? = null
+    imageArt: File? = null,
+    isPlaying: Boolean = false
 
 ) {
     Row(
         modifier = Modifier
-            .background(MaterialTheme.colorScheme.surface)
+            .background(
+                color =
+                    if ( isPlaying ) MaterialTheme.colorScheme.primaryContainer
+                    else MaterialTheme.colorScheme.surface
+            )
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 10.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
 
     ) {
         SongImageComposable(

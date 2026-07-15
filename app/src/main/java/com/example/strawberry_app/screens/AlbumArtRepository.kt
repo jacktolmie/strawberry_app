@@ -2,7 +2,6 @@ package com.example.strawberry_app.screens
 
 import android.content.Context
 import android.util.Base64
-import com.example.strawberry_app.music.SongInfo
 import com.example.strawberry_app.network.ApplicationScope
 import com.example.strawberry_app.network.NetworkManager
 import com.example.strawberry_app.network.protocol.OutgoingMessage

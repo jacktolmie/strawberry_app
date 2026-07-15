@@ -25,9 +25,12 @@ fun CurrentPlaylist(
         .background(MaterialTheme.colorScheme.surfaceContainerLow)
     ) {
         items(playlist){ song ->
+            println("currentsongid inside items ${song.id}")
+            if(callbacks.isCurrentPlaying(song.id)) println("currentsongid $song.id is the current song")
             SongItem(
                 song = song,
-                imageArt = callbacks.getAlbumArtFile(song.coverImage)
+                imageArt = callbacks.getAlbumArtFile(song.coverImage),
+                isPlaying = callbacks.isCurrentPlaying(song.id)
             )
             HorizontalDivider(thickness = 5.dp)
         }
