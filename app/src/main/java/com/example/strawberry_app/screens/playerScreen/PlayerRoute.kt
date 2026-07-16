@@ -6,7 +6,7 @@ import androidx.compose.runtime.remember
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.strawberry_app.screens.ServerGuiValues
-import com.example.strawberry_app.screens.playerScreen.screens.PlayerScreen
+import com.example.strawberry_app.screens.playerScreen.screens.PlayerScreenMedium
 import java.io.File
 
 data class PlayerScreenState(
@@ -59,5 +59,5 @@ fun PlayerRoute(
 
     val playerScreenData = PlayerScreenState(playerValues, albumArtFile)
 
-    PlayerScreen(callbacks, playerScreenData)
+    PlayerScreenMedium(callbacks, playerScreenData)
 }

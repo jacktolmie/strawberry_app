@@ -27,6 +27,7 @@ object EventTypeSerializer : JsonContentPolymorphicSerializer<EventType>(EventTy
             "play" -> EventType.Play.serializer()
             "previous" -> EventType.Previous.serializer()
             "rename_playlist" -> EventType.RenamePlaylist.serializer()
+            "repeat_mode" -> EventType.RepeatMode.serializer()
             "seek_backward" -> EventType.SeekBackward.serializer()
             "seek_forward" -> EventType.SeekForward.serializer()
             "seek_to" -> EventType.SeekTo.serializer()
@@ -81,20 +82,18 @@ sealed class EventType: IncomingMessage() {
     data class GuiUpdates(
         @SerialName("active_playlist")
         val activePlaylist: Long = -1L,
+        @SerialName("cover_image")
+        val coverImage: String = "",
         @SerialName("current_playlist")
         val currentPlaylist: Long = -1L,
         @SerialName("current_song")
         val currentSong: Long = -1L,
-        val time: Long = 0L,
         val playing: String = "",
-        val volume: Int = 0,
         val playlists: MakeAllPlaylists? = null,
-        val length: Long = 0L,
-        val title: String = "",
-        val artist: String = "",
-        val album: String = "",
-        @SerialName("cover_image")
-        val coverImage: String = ""
+        @SerialName("repeat_mode")
+        val repeatMode: String = "",
+        val time: Long = 0L,
+        val volume: Int = 0
     ) : EventType()
 
     @Serializable
@@ -141,6 +140,10 @@ sealed class EventType: IncomingMessage() {
     @SerialName("rename_playlist")
     data class RenamePlaylist(val id: Long, val name: String) : EventType()
 
+    @Serializable
+    @JsonIgnoreUnknownKeys
+    @SerialName("repeat_mode")
+    data class RepeatMode(val id: Long, @SerialName("repeat_mode") val repeatMode: String): EventType()
     @Serializable
     @JsonIgnoreUnknownKeys
     @SerialName("seek_backward")

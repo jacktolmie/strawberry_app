@@ -23,17 +23,17 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.io.File
 
 data class PlaylistState(
-    val currentPlaylist: Long = -1,
     val activePlaylist: Long = -1,
-    val currentSongIndex: Long = -1,
     val currentCoverImage: String = "",
-    val currentSongWithPosition: SongWithPosition? = null
+    val currentPlaylist: Long = -1,
+    val currentSongIndex: Long = -1,
+    val currentSongWithPosition: SongWithPosition? = null,
+    val repeatMode: String = "off"
 )
 
 @Singleton
@@ -201,13 +201,15 @@ class PlaylistRepository @Inject constructor(
         currentPlaylist: Long,
         currentSongIndex: Long,
         currentCoverImage: String,
+        repeatMode: String
     ) {
         _playlistState.update {
             it.copy(
                 activePlaylist = activePlaylist,
                 currentPlaylist = currentPlaylist,
                 currentSongIndex = currentSongIndex,
-                currentCoverImage = currentCoverImage
+                currentCoverImage = currentCoverImage,
+                repeatMode = repeatMode
             )
         }
     }

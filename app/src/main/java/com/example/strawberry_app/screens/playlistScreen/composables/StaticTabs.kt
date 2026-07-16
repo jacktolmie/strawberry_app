@@ -5,14 +5,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SecondaryTabRow
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import com.example.strawberry_app.data.entity.PlaylistEntity
 import com.example.strawberry_app.screens.playlistScreen.PlaylistCallbacks
-import com.example.strawberry_app.screens.playlistScreen.PlaylistsData
 
 @Composable
 fun StaticTabs(
     callbacks: PlaylistCallbacks,
-    playlistsData: PlaylistsData,
-    playlistId: Long,
+    playlists: List<PlaylistEntity>,
     selectedTabIndex: Int,
     onTabSelected: (Int, Long) -> Unit,
     modifier: Modifier = Modifier
@@ -28,10 +28,20 @@ fun StaticTabs(
     ) {
         MakeTabs(
             callbacks = callbacks,
-            playlistsData = playlistsData,
+            playlists = playlists,
             selectedTabIndex = selectedTabIndex,
-            onTabSelected = onTabSelected,
-            playlistId = playlistId
+            onTabSelected = onTabSelected
         )
     }
+}
+
+@Preview
+@Composable
+fun StaticTabPreview(){
+    StaticTabs(
+        callbacks = PlaylistCallbacks(),
+        playlists = samplePlaylists(),
+        selectedTabIndex = 1,
+        onTabSelected = {_,_ ->}
+    )
 }

@@ -64,7 +64,8 @@ class MessageRepository @Inject constructor(
                                     activePlaylist = message.activePlaylist,
                                     currentPlaylist = message.currentPlaylist,
                                     currentSongIndex = message.currentSong,
-                                    currentCoverImage = message.coverImage
+                                    currentCoverImage = message.coverImage,
+                                    repeatMode = message.repeatMode
                                 )
                             }
                         }

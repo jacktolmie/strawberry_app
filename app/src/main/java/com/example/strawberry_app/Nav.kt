@@ -15,8 +15,7 @@ fun Nav(){
 
     NavHost(
         navController = navController,
-//        startDestination = ScreenList.Settings.route
-          startDestination = ScreenList.Player.route
+        startDestination = ScreenList.Player.route
     ){
         composable(ScreenList.Player.route){
             PlayerRoute()

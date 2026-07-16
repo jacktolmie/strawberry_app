@@ -9,6 +9,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.strawberry_app.data.dao.SongWithPosition
 import com.example.strawberry_app.screens.playlistScreen.PlaylistCallbacks
@@ -25,14 +26,22 @@ fun CurrentPlaylist(
         .background(MaterialTheme.colorScheme.surfaceContainerLow)
     ) {
         items(playlist){ song ->
-            println("currentsongid inside items ${song.id}")
-            if(callbacks.isCurrentPlaying(song.id)) println("currentsongid $song.id is the current song")
             SongItem(
                 song = song,
                 imageArt = callbacks.getAlbumArtFile(song.coverImage),
                 isPlaying = callbacks.isCurrentPlaying(song.id)
             )
-            HorizontalDivider(thickness = 5.dp)
+            HorizontalDivider(thickness = 5.dp, color = MaterialTheme.colorScheme.primary)
         }
     }
+}
+
+@Preview
+@Composable
+fun CurrentPlaylistPreview(){
+    CurrentPlaylist(
+        callbacks = PlaylistCallbacks(),
+        playlist = sampleSongList(),
+        modifier = Modifier
+    )
 }
