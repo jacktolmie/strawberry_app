@@ -5,18 +5,23 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import com.example.strawberry_app.R
+import com.example.strawberry_app.screens.DropdownText
 import com.example.strawberry_app.screens.playlistScreen.PlaylistCallbacks
 import com.example.strawberry_app.screens.playlistScreen.PlaylistsData
 import com.example.strawberry_app.ui.theme.icons.clear_all
 import com.example.strawberry_app.ui.theme.icons.favorite
 import com.example.strawberry_app.ui.theme.icons.more_vert
 import com.example.strawberry_app.ui.theme.icons.playlist_remove
+import com.example.strawberry_app.ui.theme.icons.repeat
 import com.example.strawberry_app.ui.theme.icons.shuffle
 
 @Composable
@@ -30,6 +35,20 @@ fun TabDropdownMenu(
     onConfirm: (()->Unit, Boolean, Boolean, Int) -> Unit,
     modifier: Modifier = Modifier
 ){
+    var showDialog by remember { mutableStateOf(false) }
+    var repeatMode by remember { mutableStateOf("") }
+
+    // If showDialog is true, display RepeatAlert.
+    if (showDialog) {
+        RepeatAlert(
+            onConfirm = { mode ->
+                showDialog = false
+                callbacks.sendRepeatMode(repeatMode)
+            },
+            onDismiss = { showDialog = false }
+        )
+    }
+
     Box(
         modifier = modifier
     )
@@ -47,7 +66,7 @@ fun TabDropdownMenu(
             onDismissRequest = { onConfirm({}, false, false, actionString)}
         ) {
             DropdownMenuItem(
-                text = { Text(text = stringResource(R.string.playlist_favourites), color = MaterialTheme.colorScheme.secondary) },
+                text = { DropdownText(R.string.playlist_favourites) },
                 leadingIcon = {
                     Icon(
                         imageVector =  favorite,
@@ -65,7 +84,7 @@ fun TabDropdownMenu(
                 }
             )
             DropdownMenuItem(
-                text = { Text( text = stringResource(R.string.playlist_shuffle), color = MaterialTheme.colorScheme.secondary)},
+                text = { DropdownText(R.string.playlist_shuffle)},
                 leadingIcon = {
                     Icon(
                         imageVector = shuffle,
@@ -78,7 +97,7 @@ fun TabDropdownMenu(
                 }
             )
             DropdownMenuItem(
-                text = { Text( text = stringResource(R.string.playlist_clear), color = MaterialTheme.colorScheme.secondary)},
+                text = { DropdownText(R.string.playlist_clear)},
                 leadingIcon = {
                     Icon(
                         imageVector = clear_all,
@@ -90,7 +109,7 @@ fun TabDropdownMenu(
                         true, false, R.string.playlist_clear)}
             )
             DropdownMenuItem(
-                text = { Text( text = stringResource(R.string.playlist_delete), color = MaterialTheme.colorScheme.secondary)},
+                text = { DropdownText(R.string.playlist_delete)},
                 leadingIcon = {
                     Icon(
                         imageVector = playlist_remove,
@@ -101,6 +120,35 @@ fun TabDropdownMenu(
                     onConfirm({ callbacks.deleteCurrentPlaylist(playlistId) },
                         true, false, R.string.playlist_delete )}
             )
+            DropdownMenuItem(
+                text = { DropdownText(R.string.playlist_repeat)},
+                leadingIcon = {
+                    Icon(
+                        imageVector = repeat,
+                        contentDescription = stringResource(R.string.playlist_repeat)
+                    )
+                },
+                onClick = {
+                    onConfirm({ callbacks.sendRepeatMode(repeatMode) },
+                        true, false, R.string.playlist_shuffle)
+                    showDialog = true
+                }
+            )
         }
     }
+}
+
+@Preview
+@Composable
+fun TabDropdownPreview(){
+    TabDropdownMenu(
+        actionString = R.string.playlist_shuffle,
+        callbacks = PlaylistCallbacks(),
+        expanded = true,
+        playlistId = 1L,
+        playlistsData = PlaylistsData(),
+        selectedTabIndex = 0,
+        onConfirm = {_,_,_,_ ->},
+        modifier = Modifier
+    )
 }

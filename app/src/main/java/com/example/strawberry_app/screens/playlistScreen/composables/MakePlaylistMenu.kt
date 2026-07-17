@@ -27,10 +27,10 @@ fun MakePlaylistMenu(
     selectedTabIndex: Int,
     modifier: Modifier = Modifier
 ){
+    var actionString by remember { mutableIntStateOf(-1) }
     var expanded by remember { mutableStateOf(false) }
     var pendingAction by remember { mutableStateOf<(() -> Unit)?>(null) }
     var showDialog by remember { mutableStateOf(false) }
-    var actionString by remember { mutableIntStateOf(-1) }
 
     if (showDialog) {
         Alert(

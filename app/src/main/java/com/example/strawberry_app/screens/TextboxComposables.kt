@@ -1,5 +1,6 @@
 package com.example.strawberry_app.screens
 
+import android.graphics.Color
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
@@ -17,6 +18,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 
+@Composable
+fun DropdownText(
+    textRes: Int
+){
+    Text(
+        text = stringResource(textRes),
+        style =  MaterialTheme.typography.bodySmall,
+        color = MaterialTheme.colorScheme.onSurface
+    )
+}
 @Composable
 fun SongText(
     text: String,

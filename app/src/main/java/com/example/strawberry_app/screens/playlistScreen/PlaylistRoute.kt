@@ -26,6 +26,7 @@ data class PlaylistCallbacks(
     val sendAllPlaylists: (playlists: List<Playlist>) -> Unit = {},
     val sendCurrentPlaylist: (id: Long, playlist: Playlist) -> Unit = { _,_ ->},
     val sendPlaylistFavourite: (id: Long, favourite: Boolean) -> Unit = { _,_ ->},
+    val sendRepeatMode: (mode: String) -> Unit = {},
     val setCurrentPlaylist: (id: Long) -> Unit = {},
     val shuffleAllPlaylists: () -> Unit = {},
     val shuffleCurrentPlaylist: (id: Long) -> Unit = {}
@@ -52,6 +53,7 @@ fun PlaylistRoute(
         sendAllPlaylists = playlistViewModel::sendAllPlaylists,
         sendCurrentPlaylist = playlistViewModel::sendCurrentPlaylist,
         sendPlaylistFavourite = playlistViewModel::sendPlaylistFavourite,
+        sendRepeatMode = playlistViewModel::sendRepeatMode,
         setCurrentPlaylist = playlistViewModel::setCurrentPlaylist,
         shuffleAllPlaylists = playlistViewModel::shuffleAllPlaylists,
         shuffleCurrentPlaylist = playlistViewModel::shuffleCurrentPlaylist

@@ -8,6 +8,13 @@
     <string name="playlist_confirm">Confirm</string>
     <string name="playlist_delete">Delete Playlist</string>
     <string name="playlist_length">Length</string>
+
+    <string name="playlist_repeat">Repeat</string>
+    <string name="playlist_repeat_album">Album</string>
+    <string name="playlist_repeat_choose">Choose Repeat Option</string>
+    <string name="playlist_repeat_off">Off</string>
+    <string name="playlist_repeat_playlist">Playlist</string>
+    <string name="playlist_repeat_track">Track</string>
     <string name="playlist_shuffle">Shuffle Playlist</string>
     <string name="playlist_song_count">Songs</string>
     <string name="playlist_question">Would you like to</string>

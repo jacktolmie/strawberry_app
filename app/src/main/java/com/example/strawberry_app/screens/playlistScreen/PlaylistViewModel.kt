@@ -107,6 +107,7 @@ class PlaylistViewModel @Inject constructor(
         playlistRepository.sendCommand(OutgoingMessage.FavouritePlaylist(id = id, favourite = favourite))
     }
     fun setCurrentPlaylist(id: Long) = playlistRepository.sendCommand(OutgoingMessage.SetCurrentPlaylist(id = id))
+    fun sendRepeatMode(repeatMode: String) = playlistRepository.sendCommand(OutgoingMessage.RepeatMode(repeatMode))
     fun shuffleAllPlaylists() = playlistRepository.sendCommand(OutgoingMessage.ShuffleAllPlaylists)
     fun shuffleCurrentPlaylist(id: Long) = playlistRepository.sendCommand(OutgoingMessage.ShuffleCurrentPlaylist(id = id))
 }
