@@ -1,6 +1,5 @@
 package com.example.strawberry_app.screens
 
-import android.graphics.Color
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
@@ -18,6 +17,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 
+
+// Text box for dropdown menu text
 @Composable
 fun DropdownText(
     textRes: Int
@@ -28,6 +29,20 @@ fun DropdownText(
         color = MaterialTheme.colorScheme.onSurface
     )
 }
+
+// Text box for title of dropdown menus
+@Composable
+fun DropdownTitle(
+    textRes: Int
+){
+    Text(
+        text = stringResource(textRes),
+        color = MaterialTheme.colorScheme.onSurface,
+        style = MaterialTheme.typography.titleMedium
+    )
+}
+
+// Text box for songitem.kt text
 @Composable
 fun SongText(
     text: String,

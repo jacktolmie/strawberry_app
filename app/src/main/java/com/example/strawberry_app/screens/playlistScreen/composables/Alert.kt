@@ -21,6 +21,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import com.example.strawberry_app.R
 import com.example.strawberry_app.screens.DropdownText
+import com.example.strawberry_app.screens.DropdownTitle
+import com.example.strawberry_app.screens.playlistScreen.RepeatMode
 
 @Composable
 fun Alert(
@@ -33,7 +35,8 @@ fun Alert(
     AlertDialog(
         modifier = modifier,
         onDismissRequest = onDismiss,
-        title = { Text(text = stringResource(question)) },
+        title ={ DropdownTitle(question) },
+            //{ Text(text = stringResource(question)) },
         text = { Text(text = stringResource(action)) },
         confirmButton = {
             TextButton(onClick = onConfirm) {
@@ -50,11 +53,12 @@ fun Alert(
 
 @Composable
 fun RepeatAlert(
-    onConfirm: (Int) -> Unit,
+    currentRepeatMode: RepeatMode,
+    onConfirm: (RepeatMode) -> Unit,
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier
 ){
-    var selected by remember { mutableIntStateOf(R.string.playlist_repeat_off) }
+    var selected by remember { mutableStateOf(currentRepeatMode) }
 
     AlertDialog(
         modifier = modifier,
@@ -83,14 +87,14 @@ fun RepeatAlert(
 
 @Composable
 fun RepeatRadioBtn(
-    selected: Int,
-     onOptionSelected: (Int) -> Unit
+    selected: RepeatMode,
+    onOptionSelected: (RepeatMode) -> Unit
 ){
     val repeatOptions = listOf(
-        R.string.playlist_repeat_album,
-        R.string.playlist_repeat_off,
-        R.string.playlist_repeat_playlist,
-        R.string.playlist_repeat_track
+        RepeatMode.ALBUM,
+        RepeatMode.OFF,
+        RepeatMode.PLAYLIST,
+        RepeatMode.TRACK
         )
 
     Column(
@@ -98,7 +102,6 @@ fun RepeatRadioBtn(
     ) {
         repeatOptions.forEach { option ->
             Row( modifier = Modifier
-                .fillMaxWidth()
                 .selectable(
                     selected = (option == selected),
                     onClick = {onOptionSelected(option)},
@@ -110,7 +113,7 @@ fun RepeatRadioBtn(
                     selected = (option == selected),
                     onClick = null
                 )
-                DropdownText(option)
+                Text(text = option.toString())
             }
         }
     }

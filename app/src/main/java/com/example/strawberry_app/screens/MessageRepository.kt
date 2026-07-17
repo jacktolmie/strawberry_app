@@ -10,6 +10,7 @@ import com.example.strawberry_app.network.protocol.EventType
 import com.example.strawberry_app.network.protocol.ResponseType
 import com.example.strawberry_app.screens.playerScreen.PlayerRepository
 import com.example.strawberry_app.screens.playlistScreen.PlaylistRepository
+import com.example.strawberry_app.screens.playlistScreen.RepeatMode
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -107,6 +108,7 @@ class MessageRepository @Inject constructor(
                         )
                     )
                     is EventType.RenamePlaylist -> playlistRepository.serverRenamedPlaylist(id = message.id, name = message.name)
+                    is EventType.RepeatMode -> playlistRepository.updateRepeatMode(RepeatMode.fromString(message.repeatMode))
                     is EventType.SeekTo -> playerRepository.getGuiUpdates(serverUpdates.value.copy(currentTime = message.time) )
                     is EventType.SongChanged -> {
                         playerRepository.getGuiUpdates(serverUpdates.value.copy(currentSongId = message.row))

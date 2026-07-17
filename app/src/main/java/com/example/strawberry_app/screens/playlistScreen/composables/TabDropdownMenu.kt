@@ -36,14 +36,14 @@ fun TabDropdownMenu(
     modifier: Modifier = Modifier
 ){
     var showDialog by remember { mutableStateOf(false) }
-    var repeatMode by remember { mutableStateOf("") }
-
+    println("repeatmode in tabdropdown: ${playlistsData.playlistState.repeatMode}")
     // If showDialog is true, display RepeatAlert.
     if (showDialog) {
         RepeatAlert(
+            currentRepeatMode = playlistsData.playlistState.repeatMode,
             onConfirm = { mode ->
                 showDialog = false
-                callbacks.sendRepeatMode(repeatMode)
+                callbacks.sendRepeatMode(mode.toString())
             },
             onDismiss = { showDialog = false }
         )
@@ -129,8 +129,7 @@ fun TabDropdownMenu(
                     )
                 },
                 onClick = {
-                    onConfirm({ callbacks.sendRepeatMode(repeatMode) },
-                        true, false, R.string.playlist_shuffle)
+                    onConfirm({ },false, false, R.string.playlist_repeat)
                     showDialog = true
                 }
             )

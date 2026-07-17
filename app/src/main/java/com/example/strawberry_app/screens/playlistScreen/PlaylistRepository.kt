@@ -33,7 +33,7 @@ data class PlaylistState(
     val currentPlaylist: Long = -1,
     val currentSongIndex: Long = -1,
     val currentSongWithPosition: SongWithPosition? = null,
-    val repeatMode: String = "off"
+    val repeatMode: RepeatMode = RepeatMode.OFF
 )
 
 @Singleton
@@ -66,7 +66,8 @@ class PlaylistRepository @Inject constructor(
             _playlistState.update {
                 it.copy(
                     activePlaylist = it.activePlaylist,
-                    currentPlaylist = it.currentPlaylist
+                    currentPlaylist = it.currentPlaylist,
+                    repeatMode = it.repeatMode
                 )
             }
         }
@@ -196,24 +197,6 @@ class PlaylistRepository @Inject constructor(
         return playlistSongDao.observeSongsForPlaylist(id)
     }
 
-    fun updatePlaylistState(
-        activePlaylist: Long,
-        currentPlaylist: Long,
-        currentSongIndex: Long,
-        currentCoverImage: String,
-        repeatMode: String
-    ) {
-        _playlistState.update {
-            it.copy(
-                activePlaylist = activePlaylist,
-                currentPlaylist = currentPlaylist,
-                currentSongIndex = currentSongIndex,
-                currentCoverImage = currentCoverImage,
-                repeatMode = repeatMode
-            )
-        }
-    }
-
     fun updateCurrentSong(playlistId: Long, songIndex: Long) {
         _playlistState.update {
             it.copy(
@@ -222,4 +205,30 @@ class PlaylistRepository @Inject constructor(
             )
         }
     }
+
+    fun updatePlaylistState(
+        activePlaylist: Long,
+        currentPlaylist: Long,
+        currentSongIndex: Long,
+        currentCoverImage: String,
+        repeatMode: String
+    ) {
+        _playlistState.update {
+            println("repeatmode from server : $repeatMode")
+            it.copy(
+                activePlaylist = activePlaylist,
+                currentPlaylist = currentPlaylist,
+                currentSongIndex = currentSongIndex,
+                currentCoverImage = currentCoverImage,
+                repeatMode = RepeatMode.fromString(repeatMode)
+            )
+        }
+    }
+
+    fun updateRepeatMode(repeatMode: RepeatMode){
+        _playlistState.update {
+            it.copy(repeatMode = repeatMode)
+        }
+    }
+
 }
