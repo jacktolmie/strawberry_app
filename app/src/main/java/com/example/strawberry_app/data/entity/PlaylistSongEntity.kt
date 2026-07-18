@@ -6,7 +6,7 @@ import androidx.room.Index
 
 @Entity(
     tableName = "playlist_song",
-    primaryKeys = ["playlistId", "songUrl"],
+    primaryKeys = ["playlistId", "position"],
     foreignKeys = [
         ForeignKey(
             entity = PlaylistEntity::class,

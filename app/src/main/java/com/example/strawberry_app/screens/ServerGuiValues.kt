@@ -13,5 +13,6 @@ data class ServerGuiValues(
     val currentSongId: Long = -1L,
     val currentTime: Long = 0L,
     val playState: PlayState = PlayState.STOPPED,
+    val repeatMode: String = "",
     val volume: Int = 0
 )

@@ -10,7 +10,7 @@ import com.example.strawberry_app.network.protocol.EventType
 import com.example.strawberry_app.network.protocol.ResponseType
 import com.example.strawberry_app.screens.playerScreen.PlayerRepository
 import com.example.strawberry_app.screens.playlistScreen.PlaylistRepository
-import com.example.strawberry_app.screens.playlistScreen.RepeatMode
+import com.example.strawberry_app.screens.playlistScreen.RepeatModeValues
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -53,6 +53,7 @@ class MessageRepository @Inject constructor(
                     }
                     is EventType.FavouritePlaylist -> playlistRepository.serverFavourite(id =  message.id, isFavourite = message.favourite)
                     is EventType.GuiUpdates -> {
+                        println("networkmanager gui updates called in message repo with volume: ${message.volume}")
                         when (message.playlists) {
                             is EventType.MakeAllPlaylists -> {
                                 playlistRepository.makeAllPlaylists(message.playlists.playlists)
@@ -61,6 +62,7 @@ class MessageRepository @Inject constructor(
                                     playlistId = message.activePlaylist,
                                     songIndex = message.currentSong
                                 )
+
                                 playlistRepository.updatePlaylistState(
                                     activePlaylist = message.activePlaylist,
                                     currentPlaylist = message.currentPlaylist,
@@ -68,6 +70,8 @@ class MessageRepository @Inject constructor(
                                     currentCoverImage = message.coverImage,
                                     repeatMode = message.repeatMode
                                 )
+
+                                playlistRepository.getAlbumArtFile(message.coverImage)
                             }
                         }
 
@@ -84,7 +88,8 @@ class MessageRepository @Inject constructor(
                                     "playing" ->    PlayState.PLAYING
                                     else ->         PlayState.STOPPED
                                 },
-                                volume =            message.volume,
+                                repeatMode =        message.repeatMode,
+                                volume =            message.volume
                             )
                         )
                     }
@@ -99,6 +104,10 @@ class MessageRepository @Inject constructor(
                                 playState = PlayState.PLAYING
                             )
                         )
+                        playlistRepository.updateCurrentSong(
+                            playlistId = message.activePlaylist,
+                            songIndex = message.row
+                        )
                     }
                     // If paused, sync time sent from server
                     is EventType.Pause -> playerRepository.getGuiUpdates(
@@ -108,7 +117,7 @@ class MessageRepository @Inject constructor(
                         )
                     )
                     is EventType.RenamePlaylist -> playlistRepository.serverRenamedPlaylist(id = message.id, name = message.name)
-                    is EventType.RepeatMode -> playlistRepository.updateRepeatMode(RepeatMode.fromString(message.repeatMode))
+                    is EventType.RepeatMode -> playlistRepository.updateRepeatMode(message.repeatMode)
                     is EventType.SeekTo -> playerRepository.getGuiUpdates(serverUpdates.value.copy(currentTime = message.time) )
                     is EventType.SongChanged -> {
                         playerRepository.getGuiUpdates(serverUpdates.value.copy(currentSongId = message.row))

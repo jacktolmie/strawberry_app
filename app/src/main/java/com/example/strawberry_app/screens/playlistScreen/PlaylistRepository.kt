@@ -33,7 +33,7 @@ data class PlaylistState(
     val currentPlaylist: Long = -1,
     val currentSongIndex: Long = -1,
     val currentSongWithPosition: SongWithPosition? = null,
-    val repeatMode: RepeatMode = RepeatMode.OFF
+    val repeatMode: String = ""
 )
 
 @Singleton
@@ -84,8 +84,7 @@ class PlaylistRepository @Inject constructor(
             playlistDao.deleteAll()
 
             playlists.forEach { playlist ->
-                playlist.songs.forEach { _ ->
-                }
+
                 playlistDao.insert(
                     PlaylistEntity(
                         id = playlist.id,
@@ -171,7 +170,6 @@ class PlaylistRepository @Inject constructor(
 
     // Get information about playlists and songs in each one.
     fun getAlbumArtFile(name: String): File? {
-        println("currentplaylist.kt item song art: $name")
         return albumArtRepository.getAlbumArtFile(name)
     }
 
@@ -197,6 +195,10 @@ class PlaylistRepository @Inject constructor(
         return playlistSongDao.observeSongsForPlaylist(id)
     }
 
+    fun setCurrentPlaylist(id: Long) {
+        _playlistState.update { it.copy(currentPlaylist = id) }
+    }
+
     fun updateCurrentSong(playlistId: Long, songIndex: Long) {
         _playlistState.update {
             it.copy(
@@ -214,21 +216,19 @@ class PlaylistRepository @Inject constructor(
         repeatMode: String
     ) {
         _playlistState.update {
-            println("repeatmode from server : $repeatMode")
             it.copy(
                 activePlaylist = activePlaylist,
                 currentPlaylist = currentPlaylist,
                 currentSongIndex = currentSongIndex,
                 currentCoverImage = currentCoverImage,
-                repeatMode = RepeatMode.fromString(repeatMode)
+                repeatMode = repeatMode
             )
         }
     }
 
-    fun updateRepeatMode(repeatMode: RepeatMode){
+    fun updateRepeatMode(repeatMode: String){
         _playlistState.update {
             it.copy(repeatMode = repeatMode)
         }
     }
-
 }

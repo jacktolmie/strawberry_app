@@ -8,7 +8,6 @@ import com.example.strawberry_app.music.Playlist
 import com.example.strawberry_app.network.protocol.OutgoingMessage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -46,7 +45,14 @@ class PlaylistViewModel @Inject constructor(
             initialValue = emptyList()
         )
 
-    private val _selectedPlaylistId = MutableStateFlow(playlistRepository.playlistState.value.activePlaylist)
+//    private val _selectedPlaylistId = MutableStateFlow(playlistRepository.playlistState.value.activePlaylist)
+    private val _selectedPlaylistId = playlistRepository.playlistState
+        .map { it.currentPlaylist }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = -1L
+        )
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val playlistSongs: StateFlow<List<SongWithPosition>> = _selectedPlaylistId
@@ -72,7 +78,7 @@ class PlaylistViewModel @Inject constructor(
     )
 
     fun onPlaylistSelected(id: Long) {
-        _selectedPlaylistId.value = id
+        playlistRepository.setCurrentPlaylist(id)
     }
 
     fun getAlbumArtFile(name: String): File? {
@@ -80,10 +86,8 @@ class PlaylistViewModel @Inject constructor(
     }
 
     fun isCurrentPlaying(id: Long): Boolean {
-        println("currentsongid ${playlistState.value.currentSongWithPosition?.id}")
         return id == playlistState.value.currentSongWithPosition?.id
     }
-
 
     // Functions to send playlist changes to the server.
     fun clearCurrentPlaylist(id: Long) = playlistRepository.sendCommand(OutgoingMessage.ClearPlaylist(id))

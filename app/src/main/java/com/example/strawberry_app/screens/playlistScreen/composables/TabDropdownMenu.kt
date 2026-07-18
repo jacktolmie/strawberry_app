@@ -17,6 +17,7 @@ import com.example.strawberry_app.R
 import com.example.strawberry_app.screens.DropdownText
 import com.example.strawberry_app.screens.playlistScreen.PlaylistCallbacks
 import com.example.strawberry_app.screens.playlistScreen.PlaylistsData
+import com.example.strawberry_app.screens.playlistScreen.RepeatModeValues
 import com.example.strawberry_app.ui.theme.icons.clear_all
 import com.example.strawberry_app.ui.theme.icons.favorite
 import com.example.strawberry_app.ui.theme.icons.more_vert
@@ -36,11 +37,10 @@ fun TabDropdownMenu(
     modifier: Modifier = Modifier
 ){
     var showDialog by remember { mutableStateOf(false) }
-    println("repeatmode in tabdropdown: ${playlistsData.playlistState.repeatMode}")
     // If showDialog is true, display RepeatAlert.
     if (showDialog) {
         RepeatAlert(
-            currentRepeatMode = playlistsData.playlistState.repeatMode,
+            currentRepeatMode = RepeatModeValues.fromString(playlistsData.playlistState.repeatMode),
             onConfirm = { mode ->
                 showDialog = false
                 callbacks.sendRepeatMode(mode.toString())

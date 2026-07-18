@@ -25,6 +25,6 @@ interface SongDao {
     @Query("SELECT * FROM song WHERE url = :url")
     fun observeByUrl(url: String): Flow<SongEntity>
 
-//    @Query("SELECT * FROM song WHERE id = :id")
-//    fun observeById(id: Long): Flow<SongEntity?>
+    @Query("SELECT * FROM song WHERE id = :id")
+    fun observeById(id: Long): Flow<SongEntity?>
 }

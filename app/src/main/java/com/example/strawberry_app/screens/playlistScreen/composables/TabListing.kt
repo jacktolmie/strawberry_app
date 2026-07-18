@@ -31,7 +31,6 @@ fun TabListing(
         }?.takeIf { it >= 0 } ?: 0
 
         selectedTabIndex = index
-        playlist?.let { callbacks.onPlaylistSelected(it.id) }
     }
 
     val scrollState = rememberScrollState()
