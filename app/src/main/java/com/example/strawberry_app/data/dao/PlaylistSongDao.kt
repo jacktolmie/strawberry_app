@@ -8,14 +8,15 @@ import com.example.strawberry_app.data.entity.PlaylistSongEntity
 import kotlinx.coroutines.flow.Flow
 
 data class SongWithPosition(
-    val id: Long,
-    val url: String,
     val artist: String,
     val album: String,
     val coverImage: String,
+    val id: Long,
     val length: Long,
+    val playlistId: Long,
     val position: Long,
-    val title: String
+    val title: String,
+    val url: String
 )
 
 @Dao
@@ -25,7 +26,8 @@ interface PlaylistSongDao {
     suspend fun delete(playlistId: Long)
 
     @Query("""
-    SELECT song.id, song.url, song.coverImage, song.title, song.artist, song.album, song.length, playlist_song.position
+    SELECT song.id, song.url, song.coverImage, song.title, song.artist, 
+           song.album, song.length, playlist_song.position, playlist_song.playlistId
     FROM playlist_song
     JOIN song ON song.url = playlist_song.songUrl
     WHERE playlist_song.playlistId = :playlistId AND playlist_song.position = :position
@@ -33,13 +35,31 @@ interface PlaylistSongDao {
     fun observeSongAtPosition(playlistId: Long, position: Long): Flow<SongWithPosition?>
 
     @Query("""
-        SELECT song.id, song.url, song.coverImage, song.title, song.artist, song.album, song.length, playlist_song.position
-        FROM playlist_song
-        JOIN song ON song.url = playlist_song.songUrl
-        WHERE playlist_song.playlistId = :playlistId
-        ORDER BY playlist_song.position
-    """)
+    SELECT song.id, song.url, song.coverImage, song.title, song.artist, 
+           song.album, song.length, playlist_song.position, playlist_song.playlistId
+    FROM playlist_song
+    JOIN song ON song.url = playlist_song.songUrl
+    WHERE playlist_song.playlistId = :playlistId
+    ORDER BY playlist_song.position
+""")
     fun observeSongsForPlaylist(playlistId: Long): Flow<List<SongWithPosition>>
+
+//    @Query("""
+//    SELECT song.id, song.url, song.coverImage, song.title, song.artist, song.album, song.length, playlist_song.position
+//    FROM playlist_song
+//    JOIN song ON song.url = playlist_song.songUrl
+//    WHERE playlist_song.playlistId = :playlistId AND playlist_song.position = :position
+//""")
+//    fun observeSongAtPosition(playlistId: Long, position: Long): Flow<SongWithPosition?>
+//
+//    @Query("""
+//        SELECT song.id, song.url, song.coverImage, song.title, song.artist, song.album, song.length, playlist_song.position
+//        FROM playlist_song
+//        JOIN song ON song.url = playlist_song.songUrl
+//        WHERE playlist_song.playlistId = :playlistId
+//        ORDER BY playlist_song.position
+//    """)
+//    fun observeSongsForPlaylist(playlistId: Long): Flow<List<SongWithPosition>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(entity: PlaylistSongEntity)

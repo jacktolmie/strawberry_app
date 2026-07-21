@@ -10,7 +10,6 @@ import com.example.strawberry_app.network.protocol.EventType
 import com.example.strawberry_app.network.protocol.ResponseType
 import com.example.strawberry_app.screens.playerScreen.PlayerRepository
 import com.example.strawberry_app.screens.playlistScreen.PlaylistRepository
-import com.example.strawberry_app.screens.playlistScreen.RepeatModeValues
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -71,7 +70,11 @@ class MessageRepository @Inject constructor(
                                     repeatMode = message.repeatMode
                                 )
 
-                                playlistRepository.getAlbumArtFile(message.coverImage)
+                                playlistRepository.getAlbumArtFile(
+                                    coverArt = message.coverImage,
+                                    playlistId = message.activePlaylist,
+                                    row = message.currentSong
+                                )
                             }
                         }
 
@@ -127,15 +130,20 @@ class MessageRepository @Inject constructor(
                         playerRepository.getGuiUpdates(
                             serverUpdates.value.copy(
                                 currentSong = SongInfo(
-                                    id = message.id,
-                                    url = message.url,
-                                    artist = message.artist,
                                     album = message.album,
+                                    artist = message.artist,
                                     coverImage = message.coverImage,
+                                    id = message.id,
+                                    length = message.length,
+                                    playlistId = message.playlistId,
                                     title = message.title,
-                                    length = message.length
+                                    url = message.url
                                 )))
-                        albumArtRepository.checkAlbumArt(message.coverImage)
+                        albumArtRepository.checkAlbumArt(
+                            playlistId = message.playlistId,
+                            row = message.position,
+                            name = message.coverImage
+                        )
                     }
 
                     // If stopped, set player screen to defaults.
@@ -143,13 +151,17 @@ class MessageRepository @Inject constructor(
                         val currentVolume = serverUpdates.value.volume
                         playerRepository.getGuiUpdates(
                                 serverUpdates.value.copy(
-                                        currentSong = SongInfo(),
+                                        currentSong = SongInfo(playlistId = -1L), // delete playlistID. Testing
                                         currentTime = 0,
                                         volume = currentVolume,
                                         playState = PlayState.STOPPED,
                                     )
                         )
-                        albumArtRepository.checkAlbumArt("")
+                        albumArtRepository.checkAlbumArt(
+                            playlistId = -1L,
+                            row = -1L,
+                            name = ""
+                        )
                     }
                     is EventType.Time -> playerRepository.getGuiUpdates(serverUpdates.value.copy(currentTime = message.time))
                     is EventType.VolumeChanged -> playerRepository.getGuiUpdates(serverUpdates.value.copy(volume = message.volume))

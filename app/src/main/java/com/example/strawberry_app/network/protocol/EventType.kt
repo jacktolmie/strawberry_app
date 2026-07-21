@@ -1,7 +1,6 @@
 package com.example.strawberry_app.network.protocol
 
 import com.example.strawberry_app.music.Playlist
-import com.example.strawberry_app.screens.playlistScreen.RepeatModeValues
 import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
@@ -92,7 +91,7 @@ sealed class EventType: IncomingMessage() {
         val playing: String = "",
         val playlists: MakeAllPlaylists? = null,
         @SerialName("repeat_mode")
-        val repeatMode: String, //RepeatModeValues = RepeatModeValues.OFF,
+        val repeatMode: String,
         val time: Long = 0L,
         val volume: Int = 0
     ) : EventType()
@@ -165,8 +164,6 @@ sealed class EventType: IncomingMessage() {
     @SerialName("song_changed")
     data class SongChanged(
         val row: Long
-//        @SerialName("track_id")
-//        val trackId: Long = 0L
     ) : EventType()
 
     @Serializable
@@ -179,6 +176,9 @@ sealed class EventType: IncomingMessage() {
         val coverImage: String = "",
         val id: Long = 0L,
         val length: Long = 0L,
+        @SerialName("playlist_id")
+        val playlistId: Long = -1L,
+        val position: Long = -1L,
         val title: String = "",
         @SerialName("song_url")
         val url: String = "",

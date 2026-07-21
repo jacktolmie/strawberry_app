@@ -320,7 +320,7 @@ class NetworkManager @Inject constructor(
         val chunkSize = 3000
         var i = 0
         while (i < message.length) {
-            println("networkmanager ${message.substring(i, minOf(i + chunkSize, message.length))}")
+            println("networkmanager $tag ${message.substring(i, minOf(i + chunkSize, message.length))}")
             i += chunkSize
         }
     }

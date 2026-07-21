@@ -36,17 +36,22 @@ class PlayerRepository @Inject constructor(
                     _serverUpdates.update { state ->
                         state.copy(
                             currentSong = SongInfo(
-                                id = it.id,
                                 artist = it.artist,
                                 album = it.album,
-                                title = it.title,
-                                length = it.length,
                                 coverImage = it.coverImage,
+                                id = it.id,
+                                length = it.length,
+                                playlistId = it.playlistId,
+                                title = it.title,
                                 url = it.url
                             )
                         )
                     }
-                    albumArtRepository.checkAlbumArt(it.coverImage)
+                    albumArtRepository.checkAlbumArt(
+                        playlistId = playlistRepository.playlistState.value.activePlaylist,
+                        row = songWithPosition.position,
+                        name = it.coverImage
+                    )
                 }
             }
         }

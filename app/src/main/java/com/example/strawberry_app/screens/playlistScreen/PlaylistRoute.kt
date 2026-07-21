@@ -16,7 +16,7 @@ data class PlaylistCallbacks(
     val clearCurrentPlaylist: (id: Long) -> Unit = {},
     val closeCurrentPlaylist: (id: Long) -> Unit = {},
     val deleteCurrentPlaylist: (id: Long) -> Unit = {},
-    val getAlbumArtFile: (name: String) -> File? = { null },
+    val getAlbumArtFile: (coverArt: String, playlistId: Long, row: Long) -> File? = { _,_,_ -> null },
     val isCurrentPlaying: (id: Long) -> Boolean = { false },
     val onPlaylistSelected: (id: Long) -> Unit = {},
     val removeSongsCurrentPlaylist: (id: Long, songsList: List<Long>) -> Unit = { _,_ ->},

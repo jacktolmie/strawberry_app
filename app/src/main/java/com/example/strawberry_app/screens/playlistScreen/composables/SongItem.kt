@@ -96,7 +96,6 @@ fun SongItem(
         }
 
     }
-//    }
 }
 
 @Preview
@@ -104,14 +103,15 @@ fun SongItem(
 fun SongItemPreview() {
     SongItem(
         song = SongWithPosition(
-            id = 1,
-            url = "Some url",
             artist = "The Amazing Band",
             album = "The best of Amazing Band",
             coverImage = "Some cover",
+            id = 1,
             length = 1000L,
+            playlistId = 1L,
+            position = 1L,
             title = "Bird Madness",
-            position = 1L
+            url = "Some url"
         ),
         modifier = Modifier
             .size(48.dp) // Absolute size anchor for a clean row

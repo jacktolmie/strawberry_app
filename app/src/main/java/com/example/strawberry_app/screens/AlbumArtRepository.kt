@@ -43,11 +43,20 @@ class AlbumArtRepository @Inject constructor(
         file.writeBytes(bytes)
     }
 
-    fun getAlbumArtFile(name: String): File? {
-        return if (hasImage(name)) {
-            getImageFile(name)
+    // Should I make defaults, or force callers to provide playlistID and row???
+    fun getAlbumArtFile(coverArt: String, playlistId: Long = -1L, row: Long = -1L): File? {
+        val file = File(albumArtDir, coverArt)
+        println("playlist_song Looking for art: ${file.absolutePath} exists: ${file.exists()}")
+        return if (hasImage(coverArt)) {
+            getImageFile(coverArt)
         } else {
-            null
+            if (playlistId == -1L || row == -1L) return null
+            println("playlist_song No album art loaded. Get image?")
+            requestCover(
+                playlistId = playlistId,
+                row = row
+            )
+            null // null or get the name sent from server?
         }
     }
 
@@ -55,15 +64,32 @@ class AlbumArtRepository @Inject constructor(
         _latestCover.value = name
     }
 
-    fun checkAlbumArt(name: String){
+    fun checkAlbumArt(playlistId: Long, row: Long, name: String){
         if (name.isEmpty()){
             notifyAlbumArtReady("")
             return
         }
         if (!hasImage(name)){
-            scope.launch { networkManager.sendCommand(OutgoingMessage.RequestCover) }
+            requestCover(
+                playlistId = playlistId,
+                row = row
+            )
+            scope.launch { networkManager.sendCommand(
+                OutgoingMessage.RequestCover(playlistId = playlistId, row = row))
+            }
             return
         }
         notifyAlbumArtReady(name)
+    }
+
+     fun requestCover(playlistId: Long, row: Long){
+        scope.launch {
+            networkManager.sendCommand(
+                OutgoingMessage.RequestCover(
+                    playlistId = playlistId,
+                    row = row
+                )
+            )
+        }
     }
 }

@@ -17,8 +17,10 @@ fun sampleSongList() = listOf(
         id = 1L,
         length = 331000L,
         title = "Stairway to Heaven",
+        playlistId = 0L,
+        position = 0L,
         url = "file:///music/stairway.mp3",
-        position = 0L
+
     ),
     SongWithPosition(
         artist = "Pink Floyd",
@@ -26,9 +28,11 @@ fun sampleSongList() = listOf(
         coverImage = "",
         id = 2L,
         length = 543000L,
+        playlistId = 0L,
+        position = 1L,
         title = "Time",
         url = "file:///music/time.mp3",
-        position = 1L
+
     ),
     SongWithPosition(
         artist = "The Beatles",
@@ -36,9 +40,11 @@ fun sampleSongList() = listOf(
         coverImage = "",
         id = 3L,
         length = 259000L,
+        playlistId = 0L,
+        position = 2L,
         title = "Come Together",
         url = "file:///music/cometogether.mp3",
-        position = 2L
+
     ),
     SongWithPosition(
         artist = "David Bowie",
@@ -46,9 +52,11 @@ fun sampleSongList() = listOf(
         coverImage = "",
         id = 4L,
         length = 214000L,
+        playlistId = 0L,
+        position = 3L,
         title = "Starman",
         url = "file:///music/starman.mp3",
-        position = 3L
+
     ),
     SongWithPosition(
         artist = "Queen",
@@ -56,9 +64,11 @@ fun sampleSongList() = listOf(
         coverImage = "",
         id = 5L,
         length = 354000L,
+        playlistId = 0L,
+        position = 4L,
         title = "Bohemian Rhapsody",
         url = "file:///music/bohemian.mp3",
-        position = 4L
+
     ),
     SongWithPosition(
         artist = "Fleetwood Mac",
@@ -66,9 +76,11 @@ fun sampleSongList() = listOf(
         coverImage = "",
         id = 6L,
         length = 295000L,
+        playlistId = 0L,
+        position = 5L,
         title = "Go Your Own Way",
         url = "file:///music/goyourownway.mp3",
-        position = 5L
+
     ),
     SongWithPosition(
         artist = "The Rolling Stones",
@@ -76,9 +88,11 @@ fun sampleSongList() = listOf(
         coverImage = "",
         id = 7L,
         length = 226000L,
+        playlistId = 0L,
+        position = 6L,
         title = "Tumbling Dice",
         url = "file:///music/tumblingdice.mp3",
-        position = 6L
+
     ),
     SongWithPosition(
         artist = "Jimi Hendrix",
@@ -86,8 +100,10 @@ fun sampleSongList() = listOf(
         coverImage = "",
         id = 8L,
         length = 242000L,
+        playlistId = 0L,
+        position = 7L,
         title = "Purple Haze",
         url = "file:///music/purplehaze.mp3",
-        position = 7L
+
     )
 )

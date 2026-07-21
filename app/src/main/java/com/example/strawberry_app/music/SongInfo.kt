@@ -15,7 +15,9 @@ data class SongInfo(
     val coverImage: String = "",
     val id: Long = -1L,
     val length: Long = -1L,
+    val playlistId: Long = 1L,
+    val position: Long = -1L,
     val title: String = "",
     @SerialName("song_url")
-    val url: String = "",
+    val url: String = ""
 )

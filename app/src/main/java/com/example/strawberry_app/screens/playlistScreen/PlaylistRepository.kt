@@ -169,8 +169,12 @@ class PlaylistRepository @Inject constructor(
     }
 
     // Get information about playlists and songs in each one.
-    fun getAlbumArtFile(name: String): File? {
-        return albumArtRepository.getAlbumArtFile(name)
+    fun getAlbumArtFile(coverArt: String, playlistId: Long, row: Long): File? {
+        return albumArtRepository.getAlbumArtFile(
+            coverArt = coverArt,
+            playlistId = playlistId,
+            row = row
+        )
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)

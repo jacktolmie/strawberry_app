@@ -30,7 +30,8 @@ fun MedLrgScreenTabs(
         if (playlistScreenState.playlistsData.playlistSongs.isNotEmpty()) {
             CurrentPlaylist(
                 callbacks = callbacks,
-                playlist = playlistScreenState.playlistsData.playlistSongs
+                playlist = playlistScreenState.playlistsData.playlistSongs,
+//                playlistId = playlistScreenState.playlistsData.playlistState.activePlaylist //Might be wrong
             )
         }
     }

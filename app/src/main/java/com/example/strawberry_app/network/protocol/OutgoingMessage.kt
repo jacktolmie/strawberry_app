@@ -44,15 +44,19 @@ sealed class OutgoingMessage {
     data class RenamePlaylist(val id: Long, val name: String): OutgoingMessage()
 
     @Serializable
-    @SerialName("repeat_mode")
+    @SerialName("repeat-mode")
     data class RepeatMode(
-        @SerialName("repeat_mode")
+        @SerialName("repeat-mode")
         val repeatMode: String
     ): OutgoingMessage()
 
     @Serializable
     @SerialName("request-cover")
-    data object RequestCover: OutgoingMessage()
+    data class RequestCover(
+        @SerialName("playlist-id")
+        val playlistId: Long,
+        val row: Long
+    ): OutgoingMessage()
     @Serializable
     @SerialName("send-playlist-song")
     data class SendActivePlaylistSong(val id: Long, val songIndex: Long): OutgoingMessage()
