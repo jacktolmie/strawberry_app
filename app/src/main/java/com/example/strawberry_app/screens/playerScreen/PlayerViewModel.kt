@@ -35,6 +35,7 @@ class PlayerViewModel @Inject constructor(
         timerUpdate()
     }
 
+    fun getSongById(url: String) = playerRepository.getSongById(url)
     fun sendMute() = playerRepository.sendCommand(OutgoingMessage.Mute)
     fun sendNext() = playerRepository.sendCommand(OutgoingMessage.Next)
     fun sendRestartPrevious() = playerRepository.sendCommand(OutgoingMessage.RestartOrPrevious)

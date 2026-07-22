@@ -52,29 +52,27 @@ class MessageRepository @Inject constructor(
                     }
                     is EventType.FavouritePlaylist -> playlistRepository.serverFavourite(id =  message.id, isFavourite = message.favourite)
                     is EventType.GuiUpdates -> {
-                        println("networkmanager gui updates called in message repo with volume: ${message.volume}")
+                        playlistRepository.updateCurrentSong(
+                            playlistId = message.activePlaylist,
+                            songIndex = message.currentSong
+                        )
+                        playlistRepository.updatePlaylistState(
+                            activePlaylist = message.activePlaylist,
+                            currentPlaylist = message.currentPlaylist,
+                            currentSongIndex = message.currentSong,
+                            currentCoverImage = message.coverImage,
+                            repeatMode = message.repeatMode
+                        )
+                        playlistRepository.getAlbumArtFile(
+                            coverArt = message.coverImage,
+                            playlistId = message.activePlaylist,
+                            row = message.currentSong
+                        )
+
+                        // Only rebuild playlists when that payload is present
                         when (message.playlists) {
                             is EventType.MakeAllPlaylists -> {
                                 playlistRepository.makeAllPlaylists(message.playlists.playlists)
-
-                                playlistRepository.updateCurrentSong(
-                                    playlistId = message.activePlaylist,
-                                    songIndex = message.currentSong
-                                )
-
-                                playlistRepository.updatePlaylistState(
-                                    activePlaylist = message.activePlaylist,
-                                    currentPlaylist = message.currentPlaylist,
-                                    currentSongIndex = message.currentSong,
-                                    currentCoverImage = message.coverImage,
-                                    repeatMode = message.repeatMode
-                                )
-
-                                playlistRepository.getAlbumArtFile(
-                                    coverArt = message.coverImage,
-                                    playlistId = message.activePlaylist,
-                                    row = message.currentSong
-                                )
                             }
                         }
 
@@ -151,7 +149,7 @@ class MessageRepository @Inject constructor(
                         val currentVolume = serverUpdates.value.volume
                         playerRepository.getGuiUpdates(
                                 serverUpdates.value.copy(
-                                        currentSong = SongInfo(playlistId = -1L), // delete playlistID. Testing
+                                        currentSong = SongInfo(),
                                         currentTime = 0,
                                         volume = currentVolume,
                                         playState = PlayState.STOPPED,

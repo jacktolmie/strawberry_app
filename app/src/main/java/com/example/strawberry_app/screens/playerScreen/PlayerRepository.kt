@@ -1,5 +1,7 @@
 package com.example.strawberry_app.screens.playerScreen
 
+import com.example.strawberry_app.data.dao.SongDao
+import com.example.strawberry_app.data.entity.SongEntity
 import com.example.strawberry_app.music.SongInfo
 import com.example.strawberry_app.network.ApplicationScope
 import com.example.strawberry_app.network.protocol.OutgoingMessage
@@ -7,6 +9,7 @@ import com.example.strawberry_app.screens.AlbumArtRepository
 import com.example.strawberry_app.screens.ServerGuiValues
 import com.example.strawberry_app.screens.playlistScreen.PlaylistRepository
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -58,6 +61,7 @@ class PlayerRepository @Inject constructor(
     }
 
     fun getGuiUpdates(serverGui: ServerGuiValues){
+        println("playerrepo getguiupdates called with $serverGui")
         _serverUpdates.value = serverGui
     }
 
@@ -67,5 +71,9 @@ class PlayerRepository @Inject constructor(
 
     fun getAlbumArtFile(name: String): File? {
         return albumArtRepository.getAlbumArtFile(name)
+    }
+
+    fun getSongById(url: String): Flow<SongEntity?>{
+        return playlistRepository.getSongById(url)
     }
 }

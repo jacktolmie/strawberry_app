@@ -15,6 +15,7 @@ data class PlayerScreenState(
 )
 
 class PlayerCallbacks(
+    val getSongById: (String) -> Unit = {},
     val sendMute: () -> Unit = {},
     val sendNext: () -> Unit = {},
     val sendRestartPrevious: () -> Unit = {},
@@ -40,6 +41,7 @@ fun PlayerRoute(
 
     val callbacks = remember {
         PlayerCallbacks(
+            getSongById = playerViewModel::getSongById,
             sendMute = playerViewModel::sendMute,
             sendNext = playerViewModel::sendNext,
             sendRestartPrevious = playerViewModel::sendRestartPrevious,

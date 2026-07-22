@@ -9,7 +9,7 @@ data class ServerGuiValues(
     val coverImage: String = "",
     val activePlaylist: Long = -1L,
     val currentPlaylist: Long = -1L,
-    val currentSong: SongInfo = SongInfo(playlistId = -1L),
+    val currentSong: SongInfo = SongInfo(),
     val currentSongId: Long = -1L,
     val currentTime: Long = 0L,
     val playState: PlayState = PlayState.STOPPED,

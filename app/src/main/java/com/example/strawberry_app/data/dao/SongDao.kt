@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Upsert
 import com.example.strawberry_app.data.entity.SongEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -13,7 +14,8 @@ interface SongDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(song: SongEntity)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+//    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Upsert
     suspend fun insertAll(songs: List<SongEntity>)
 
     @Query("DELETE FROM song WHERE id = :id")
@@ -25,6 +27,6 @@ interface SongDao {
     @Query("SELECT * FROM song WHERE url = :url")
     fun observeByUrl(url: String): Flow<SongEntity>
 
-    @Query("SELECT * FROM song WHERE id = :id")
-    fun observeById(id: Long): Flow<SongEntity?>
+    @Query("SELECT * FROM song WHERE url = :url")
+    fun observeById(url: String): Flow<SongEntity?>
 }

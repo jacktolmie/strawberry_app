@@ -1,5 +1,6 @@
 package com.example.strawberry_app.screens.playlistScreen
 
+import android.util.Log
 import androidx.room.withTransaction
 import com.example.strawberry_app.data.dao.PlaylistDao
 import com.example.strawberry_app.data.dao.PlaylistSongDao
@@ -23,6 +24,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.io.File
@@ -84,7 +86,6 @@ class PlaylistRepository @Inject constructor(
             playlistDao.deleteAll()
 
             playlists.forEach { playlist ->
-
                 playlistDao.insert(
                     PlaylistEntity(
                         id = playlist.id,
@@ -99,20 +100,22 @@ class PlaylistRepository @Inject constructor(
                     SongEntity(
                         id = song.id,
                         url = song.url,
+                        coverImage = song.coverImage,
                         title = song.title,
                         artist = song.artist,
                         album = song.album,
-                        coverImage = song.coverImage,
                         length = song.length
                     )
                 }
                 songDao.insertAll(songs)
+            }
 
+            playlists.forEach { playlist ->
                 val songIndex = playlist.songs.mapIndexed { index, song ->
                     PlaylistSongEntity(
                         playlistId = playlist.id,
-                        position = index,
-                        songUrl = song.url
+                        songUrl = song.url,
+                        position = index
                     )
                 }
                 playlistSongDao.insertAll(entities = songIndex)
@@ -184,12 +187,26 @@ class PlaylistRepository @Inject constructor(
                 flowOf(null)
             } else {
                 playlistSongDao.observeSongAtPosition(
-                    state.currentPlaylist,
+                    state.activePlaylist,
                     state.currentSongIndex
                 )
             }
         }
     }
+//    private fun getCurrentSong(): Flow<SongWithPosition?> {
+//        return playlistState.flatMapLatest { state ->
+//            Log.d("CurrentSongtest", "state: playlist=${state.currentPlaylist} index=${state.currentSongIndex}")
+//            if (state.currentPlaylist == -1L || state.currentSongIndex == -1L) {
+//                Log.d("CurrentSongtest", "-> null branch (no valid position)")
+//                flowOf(null)
+//            } else {
+//                playlistSongDao.observeSongAtPosition(
+//                    state.activePlaylist,
+//                    state.currentSongIndex
+//                ).onEach { Log.d("CurrentSongtest", "-> DB returned: $it") }
+//            }
+//        }
+//    }
 
     fun getPlaylists(): Flow<List<PlaylistEntity>>{
         return playlistDao.observeAll()
@@ -199,6 +216,10 @@ class PlaylistRepository @Inject constructor(
         return playlistSongDao.observeSongsForPlaylist(id)
     }
 
+    fun getSongById(url: String): Flow<SongEntity?>{
+        return songDao.observeById(url)
+    }
+
     fun setCurrentPlaylist(id: Long) {
         _playlistState.update { it.copy(currentPlaylist = id) }
     }
@@ -206,7 +227,7 @@ class PlaylistRepository @Inject constructor(
     fun updateCurrentSong(playlistId: Long, songIndex: Long) {
         _playlistState.update {
             it.copy(
-                currentPlaylist = playlistId,
+                activePlaylist = playlistId,
                 currentSongIndex = songIndex
             )
         }
