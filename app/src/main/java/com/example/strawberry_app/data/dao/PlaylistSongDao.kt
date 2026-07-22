@@ -44,23 +44,6 @@ interface PlaylistSongDao {
 """)
     fun observeSongsForPlaylist(playlistId: Long): Flow<List<SongWithPosition>>
 
-//    @Query("""
-//    SELECT song.id, song.url, song.coverImage, song.title, song.artist, song.album, song.length, playlist_song.position
-//    FROM playlist_song
-//    JOIN song ON song.url = playlist_song.songUrl
-//    WHERE playlist_song.playlistId = :playlistId AND playlist_song.position = :position
-//""")
-//    fun observeSongAtPosition(playlistId: Long, position: Long): Flow<SongWithPosition?>
-//
-//    @Query("""
-//        SELECT song.id, song.url, song.coverImage, song.title, song.artist, song.album, song.length, playlist_song.position
-//        FROM playlist_song
-//        JOIN song ON song.url = playlist_song.songUrl
-//        WHERE playlist_song.playlistId = :playlistId
-//        ORDER BY playlist_song.position
-//    """)
-//    fun observeSongsForPlaylist(playlistId: Long): Flow<List<SongWithPosition>>
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(entity: PlaylistSongEntity)
 
