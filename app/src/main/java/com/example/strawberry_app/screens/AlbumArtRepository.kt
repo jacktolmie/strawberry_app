@@ -9,6 +9,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.io.File
 import javax.inject.Inject
@@ -30,6 +31,8 @@ class AlbumArtRepository @Inject constructor(
         .also{ if(!it.exists()) it.mkdirs()}
 
     val requestedCovers = mutableSetOf<String>()
+
+    private val _albumArtCollection = MutableStateFlow<Map<String, File?>>(emptyMap())
 
     fun checkAlbumArt(name: String){
         if (name.isEmpty()){
@@ -71,11 +74,13 @@ class AlbumArtRepository @Inject constructor(
         _latestCover.value = name
     }
 
-    fun receiveCover(name: String, coverImage: String){
+    fun receiveCover(name: String, coverImage: String) {
         val bytes = Base64.decode(coverImage, Base64.DEFAULT)
         val file = getImageFile(File(name).name)
 
         file.writeBytes(bytes)
+
+        _albumArtCollection.update { it + (name to file) }
     }
 
     fun removeRequestedArt(name: String){

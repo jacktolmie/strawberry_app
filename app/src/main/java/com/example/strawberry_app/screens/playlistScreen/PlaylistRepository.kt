@@ -56,8 +56,6 @@ class PlaylistRepository @Inject constructor(
 
     val latestCover = albumArtRepository.latestCover
 
-
-
     init {
         scope.launch {
             getCurrentSong().collect { songData ->

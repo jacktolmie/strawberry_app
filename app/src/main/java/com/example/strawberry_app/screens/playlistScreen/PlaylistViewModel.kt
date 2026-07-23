@@ -30,11 +30,7 @@ class PlaylistViewModel @Inject constructor(
 
     val albumArtFile: StateFlow<File?> = playlistRepository.latestCover
         .map { name ->
-            playlistRepository.getAlbumArtFile(
-                coverArt = name,
-//                playlistId = playlistState.value.activePlaylist,
-//                row = playlistState.value.currentSongIndex
-            )
+            playlistRepository.getAlbumArtFile(coverArt = name)
         }
         .stateIn(
             scope = viewModelScope,
@@ -51,7 +47,6 @@ class PlaylistViewModel @Inject constructor(
             initialValue = emptyList()
         )
 
-//    private val _selectedPlaylistId = MutableStateFlow(playlistRepository.playlistState.value.activePlaylist)
     private val _selectedPlaylistId = playlistRepository.playlistState
         .map { it.currentPlaylist }
         .stateIn(
@@ -87,8 +82,8 @@ class PlaylistViewModel @Inject constructor(
         playlistRepository.setCurrentPlaylist(id)
     }
 
-    fun getAlbumArtFile(coverArt: String): File? {//, playlistId: Long, row: Long): File? {
-        return playlistRepository.getAlbumArtFile(coverArt) //, playlistId, row)
+    fun getAlbumArtFile(coverArt: String): File? {
+        return playlistRepository.getAlbumArtFile(coverArt)
     }
 
     fun isCurrentPlaying(id: Long): Boolean {
