@@ -29,6 +29,36 @@ class AlbumArtRepository @Inject constructor(
     private val albumArtDir : File = File(context.filesDir, "album_art")
         .also{ if(!it.exists()) it.mkdirs()}
 
+    val requestedCovers = mutableSetOf<String>()
+
+    fun checkAlbumArt(name: String){
+        if (name.isEmpty()){
+            notifyAlbumArtReady("")
+            return
+        }
+        if (!hasImage(name)){
+            scope.launch { networkManager.sendCommand(
+                OutgoingMessage.RequestCover(name) )
+            }
+            return
+        }
+        notifyAlbumArtReady(name)
+    }
+
+    fun getAlbumArtFile(coverArt: String): File? {
+        if (requestedCovers.contains(coverArt)) return null
+
+        val fileName = File(coverArt).name
+
+        return if (hasImage(fileName)) {
+            getImageFile(fileName)
+        } else {
+            requestedCovers.add(coverArt)
+            requestCover(coverArt)
+            null
+        }
+    }
+
     fun getImageFile(filename: String): File {
         return File(albumArtDir, filename)
     }
@@ -37,59 +67,24 @@ class AlbumArtRepository @Inject constructor(
         return File(albumArtDir, name).exists()
     }
 
-    fun receiveCover(name: String, image: String){
-        val bytes = Base64.decode(image, Base64.DEFAULT)
-        val file = getImageFile(name)
-        file.writeBytes(bytes)
-    }
-
-    // Should I make defaults, or force callers to provide playlistID and row???
-    fun getAlbumArtFile(coverArt: String, playlistId: Long = -1L, row: Long = -1L): File? {
-        val file = File(albumArtDir, coverArt)
-        println("playlist_song Looking for art: ${file.absolutePath} exists: ${file.exists()}")
-        return if (hasImage(coverArt)) {
-            getImageFile(coverArt)
-        } else {
-            if (playlistId == -1L || row == -1L) return null
-            println("playlist_song No album art loaded. Get image?")
-            requestCover(
-                playlistId = playlistId,
-                row = row
-            )
-            null // null or get the name sent from server?
-        }
-    }
-
     fun notifyAlbumArtReady(name: String){
         _latestCover.value = name
     }
 
-    fun checkAlbumArt(playlistId: Long, row: Long, name: String){
-        if (name.isEmpty()){
-            notifyAlbumArtReady("")
-            return
-        }
-        if (!hasImage(name)){
-            requestCover(
-                playlistId = playlistId,
-                row = row
-            )
-            scope.launch { networkManager.sendCommand(
-                OutgoingMessage.RequestCover(playlistId = playlistId, row = row))
-            }
-            return
-        }
-        notifyAlbumArtReady(name)
+    fun receiveCover(name: String, coverImage: String){
+        val bytes = Base64.decode(coverImage, Base64.DEFAULT)
+        val file = getImageFile(File(name).name)
+
+        file.writeBytes(bytes)
     }
 
-     fun requestCover(playlistId: Long, row: Long){
+    fun removeRequestedArt(name: String){
+        requestedCovers.removeIf { it == name }
+    }
+
+    fun requestCover(coverArt: String){
         scope.launch {
-            networkManager.sendCommand(
-                OutgoingMessage.RequestCover(
-                    playlistId = playlistId,
-                    row = row
-                )
-            )
+            networkManager.sendCommand(OutgoingMessage.RequestCover(coverArt))
         }
     }
 }

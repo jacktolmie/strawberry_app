@@ -1,6 +1,5 @@
 package com.example.strawberry_app.screens.playlistScreen
 
-import android.util.Log
 import androidx.room.withTransaction
 import com.example.strawberry_app.data.dao.PlaylistDao
 import com.example.strawberry_app.data.dao.PlaylistSongDao
@@ -24,7 +23,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.io.File
@@ -57,6 +55,8 @@ class PlaylistRepository @Inject constructor(
     val currentSongData: Flow<SongWithPosition?> = getCurrentSong()
 
     val latestCover = albumArtRepository.latestCover
+
+
 
     init {
         scope.launch {
@@ -172,12 +172,11 @@ class PlaylistRepository @Inject constructor(
     }
 
     // Get information about playlists and songs in each one.
-    fun getAlbumArtFile(coverArt: String, playlistId: Long, row: Long): File? {
-        return albumArtRepository.getAlbumArtFile(
-            coverArt = coverArt,
-            playlistId = playlistId,
-            row = row
-        )
+    fun getAlbumArtFile(coverArt: String): File? {
+        return if (albumArtRepository.hasImage(coverArt)){
+            albumArtRepository.getImageFile(coverArt)
+        }else
+            albumArtRepository.getAlbumArtFile(coverArt)
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -193,20 +192,6 @@ class PlaylistRepository @Inject constructor(
             }
         }
     }
-//    private fun getCurrentSong(): Flow<SongWithPosition?> {
-//        return playlistState.flatMapLatest { state ->
-//            Log.d("CurrentSongtest", "state: playlist=${state.currentPlaylist} index=${state.currentSongIndex}")
-//            if (state.currentPlaylist == -1L || state.currentSongIndex == -1L) {
-//                Log.d("CurrentSongtest", "-> null branch (no valid position)")
-//                flowOf(null)
-//            } else {
-//                playlistSongDao.observeSongAtPosition(
-//                    state.activePlaylist,
-//                    state.currentSongIndex
-//                ).onEach { Log.d("CurrentSongtest", "-> DB returned: $it") }
-//            }
-//        }
-//    }
 
     fun getPlaylists(): Flow<List<PlaylistEntity>>{
         return playlistDao.observeAll()
@@ -214,10 +199,6 @@ class PlaylistRepository @Inject constructor(
 
     fun getPlaylistSongs(id: Long): Flow<List<SongWithPosition>>{
         return playlistSongDao.observeSongsForPlaylist(id)
-    }
-
-    fun getSongById(url: String): Flow<SongEntity?>{
-        return songDao.observeById(url)
     }
 
     fun setCurrentPlaylist(id: Long) {

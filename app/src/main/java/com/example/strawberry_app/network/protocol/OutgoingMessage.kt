@@ -53,9 +53,11 @@ sealed class OutgoingMessage {
     @Serializable
     @SerialName("request-cover")
     data class RequestCover(
-        @SerialName("playlist-id")
-        val playlistId: Long,
-        val row: Long
+        @SerialName("cover_art")
+        val coverArt: String
+//        @SerialName("playlist-id")
+//        val playlistId: Long,
+//        val row: Long
     ): OutgoingMessage()
     @Serializable
     @SerialName("send-playlist-song")

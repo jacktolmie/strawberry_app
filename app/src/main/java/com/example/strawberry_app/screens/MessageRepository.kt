@@ -47,8 +47,9 @@ class MessageRepository @Inject constructor(
                     // Server Event messages.
                     is EventType.ClosedPlaylistWithId -> { playlistRepository.serverClosedPlaylist(message.id) }
                     is EventType.CoverImage -> {
-                        albumArtRepository.receiveCover(name = message.name, image = message.coverImage)
+                        albumArtRepository.receiveCover(name = message.name, coverImage = message.coverImage)
                         albumArtRepository.notifyAlbumArtReady(message.name)
+                        albumArtRepository.removeRequestedArt(message.name)
                     }
                     is EventType.FavouritePlaylist -> playlistRepository.serverFavourite(id =  message.id, isFavourite = message.favourite)
                     is EventType.GuiUpdates -> {
@@ -63,11 +64,7 @@ class MessageRepository @Inject constructor(
                             currentCoverImage = message.coverImage,
                             repeatMode = message.repeatMode
                         )
-                        playlistRepository.getAlbumArtFile(
-                            coverArt = message.coverImage,
-                            playlistId = message.activePlaylist,
-                            row = message.currentSong
-                        )
+                        playlistRepository.getAlbumArtFile(coverArt = message.coverImage)
 
                         // Only rebuild playlists when that payload is present
                         when (message.playlists) {
@@ -137,11 +134,7 @@ class MessageRepository @Inject constructor(
                                     title = message.title,
                                     url = message.url
                                 )))
-                        albumArtRepository.checkAlbumArt(
-                            playlistId = message.playlistId,
-                            row = message.position,
-                            name = message.coverImage
-                        )
+                        albumArtRepository.checkAlbumArt(name = message.coverImage)
                     }
 
                     // If stopped, set player screen to defaults.
@@ -155,11 +148,7 @@ class MessageRepository @Inject constructor(
                                         playState = PlayState.STOPPED,
                                     )
                         )
-                        albumArtRepository.checkAlbumArt(
-                            playlistId = -1L,
-                            row = -1L,
-                            name = ""
-                        )
+                        albumArtRepository.checkAlbumArt(name = "")
                     }
                     is EventType.Time -> playerRepository.getGuiUpdates(serverUpdates.value.copy(currentTime = message.time))
                     is EventType.VolumeChanged -> playerRepository.getGuiUpdates(serverUpdates.value.copy(volume = message.volume))

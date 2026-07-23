@@ -32,8 +32,8 @@ class PlaylistViewModel @Inject constructor(
         .map { name ->
             playlistRepository.getAlbumArtFile(
                 coverArt = name,
-                playlistId = playlistState.value.activePlaylist,
-                row = playlistState.value.currentSongIndex
+//                playlistId = playlistState.value.activePlaylist,
+//                row = playlistState.value.currentSongIndex
             )
         }
         .stateIn(
@@ -87,8 +87,8 @@ class PlaylistViewModel @Inject constructor(
         playlistRepository.setCurrentPlaylist(id)
     }
 
-    fun getAlbumArtFile(coverArt: String, playlistId: Long, row: Long): File? {
-        return playlistRepository.getAlbumArtFile(coverArt, playlistId, row)
+    fun getAlbumArtFile(coverArt: String): File? {//, playlistId: Long, row: Long): File? {
+        return playlistRepository.getAlbumArtFile(coverArt) //, playlistId, row)
     }
 
     fun isCurrentPlaying(id: Long): Boolean {

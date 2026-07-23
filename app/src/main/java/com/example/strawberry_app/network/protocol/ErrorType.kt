@@ -14,6 +14,7 @@ object ErrorTypeSerializer : JsonContentPolymorphicSerializer<ErrorType>(ErrorTy
     override fun selectDeserializer(element: JsonElement): DeserializationStrategy<ErrorType> {
         return when (element.jsonObject["error"]?.jsonPrimitive?.content) {
             "command_not_found" -> ErrorType.CommandNotFound.serializer()
+            "cover_not_found" -> ErrorType.CoverNotFound.serializer()
             "not_enough_arguments_passed_needs" -> ErrorType.NotEnoughArguments.serializer()
             "playlist_not_closed" -> ErrorType.PlaylistNotClosed.serializer()
             "playlist_not_found" -> ErrorType.PlaylistNotFound.serializer()
@@ -30,6 +31,10 @@ sealed class ErrorType: IncomingMessage() {
     @Serializable
     @SerialName("command_not_found")
     data class CommandNotFound(val command: String = ""): ErrorType()
+
+    @Serializable
+    @SerialName("cover_not_found")
+    data object CoverNotFound: ErrorType()
 
     @Serializable
     @SerialName("not_enough_arguments_passed_needs")

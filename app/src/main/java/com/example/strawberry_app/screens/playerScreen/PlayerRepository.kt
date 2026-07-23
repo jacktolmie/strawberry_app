@@ -47,17 +47,13 @@ class PlayerRepository @Inject constructor(
                             )
                         )
                     }
-                    albumArtRepository.checkAlbumArt(
-                        playlistId = playlistRepository.playlistState.value.activePlaylist,
-                        row = songWithPosition.position,
-                        name = it.coverImage
-                    )
+                    albumArtRepository.checkAlbumArt( name = it.coverImage )
                 }
             }
         }
     }
 
-    fun getGuiUpdates(serverGui: ServerGuiValues){
+    fun getGuiUpdates(serverGui: ServerGuiValues) {
         _serverUpdates.value = serverGui
     }
 
@@ -66,6 +62,6 @@ class PlayerRepository @Inject constructor(
     }
 
     fun getAlbumArtFile(name: String): File? {
-        return albumArtRepository.getAlbumArtFile(name)
+        return playlistRepository.getAlbumArtFile(name)
     }
 }
