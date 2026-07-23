@@ -28,15 +28,7 @@ class PlaylistViewModel @Inject constructor(
     private val playlistRepository: PlaylistRepository
 ): ViewModel(){
 
-    val albumArtFile: StateFlow<File?> = playlistRepository.latestCover
-        .map { name ->
-            playlistRepository.getAlbumArtFile(coverArt = name)
-        }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = null
-        )
+    val albumArtCollection = playlistRepository.artAlbumCollection
 
     val playlistState = playlistRepository.playlistState
 

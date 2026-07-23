@@ -10,8 +10,9 @@ import java.io.File
 
 data class PlaylistScreenState(
     val playlistsData: PlaylistsData = PlaylistsData(),
-    val albumArtFile: File? = null
+    val albumArtFile: Map<String, File?> = emptyMap()
 )
+
 data class PlaylistCallbacks(
     val clearCurrentPlaylist: (id: Long) -> Unit = {},
     val closeCurrentPlaylist: (id: Long) -> Unit = {},
@@ -37,7 +38,7 @@ fun PlaylistRoute(
     playlistViewModel: PlaylistViewModel = hiltViewModel()
 ){
     val playlistsData by playlistViewModel.playlistsData.collectAsStateWithLifecycle()
-    val albumArtFile by playlistViewModel.albumArtFile.collectAsStateWithLifecycle()
+    val albumArtFile by playlistViewModel.albumArtCollection.collectAsStateWithLifecycle()
 
     val callbacks = PlaylistCallbacks(
         clearCurrentPlaylist = playlistViewModel::clearCurrentPlaylist,

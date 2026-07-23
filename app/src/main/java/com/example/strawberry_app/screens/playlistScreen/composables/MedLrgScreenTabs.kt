@@ -29,9 +29,9 @@ fun MedLrgScreenTabs(
         // Create the playlists for each tab.
         if (playlistScreenState.playlistsData.playlistSongs.isNotEmpty()) {
             CurrentPlaylist(
+                albumArtCollection = playlistScreenState.albumArtFile,
                 callbacks = callbacks,
-                playlist = playlistScreenState.playlistsData.playlistSongs,
-//                playlistId = playlistScreenState.playlistsData.playlistState.activePlaylist //Might be wrong
+                playlist = playlistScreenState.playlistsData.playlistSongs
             )
         }
     }

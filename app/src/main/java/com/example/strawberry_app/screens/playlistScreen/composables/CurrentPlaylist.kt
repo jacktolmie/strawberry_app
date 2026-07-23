@@ -13,9 +13,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.strawberry_app.data.dao.SongWithPosition
 import com.example.strawberry_app.screens.playlistScreen.PlaylistCallbacks
+import java.io.File
 
 @Composable
 fun CurrentPlaylist(
+    albumArtCollection: Map<String, File?>,
     callbacks: PlaylistCallbacks,
     playlist: List<SongWithPosition>,
     modifier: Modifier = Modifier
@@ -29,12 +31,7 @@ fun CurrentPlaylist(
             println("playlist_song Song: ${song.title} coverImage: ${song.coverImage}")
             SongItem(
                 song = song,
-//                imageArt = callbacks.getAlbumArtFile(
-//                    song.coverImage,
-//                    song.playlistId,
-//                    song.position
-//                ),
-                imageArt = callbacks.getAlbumArtFile(song.coverImage),
+                imageArt = albumArtCollection[song.coverImage],
                 isPlaying = callbacks.isCurrentPlaying(song.id)
             )
             HorizontalDivider(thickness = 5.dp, color = MaterialTheme.colorScheme.primary)
@@ -46,6 +43,7 @@ fun CurrentPlaylist(
 @Composable
 fun CurrentPlaylistPreview(){
     CurrentPlaylist(
+        albumArtCollection = emptyMap(),
         callbacks = PlaylistCallbacks(),
         playlist = sampleSongList(),
         modifier = Modifier
