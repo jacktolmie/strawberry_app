@@ -30,18 +30,18 @@ fun MakePlaylistMenu(
     var actionString by remember { mutableIntStateOf(-1) }
     var expanded by remember { mutableStateOf(false) }
     var pendingAction by remember { mutableStateOf<(() -> Unit)?>(null) }
-    var showDialog by remember { mutableStateOf(false) }
+    var showAlert by remember { mutableStateOf(false) }
 
-    if (showDialog) {
+    if (showAlert) {
         Alert(
             action = actionString,
             question = R.string.playlist_question,
             onConfirm = {
                 pendingAction?.invoke()
-                showDialog = false
+                showAlert = false
                 expanded = false
             },
-            onDismiss = { showDialog = false }
+            onDismiss = { showAlert = false }
         )
     }
 
@@ -59,11 +59,11 @@ fun MakePlaylistMenu(
             onConfirm = { action, dialog, expand, actionText ->
                 pendingAction = action
                 if(dialog){
-                    showDialog = true
+                    showAlert = true
                 }else {
                     action.invoke()
                 }
-                showDialog = dialog
+                showAlert = dialog
                 expanded = expand
                 actionString =actionText
             },

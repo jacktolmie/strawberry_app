@@ -8,12 +8,13 @@
     <string name="playlist_confirm">Confirm</string>
     <string name="playlist_delete">Delete Playlist</string>
     <string name="playlist_length">Length</string>
-
+    <string name="playlist_question">Would you like to</string>
+    <string name="playlist_rename">Rename</string>
     <string name="playlist_repeat">Repeat</string>
     <string name="playlist_repeat_choose">Choose Repeat Option</string>
     <string name="playlist_shuffle">Shuffle Playlist</string>
     <string name="playlist_song_count">Songs</string>
-    <string name="playlist_question">Would you like to</string>
+
 
     <string name="settings_title">Settings</string>
     <string name="settings_ip">IP Address</string>

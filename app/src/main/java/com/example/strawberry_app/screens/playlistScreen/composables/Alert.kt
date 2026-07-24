@@ -33,7 +33,6 @@ fun Alert(
         modifier = modifier,
         onDismissRequest = onDismiss,
         title ={ DropdownTitle(question) },
-            //{ Text(text = stringResource(question)) },
         text = { Text(text = stringResource(action)) },
         confirmButton = {
             TextButton(onClick = onConfirm) {
@@ -46,72 +45,4 @@ fun Alert(
             }
         }
     )
-}
-
-@Composable
-fun RepeatAlert(
-    currentRepeatMode: RepeatModeValues,
-    onConfirm: (RepeatModeValues) -> Unit,
-    onDismiss: () -> Unit,
-    modifier: Modifier = Modifier
-){
-    var selected by remember { mutableStateOf(currentRepeatMode) }
-
-    AlertDialog(
-        modifier = modifier,
-        confirmButton = {
-            TextButton(onClick = {onConfirm(selected) }) {
-                Text(text = stringResource(R.string.playlist_confirm))
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text(text = stringResource(R.string.cancel))
-            }
-
-        },
-        onDismissRequest = onDismiss,
-        text = {
-            RepeatRadioBtn(
-                selected = selected,
-                onOptionSelected = { selected = it }
-            )
-        },
-        title = { Text(text = stringResource(R.string.playlist_repeat_choose))},
-
-    )
-}
-
-@Composable
-fun RepeatRadioBtn(
-    selected: RepeatModeValues,
-    onOptionSelected: (RepeatModeValues) -> Unit
-){
-    val repeatOptions = listOf(
-        RepeatModeValues.ALBUM,
-        RepeatModeValues.OFF,
-        RepeatModeValues.PLAYLIST,
-        RepeatModeValues.TRACK
-        )
-
-    Column(
-        modifier = Modifier.selectableGroup()
-    ) {
-        repeatOptions.forEach { option ->
-            Row( modifier = Modifier
-                .selectable(
-                    selected = (option == selected),
-                    onClick = {onOptionSelected(option)},
-                    role = Role.RadioButton
-                ),
-                verticalAlignment = Alignment.CenterVertically
-            ){
-                RadioButton(
-                    selected = (option == selected),
-                    onClick = null
-                )
-                Text(text = option.toString())
-            }
-        }
-    }
 }

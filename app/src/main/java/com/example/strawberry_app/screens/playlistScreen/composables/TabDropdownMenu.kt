@@ -2,7 +2,6 @@ package com.example.strawberry_app.screens.playlistScreen.composables
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
@@ -11,10 +10,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.strawberry_app.R
-import com.example.strawberry_app.screens.DropdownText
 import com.example.strawberry_app.screens.playlistScreen.PlaylistCallbacks
 import com.example.strawberry_app.screens.playlistScreen.PlaylistsData
 import com.example.strawberry_app.screens.playlistScreen.RepeatModeValues
@@ -22,6 +19,7 @@ import com.example.strawberry_app.ui.theme.icons.clear_all
 import com.example.strawberry_app.ui.theme.icons.favorite
 import com.example.strawberry_app.ui.theme.icons.more_vert
 import com.example.strawberry_app.ui.theme.icons.playlist_remove
+import com.example.strawberry_app.ui.theme.icons.drive_file_rename
 import com.example.strawberry_app.ui.theme.icons.repeat
 import com.example.strawberry_app.ui.theme.icons.shuffle
 
@@ -36,16 +34,25 @@ fun TabDropdownMenu(
     onConfirm: (()->Unit, Boolean, Boolean, Int) -> Unit,
     modifier: Modifier = Modifier
 ){
-    var showDialog by remember { mutableStateOf(false) }
+    var showRenameDialot by remember { mutableStateOf(false)}
+    var showRepeatDialog by remember { mutableStateOf(false) }
+    var newPlaylistName by remember { mutableStateOf("")}
+
     // If showDialog is true, display RepeatAlert.
-    if (showDialog) {
+    if (showRepeatDialog) {
         RepeatAlert(
             currentRepeatMode = RepeatModeValues.fromString(playlistsData.playlistState.repeatMode),
             onConfirm = { mode ->
-                showDialog = false
+                showRepeatDialog = false
                 callbacks.sendRepeatMode(mode.toString())
             },
-            onDismiss = { showDialog = false }
+            onDismiss = { showRepeatDialog = false }
+        )
+    }
+
+    if (showRenameDialot) {
+        RenameAlert(
+
         )
     }
 
@@ -72,13 +79,14 @@ fun TabDropdownMenu(
                             playlistId,
                             !playlistsData.playlists[selectedTabIndex].favourite
                         )}, false, false, actionString)
-                }
+                },
+                playlistName = playlistsData.playlists.firstOrNull{ it.id == playlistId}?.name ?: ""
             )
             DropdownMenuItemComposable(
                 text = R.string.playlist_repeat,
                 iconImage = repeat,
                 onConfirm = { onConfirm({ },false, false, R.string.playlist_repeat)
-                    showDialog = true
+                    showRepeatDialog = true
                 }
             )
             DropdownMenuItemComposable(
@@ -102,9 +110,23 @@ fun TabDropdownMenu(
                         true, false, R.string.playlist_delete )
                 }
             )
+            DropdownMenuItemComposable(
+                text = R.string.playlist_rename,
+                iconImage = drive_file_rename,
+                onConfirm = { onConfirm({
+                    callbacks.renameCurrentPlaylist(
+                        playlistId, newPlaylistName)},
+                    true, false, R.string.playlist_rename)
+                    showRenameDialot = true
+                }
+            )
         }
     }
 }
+
+fun getPlaylistName(
+    playlistsData: PlaylistsData,
+    playlistId: Long) = playlistsData.playlists.firstOrNull{ it.id == playlistId}?.name ?: ""
 
 @Preview
 @Composable

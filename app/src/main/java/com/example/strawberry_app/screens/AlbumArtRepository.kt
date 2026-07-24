@@ -66,9 +66,6 @@ class AlbumArtRepository @Inject constructor(
     }
 
     fun getImageFile(filename: String): File {
-        _albumArtCollection.value.forEach { (string, file) ->
-
-        }
         return File(albumArtDir, filename)
     }
 

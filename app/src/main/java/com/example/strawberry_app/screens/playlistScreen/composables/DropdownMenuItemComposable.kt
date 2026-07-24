@@ -10,17 +10,17 @@ import com.example.strawberry_app.screens.DropdownText
 
 @Composable
 fun DropdownMenuItemComposable(
-    text: Int,
     iconImage: ImageVector,
     onConfirm: ()->Unit,
-    modifier: Modifier = Modifier
+    playlistName: String = "",
+    text: Int,
 ) {
     DropdownMenuItem(
         text = { DropdownText(text) },
         leadingIcon = {
             Icon(
                 imageVector = iconImage,
-                contentDescription = stringResource(text)
+                contentDescription = "${stringResource(text)} $playlistName"
             )
         },
         onClick = onConfirm
