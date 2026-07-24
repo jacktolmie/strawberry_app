@@ -164,7 +164,10 @@ class PlaylistRepository @Inject constructor(
     }
 
     suspend fun serverClosedPlaylist(id: Long) {
-        playlistDao.deleteById(id = id)
+        val test = playlistDao.getPlaylistId(id)
+        if(playlistDao.getPlaylistId(id) != null){
+            playlistDao.deleteById(id = id)
+        }
     }
 
     suspend fun serverRenamedPlaylist(id: Long, name: String) {

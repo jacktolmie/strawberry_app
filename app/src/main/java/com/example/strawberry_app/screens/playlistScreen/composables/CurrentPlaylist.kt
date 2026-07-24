@@ -28,7 +28,9 @@ fun CurrentPlaylist(
         .background(MaterialTheme.colorScheme.surfaceContainerLow)
     ) {
         items(playlist){ song ->
-            println("playlist_song Song: ${song.title} coverImage: ${song.coverImage}")
+            if (!albumArtCollection.contains(song.coverImage)){
+                callbacks.getAlbumArtFile(song.coverImage)
+            }
             SongItem(
                 song = song,
                 imageArt = albumArtCollection[song.coverImage],

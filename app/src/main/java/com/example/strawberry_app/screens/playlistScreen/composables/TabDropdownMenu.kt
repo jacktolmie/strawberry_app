@@ -65,72 +65,41 @@ fun TabDropdownMenu(
             expanded = expanded,
             onDismissRequest = { onConfirm({}, false, false, actionString)}
         ) {
-            DropdownMenuItem(
-                text = { DropdownText(R.string.playlist_favourites) },
-                leadingIcon = {
-                    Icon(
-                        imageVector =  favorite,
-                        contentDescription = stringResource(R.string.playlist_favourites)
-                    )
-                },
-                onClick = {
-                    onConfirm(
-                        { callbacks.sendPlaylistFavourite(
+            DropdownMenuItemComposable(
+                text = R.string.playlist_favourites,
+                iconImage = favorite,
+                onConfirm = { onConfirm( { callbacks.sendPlaylistFavourite(
                             playlistId,
                             !playlistsData.playlists[selectedTabIndex].favourite
-                        )
-                        }, false, false, actionString
-                    )
+                        )}, false, false, actionString)
                 }
             )
-            DropdownMenuItem(
-                text = { DropdownText(R.string.playlist_shuffle)},
-                leadingIcon = {
-                    Icon(
-                        imageVector = shuffle,
-                        contentDescription = stringResource(R.string.playlist_shuffle)
-                    )
-                },
-                onClick = {
-                    onConfirm({ callbacks.shuffleCurrentPlaylist(playlistId) },
+            DropdownMenuItemComposable(
+                text = R.string.playlist_repeat,
+                iconImage = repeat,
+                onConfirm = { onConfirm({ },false, false, R.string.playlist_repeat)
+                    showDialog = true
+                }
+            )
+            DropdownMenuItemComposable(
+                text = R.string.playlist_shuffle,
+                iconImage = shuffle,
+                onConfirm = { onConfirm({ callbacks.shuffleCurrentPlaylist(playlistId) },
                         true, false, R.string.playlist_shuffle)
                 }
             )
-            DropdownMenuItem(
-                text = { DropdownText(R.string.playlist_clear)},
-                leadingIcon = {
-                    Icon(
-                        imageVector = clear_all,
-                        contentDescription = stringResource(R.string.playlist_clear)
-                    )
-                },
-                onClick = {
-                    onConfirm({ callbacks.clearCurrentPlaylist(playlistId) },
-                        true, false, R.string.playlist_clear)}
+            DropdownMenuItemComposable(
+                text = R.string.playlist_clear,
+                iconImage = clear_all,
+                onConfirm = { onConfirm({ callbacks.clearCurrentPlaylist(playlistId) },
+                        true, false, R.string.playlist_clear)
+                }
             )
-            DropdownMenuItem(
-                text = { DropdownText(R.string.playlist_delete)},
-                leadingIcon = {
-                    Icon(
-                        imageVector = playlist_remove,
-                        contentDescription = stringResource(R.string.playlist_delete)
-                    )
-                },
-                onClick = {
-                    onConfirm({ callbacks.deleteCurrentPlaylist(playlistId) },
-                        true, false, R.string.playlist_delete )}
-            )
-            DropdownMenuItem(
-                text = { DropdownText(R.string.playlist_repeat)},
-                leadingIcon = {
-                    Icon(
-                        imageVector = repeat,
-                        contentDescription = stringResource(R.string.playlist_repeat)
-                    )
-                },
-                onClick = {
-                    onConfirm({ },false, false, R.string.playlist_repeat)
-                    showDialog = true
+            DropdownMenuItemComposable(
+                text = R.string.playlist_delete,
+                iconImage = playlist_remove,
+                onConfirm = { onConfirm({ callbacks.deleteCurrentPlaylist(playlistId) },
+                        true, false, R.string.playlist_delete )
                 }
             )
         }

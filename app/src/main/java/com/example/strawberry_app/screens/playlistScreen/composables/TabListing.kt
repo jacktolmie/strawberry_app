@@ -21,6 +21,7 @@ fun TabListing(
     modifier: Modifier = Modifier
 ){
     var selectedTabIndex by remember { mutableIntStateOf(0) }
+    val safeIndex = selectedTabIndex.coerceAtMost((playlistScreenState.playlistsData.playlists.size - 1).coerceAtLeast(0))
 
     LaunchedEffect(playlistScreenState.playlistsData.playlistState.currentPlaylist) {
         val playlist = playlistScreenState.playlistsData.playlists.firstOrNull {
@@ -40,7 +41,7 @@ fun TabListing(
         ScrollableTabs(
             callbacks = callbacks,
             playlists = playlistScreenState.playlistsData.playlists,
-            selectedTabIndex = selectedTabIndex,
+            selectedTabIndex = safeIndex,
             onTabSelected = { tabIndex: Int, id: Long ->
                 selectedTabIndex = tabIndex
                 playlistId = id
@@ -51,7 +52,7 @@ fun TabListing(
         StaticTabs(
             callbacks = callbacks,
             playlists = playlistScreenState.playlistsData.playlists,
-            selectedTabIndex = selectedTabIndex,
+            selectedTabIndex = safeIndex,
             onTabSelected = { tabIndex: Int, id: Long ->
                 selectedTabIndex = tabIndex
                 playlistId = id
@@ -63,7 +64,7 @@ fun TabListing(
         callbacks = callbacks,
         playlistId = playlistId,
         playlistsData = playlistScreenState.playlistsData,
-        selectedTabIndex = selectedTabIndex,
+        selectedTabIndex = safeIndex,
         modifier = modifier
     )
 }

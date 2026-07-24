@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.io.File
+import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -30,7 +31,7 @@ class AlbumArtRepository @Inject constructor(
     private val albumArtDir : File = File(context.filesDir, "album_art")
         .also{ if(!it.exists()) it.mkdirs()}
 
-    val requestedCovers = mutableSetOf<String>()
+    val requestedCovers: MutableSet<String> = ConcurrentHashMap.newKeySet<String>()
 
     private val _albumArtCollection = MutableStateFlow<Map<String, File?>>(emptyMap())
     val artAlbumCollection = _albumArtCollection.asStateFlow()
@@ -50,12 +51,13 @@ class AlbumArtRepository @Inject constructor(
     }
 
     fun getAlbumArtFile(coverArt: String): File? {
-        if (requestedCovers.contains(coverArt)) return null
-
+        if (requestedCovers.contains(coverArt) || coverArt.isEmpty()) return null
         val fileName = File(coverArt).name
 
         return if (hasImage(fileName)) {
-            getImageFile(fileName)
+            val image = getImageFile(filename = fileName)
+            _albumArtCollection.update { it + (coverArt to image) }
+            image
         } else {
             requestedCovers.add(coverArt)
             requestCover(coverArt)
@@ -64,6 +66,9 @@ class AlbumArtRepository @Inject constructor(
     }
 
     fun getImageFile(filename: String): File {
+        _albumArtCollection.value.forEach { (string, file) ->
+
+        }
         return File(albumArtDir, filename)
     }
 
@@ -76,16 +81,12 @@ class AlbumArtRepository @Inject constructor(
     }
 
     fun receiveCover(name: String, coverImage: String) {
-        println("albumartrepo called")
         val bytes = Base64.decode(coverImage, Base64.DEFAULT)
         val file = getImageFile(File(name).name)
 
         file.writeBytes(bytes)
 
         _albumArtCollection.update { it + (name to file) }
-        _albumArtCollection.value.forEach { string, file ->
-            println("albumartrepo Items in the album art: $string and $file")
-        }
     }
 
     fun removeRequestedArt(name: String){
