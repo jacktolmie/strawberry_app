@@ -10,7 +10,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.strawberry_app.data.entity.PlaylistEntity
 import com.example.strawberry_app.screens.playlistScreen.PlaylistCallbacks
-import com.example.strawberry_app.screens.playlistScreen.PlaylistsData
 
 @Composable
 fun ScrollableTabs(

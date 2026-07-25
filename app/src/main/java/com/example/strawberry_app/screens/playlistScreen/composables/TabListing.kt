@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.strawberry_app.screens.playlistScreen.PlaylistCallbacks
 import com.example.strawberry_app.screens.playlistScreen.PlaylistScreenState
+import com.example.strawberry_app.screens.playlistScreen.PlaylistsData
 
 
 @Composable
@@ -64,9 +65,20 @@ fun TabListing(
         callbacks = callbacks,
         playlistId = playlistId,
         playlistsData = playlistScreenState.playlistsData,
+        playlistName = getPlaylistName(
+            playlistsData = playlistScreenState.playlistsData,
+            playlistId = playlistId
+        ),
         selectedTabIndex = safeIndex,
         modifier = modifier
     )
+}
+
+fun getPlaylistName(
+    playlistsData: PlaylistsData,
+    playlistId: Long
+): String {
+    return playlistsData.playlists.firstOrNull{ it.id == playlistId}?.name ?: ""
 }
 
 @Preview

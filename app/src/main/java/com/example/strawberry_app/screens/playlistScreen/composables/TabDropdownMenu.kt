@@ -30,6 +30,7 @@ fun TabDropdownMenu(
     expanded: Boolean,
     playlistId: Long,
     playlistsData: PlaylistsData,
+    playlistName: String,
     selectedTabIndex: Int,
     onConfirm: (()->Unit, Boolean, Boolean, Int) -> Unit,
     modifier: Modifier = Modifier
@@ -38,7 +39,7 @@ fun TabDropdownMenu(
     var showRepeatDialog by remember { mutableStateOf(false) }
     var newPlaylistName by remember { mutableStateOf("")}
 
-    // If showDialog is true, display RepeatAlert.
+    // If showRepeatDialog is true, display RepeatAlert.
     if (showRepeatDialog) {
         RepeatAlert(
             currentRepeatMode = RepeatModeValues.fromString(playlistsData.playlistState.repeatMode),
@@ -80,35 +81,39 @@ fun TabDropdownMenu(
                             !playlistsData.playlists[selectedTabIndex].favourite
                         )}, false, false, actionString)
                 },
-                playlistName = playlistsData.playlists.firstOrNull{ it.id == playlistId}?.name ?: ""
+                playlistName = playlistName
             )
             DropdownMenuItemComposable(
                 text = R.string.playlist_repeat,
                 iconImage = repeat,
                 onConfirm = { onConfirm({ },false, false, R.string.playlist_repeat)
                     showRepeatDialog = true
-                }
+                },
+                playlistName = playlistName
             )
             DropdownMenuItemComposable(
                 text = R.string.playlist_shuffle,
                 iconImage = shuffle,
                 onConfirm = { onConfirm({ callbacks.shuffleCurrentPlaylist(playlistId) },
                         true, false, R.string.playlist_shuffle)
-                }
+                },
+                playlistName = playlistName
             )
             DropdownMenuItemComposable(
                 text = R.string.playlist_clear,
                 iconImage = clear_all,
                 onConfirm = { onConfirm({ callbacks.clearCurrentPlaylist(playlistId) },
                         true, false, R.string.playlist_clear)
-                }
+                },
+                playlistName = playlistName
             )
             DropdownMenuItemComposable(
                 text = R.string.playlist_delete,
                 iconImage = playlist_remove,
                 onConfirm = { onConfirm({ callbacks.deleteCurrentPlaylist(playlistId) },
                         true, false, R.string.playlist_delete )
-                }
+                },
+                playlistName = playlistName
             )
             DropdownMenuItemComposable(
                 text = R.string.playlist_rename,
@@ -118,15 +123,12 @@ fun TabDropdownMenu(
                         playlistId, newPlaylistName)},
                     true, false, R.string.playlist_rename)
                     showRenameDialot = true
-                }
+                },
+                playlistName = playlistName
             )
         }
     }
 }
-
-fun getPlaylistName(
-    playlistsData: PlaylistsData,
-    playlistId: Long) = playlistsData.playlists.firstOrNull{ it.id == playlistId}?.name ?: ""
 
 @Preview
 @Composable
@@ -137,6 +139,7 @@ fun TabDropdownPreview(){
         expanded = true,
         playlistId = 1L,
         playlistsData = PlaylistsData(),
+        playlistName = "Playlist 1000",
         selectedTabIndex = 0,
         onConfirm = {_,_,_,_ ->},
         modifier = Modifier

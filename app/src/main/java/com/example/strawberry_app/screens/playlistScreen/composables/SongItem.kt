@@ -21,7 +21,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.strawberry_app.data.dao.SongWithPosition
 import com.example.strawberry_app.screens.SongImageComposable
-import com.example.strawberry_app.screens.SongText
 import com.example.strawberry_app.screens.formatTime
 import com.example.strawberry_app.ui.theme.icons.more_horiz
 import java.io.File
@@ -29,7 +28,6 @@ import java.io.File
 @Composable
 fun SongItem(
     song: SongWithPosition,
-    modifier: Modifier = Modifier,
     imageArt: File? = null,
     isPlaying: Boolean = false
 
@@ -57,8 +55,8 @@ fun SongItem(
 
         Spacer(modifier = Modifier.padding(5.dp))
 
-        Column(
-        ) {
+        Column()
+         {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
@@ -112,52 +110,6 @@ fun SongItemPreview() {
             position = 1L,
             title = "Bird Madness",
             url = "Some url"
-        ),
-        modifier = Modifier
-            .size(48.dp) // Absolute size anchor for a clean row
-            .clip(RoundedCornerShape(4.dp))
+        )
     )
 }
-
-/*
-@Composable
-fun SongItem(
-    song: SongWithPosition,
-    modifier: Modifier = Modifier
-){
-    Column( modifier = modifier
-        .background(MaterialTheme.colorScheme.surface)
-        .fillMaxWidth()
-        .padding(horizontal = 16.dp, vertical = 10.dp),
-        horizontalAlignment = Alignment.Start
-    ) {
-        // Row for song title and length
-        Row(modifier = Modifier
-        ) {
-            SongText(
-                text = song.title,
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.weight(1F)
-            )
-            SongText(
-                text = formatTime(song.length),
-                style = MaterialTheme.typography.bodyMedium
-            )
-        }
-
-        // Row for artist and album name
-        Row(modifier = Modifier
-        ){
-            SongText(
-                text = song.artist,
-                style = MaterialTheme.typography.bodySmall,
-                modifier = Modifier.weight(1F)
-                )
-            SongText(
-                text = song.album,
-                style = MaterialTheme.typography.bodySmall
-            )
-        }
-    }
-}
-*/

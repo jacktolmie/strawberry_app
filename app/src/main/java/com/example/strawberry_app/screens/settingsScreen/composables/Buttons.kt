@@ -20,8 +20,8 @@ import androidx.compose.ui.unit.dp
 import com.example.strawberry_app.R
 import com.example.strawberry_app.network.ConnectionState
 import com.example.strawberry_app.network.ConnectionState.Connected
-import com.example.strawberry_app.screens.ButtonText
 import com.example.strawberry_app.screens.TextBox
+import com.example.strawberry_app.screens.playlistScreen.composables.ButtonText
 import com.example.strawberry_app.screens.settingsScreen.SettingsCallbacks
 import com.example.strawberry_app.server.SettingsUiState
 

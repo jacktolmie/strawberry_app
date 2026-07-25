@@ -31,7 +31,7 @@ class AlbumArtRepository @Inject constructor(
     private val albumArtDir : File = File(context.filesDir, "album_art")
         .also{ if(!it.exists()) it.mkdirs()}
 
-    val requestedCovers: MutableSet<String> = ConcurrentHashMap.newKeySet<String>()
+    val requestedCovers: MutableSet<String> = ConcurrentHashMap.newKeySet()
 
     private val _albumArtCollection = MutableStateFlow<Map<String, File?>>(emptyMap())
     val artAlbumCollection = _albumArtCollection.asStateFlow()

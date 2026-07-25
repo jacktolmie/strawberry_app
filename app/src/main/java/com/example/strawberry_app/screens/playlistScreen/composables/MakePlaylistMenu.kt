@@ -24,6 +24,7 @@ fun MakePlaylistMenu(
     callbacks: PlaylistCallbacks,
     playlistId: Long,
     playlistsData: PlaylistsData,
+    playlistName: String,
     selectedTabIndex: Int,
     modifier: Modifier = Modifier
 ){
@@ -36,6 +37,7 @@ fun MakePlaylistMenu(
         Alert(
             action = actionString,
             question = R.string.playlist_question,
+            playlistName = playlistName,
             onConfirm = {
                 pendingAction?.invoke()
                 showAlert = false
@@ -55,6 +57,7 @@ fun MakePlaylistMenu(
             callbacks = callbacks,
             playlistId = playlistId,
             playlistsData = playlistsData,
+            playlistName = playlistName,
             selectedTabIndex = selectedTabIndex,
             onConfirm = { action, dialog, expand, actionText ->
                 pendingAction = action
