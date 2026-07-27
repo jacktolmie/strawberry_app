@@ -16,10 +16,10 @@ import com.example.strawberry_app.screens.playlistScreen.PlaylistCallbacks
 import com.example.strawberry_app.screens.playlistScreen.PlaylistsData
 import com.example.strawberry_app.screens.playlistScreen.RepeatModeValues
 import com.example.strawberry_app.ui.theme.icons.clear_all
+import com.example.strawberry_app.ui.theme.icons.drive_file_rename
 import com.example.strawberry_app.ui.theme.icons.favorite
 import com.example.strawberry_app.ui.theme.icons.more_vert
 import com.example.strawberry_app.ui.theme.icons.playlist_remove
-import com.example.strawberry_app.ui.theme.icons.drive_file_rename
 import com.example.strawberry_app.ui.theme.icons.repeat
 import com.example.strawberry_app.ui.theme.icons.shuffle
 
@@ -35,9 +35,9 @@ fun TabDropdownMenu(
     onConfirm: (()->Unit, Boolean, Boolean, Int) -> Unit,
     modifier: Modifier = Modifier
 ){
-    var showRenameDialot by remember { mutableStateOf(false)}
+    var showRenameDialog by remember { mutableStateOf(false)}
     var showRepeatDialog by remember { mutableStateOf(false) }
-    var newPlaylistName by remember { mutableStateOf("")}
+    var newPlaylistName by remember(playlistName) { mutableStateOf(playlistName)}
 
     // If showRepeatDialog is true, display RepeatAlert.
     if (showRepeatDialog) {
@@ -51,9 +51,15 @@ fun TabDropdownMenu(
         )
     }
 
-    if (showRenameDialot) {
+    // If showRenameDialog is true, display RenameAlert
+    if (showRenameDialog) {
         RenameAlert(
-
+            name = newPlaylistName,
+            onConfirm = { name ->
+                showRenameDialog = false
+                callbacks.renameCurrentPlaylist(playlistId, name)
+            },
+            onDismiss = { showRenameDialog = false }
         )
     }
 
@@ -118,11 +124,9 @@ fun TabDropdownMenu(
             DropdownMenuItemComposable(
                 text = R.string.playlist_rename,
                 iconImage = drive_file_rename,
-                onConfirm = { onConfirm({
-                    callbacks.renameCurrentPlaylist(
-                        playlistId, newPlaylistName)},
-                    true, false, R.string.playlist_rename)
-                    showRenameDialot = true
+                onConfirm = { onConfirm({},
+                    false, false, R.string.playlist_rename)
+                    showRenameDialog = true
                 },
                 playlistName = playlistName
             )
