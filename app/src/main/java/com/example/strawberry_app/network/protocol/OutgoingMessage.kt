@@ -40,6 +40,10 @@ sealed class OutgoingMessage {
         val songsList: List<Long>): OutgoingMessage()
 
     @Serializable
+    @SerialName("remove-unavailable-songs")
+    data class RemoveUnavailableSongs(val id: Long): OutgoingMessage()
+
+    @Serializable
     @SerialName("rename-playlist")
     data class RenamePlaylist(val id: Long, val name: String): OutgoingMessage()
 
@@ -55,9 +59,6 @@ sealed class OutgoingMessage {
     data class RequestCover(
         @SerialName("cover_art")
         val coverArt: String
-//        @SerialName("playlist-id")
-//        val playlistId: Long,
-//        val row: Long
     ): OutgoingMessage()
     @Serializable
     @SerialName("send-playlist-song")

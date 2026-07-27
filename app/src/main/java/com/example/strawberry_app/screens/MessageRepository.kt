@@ -166,6 +166,7 @@ class MessageRepository @Inject constructor(
                     is ResponseType.IsPlaylistAFavourite -> { serverResponseMessage("Is playlist ${message.id} a favourite? ${message.isFavourite}.") }
                     is ResponseType.PlaylistClosed -> { serverResponseMessage("Playlist ${message.id} closed.") }
                     is ResponseType.RemovedDuplicatesFromPlaylist -> { serverResponseMessage("Removed duplicates from playlist.") }
+                    is ResponseType.RemoveUnavailableSongs -> { serverResponseMessage("removed_unavailable_songs") }
                     is ResponseType.RenamePlaylist -> { serverResponseMessage("Renamed playlist ${message.id} to ${message.name}.") }
                     is ResponseType.RemovedSongFromPlaylist -> { serverResponseMessage("Removed songs from playlist ${message.id}.") }
                     is ResponseType.RunningCommand -> { serverResponseMessage("Running command ${message.command}.") }

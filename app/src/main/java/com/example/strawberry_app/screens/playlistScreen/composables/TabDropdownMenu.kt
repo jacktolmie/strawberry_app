@@ -16,12 +16,14 @@ import com.example.strawberry_app.screens.playlistScreen.PlaylistCallbacks
 import com.example.strawberry_app.screens.playlistScreen.PlaylistsData
 import com.example.strawberry_app.screens.playlistScreen.RepeatModeValues
 import com.example.strawberry_app.ui.theme.icons.clear_all
+import com.example.strawberry_app.ui.theme.icons.delete_sweep
 import com.example.strawberry_app.ui.theme.icons.drive_file_rename
 import com.example.strawberry_app.ui.theme.icons.favorite
 import com.example.strawberry_app.ui.theme.icons.more_vert
 import com.example.strawberry_app.ui.theme.icons.playlist_remove
 import com.example.strawberry_app.ui.theme.icons.repeat
 import com.example.strawberry_app.ui.theme.icons.shuffle
+import com.example.strawberry_app.ui.theme.icons.stack_off
 
 @Composable
 fun TabDropdownMenu(
@@ -63,9 +65,7 @@ fun TabDropdownMenu(
         )
     }
 
-    Box(
-        modifier = modifier
-    )
+    Box( modifier = modifier )
     {
         IconButton(onClick = {
             onConfirm({}, false, !expanded, actionString)
@@ -118,6 +118,22 @@ fun TabDropdownMenu(
                 iconImage = playlist_remove,
                 onConfirm = { onConfirm({ callbacks.deleteCurrentPlaylist(playlistId) },
                         true, false, R.string.playlist_delete )
+                    },
+                playlistName = playlistName
+            )
+            DropdownMenuItemComposable(
+                text = R.string.playlist_remove_duplicates,
+                iconImage = stack_off,
+                onConfirm = { onConfirm ({ callbacks.removeDuplicatesInPlaylist(playlistId) } ,
+                        true, false, R.string.playlist_remove_duplicates_from )
+                    },
+                playlistName = playlistName
+            )
+            DropdownMenuItemComposable(
+                text = R.string.playlist_remove_unavailable,
+                iconImage = delete_sweep,
+                onConfirm = { onConfirm({ callbacks.removeUnavailableSongs(playlistId) },
+                    true, false, R.string.playlist_remove_unavailable_from)
                 },
                 playlistName = playlistName
             )

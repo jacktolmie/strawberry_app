@@ -90,6 +90,7 @@ class PlaylistViewModel @Inject constructor(
         playlistRepository.sendCommand(OutgoingMessage.RemoveCurrentSongsFromPlaylist(id = id, songsList = songsList))
     }
     fun removeDuplicatesInPlaylist(id: Long) = playlistRepository.sendCommand(OutgoingMessage.RemoveDuplicatesFromPlaylist(id = id))
+    fun removeUnavailableSongs(id: Long) = playlistRepository.sendCommand(OutgoingMessage.RemoveUnavailableSongs(id = id))
     fun renameCurrentPlaylist(id: Long, name: String) {
         playlistRepository.sendCommand(OutgoingMessage.RenamePlaylist(id = id, name = name))
     }

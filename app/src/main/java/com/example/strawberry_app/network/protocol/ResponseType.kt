@@ -21,6 +21,7 @@ object ResponseTypeSerializer : JsonContentPolymorphicSerializer<ResponseType>(R
             "is_playlist_a_favourite" -> ResponseType.IsPlaylistAFavourite.serializer()
             "playlist_closed" -> ResponseType.PlaylistClosed.serializer()
             "removed_duplicates_from_playlist" -> ResponseType.RemovedDuplicatesFromPlaylist.serializer()
+            "removed_unavailable_songs" -> ResponseType.RemoveUnavailableSongs.serializer()
             "rename_playlist" -> ResponseType.RenamePlaylist.serializer()
             "removed_songs_from_playlist" -> ResponseType.RemovedSongFromPlaylist.serializer()
             "running_command" -> ResponseType.RunningCommand.serializer()
@@ -67,6 +68,10 @@ sealed  class ResponseType: IncomingMessage() {
     @JsonIgnoreUnknownKeys
     @SerialName("removed_duplicates_from_playlist")
     data object RemovedDuplicatesFromPlaylist: ResponseType()
+
+    @Serializable
+    @SerialName("removed_unavailable_songs")
+    data object RemoveUnavailableSongs: ResponseType()
 
     @Serializable
     @JsonIgnoreUnknownKeys

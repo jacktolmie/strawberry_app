@@ -9,6 +9,10 @@
     <string name="playlist_delete">Delete Playlist</string>
     <string name="playlist_length">Length</string>
     <string name="playlist_question">Would you like to</string>
+    <string name="playlist_remove_duplicates">Remove Duplicates</string>
+    <string name="playlist_remove_duplicates_from">Remove Duplicates From</string>
+    <string name="playlist_remove_unavailable">Remove Unavailable Songs</string>
+    <string name="playlist_remove_unavailable_from">Remove Unavailable Songs From</string>
     <string name="playlist_rename">Rename</string>
     <string name="playlist_repeat">Repeat</string>
     <string name="playlist_repeat_choose">Choose Repeat Option</string>

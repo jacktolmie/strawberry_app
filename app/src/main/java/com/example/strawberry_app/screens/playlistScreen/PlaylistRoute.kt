@@ -5,6 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.strawberry_app.music.Playlist
+import com.example.strawberry_app.network.protocol.OutgoingMessage
 import com.example.strawberry_app.screens.playlistScreen.screens.PlaylistMediumScreen
 import java.io.File
 
@@ -22,6 +23,7 @@ data class PlaylistCallbacks(
     val onPlaylistSelected: (id: Long) -> Unit = {},
     val removeSongsCurrentPlaylist: (id: Long, songsList: List<Long>) -> Unit = { _,_ ->},
     val removeDuplicatesInPlaylist: (id: Long) -> Unit = {},
+    val removeUnavailableSongs: (id: Long) -> Unit = {},
     val renameCurrentPlaylist: (id: Long, name: String) -> Unit = { _,_ ->},
     val sendActivePlaylistSong: (id: Long, songIndex: Long) -> Unit = { _,_ ->},
     val sendAllPlaylists: (playlists: List<Playlist>) -> Unit = {},
@@ -49,6 +51,7 @@ fun PlaylistRoute(
         onPlaylistSelected = playlistViewModel::onPlaylistSelected,
         removeSongsCurrentPlaylist = playlistViewModel::removeSongsCurrentPlaylist,
         removeDuplicatesInPlaylist = playlistViewModel::removeDuplicatesInPlaylist,
+        removeUnavailableSongs = playlistViewModel::removeUnavailableSongs,
         renameCurrentPlaylist = playlistViewModel::renameCurrentPlaylist,
         sendActivePlaylistSong = playlistViewModel::sendActivePlaylistSong,
         sendAllPlaylists = playlistViewModel::sendAllPlaylists,
