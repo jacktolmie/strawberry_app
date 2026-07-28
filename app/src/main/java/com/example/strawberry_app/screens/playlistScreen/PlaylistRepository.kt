@@ -175,10 +175,15 @@ class PlaylistRepository @Inject constructor(
 
     // Get information about playlists and songs in each one.
     fun getAlbumArtFile(coverArt: String): File? {
+
         return if (albumArtRepository.hasImage(coverArt)){
+            println("playlistrepo getalbumartfile hasimage with name $coverArt")
             albumArtRepository.getImageFile(coverArt)
-        }else
+        }else{
+            println("playlistrepo getalbumartfile calling album repo with name $coverArt")
             albumArtRepository.getAlbumArtFile(coverArt)
+        }
+
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -204,6 +209,7 @@ class PlaylistRepository @Inject constructor(
     }
 
     fun setCurrentPlaylist(id: Long) {
+        println("playlistrepo setCurrentPlaylist called with id: $id")
         _playlistState.update { it.copy(currentPlaylist = id) }
     }
 

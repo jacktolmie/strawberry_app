@@ -16,7 +16,6 @@ import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 import javax.inject.Singleton
 
-
 @Singleton
 class AlbumArtRepository @Inject constructor(
     @param:ApplicationContext
@@ -42,9 +41,7 @@ class AlbumArtRepository @Inject constructor(
             return
         }
         if (!hasImage(name)){
-            scope.launch { networkManager.sendCommand(
-                OutgoingMessage.RequestCover(name) )
-            }
+            requestCover(name)
             return
         }
         notifyAlbumArtReady(name)
@@ -70,7 +67,7 @@ class AlbumArtRepository @Inject constructor(
     }
 
     fun hasImage(name: String): Boolean{
-        return File(albumArtDir, name).exists()
+        return File(albumArtDir, File(name).name).exists()
     }
 
     fun notifyAlbumArtReady(name: String){

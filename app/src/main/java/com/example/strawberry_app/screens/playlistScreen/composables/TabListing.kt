@@ -46,6 +46,7 @@ fun TabListing(
             onTabSelected = { tabIndex: Int, id: Long ->
                 selectedTabIndex = tabIndex
                 playlistId = id
+                callbacks.onPlaylistSelected(id)
             },
             scrollState = scrollState
         )
@@ -57,6 +58,7 @@ fun TabListing(
             onTabSelected = { tabIndex: Int, id: Long ->
                 selectedTabIndex = tabIndex
                 playlistId = id
+                callbacks.onPlaylistSelected(id)
             }
         )
     }

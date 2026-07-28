@@ -62,6 +62,7 @@ class PlayerRepository @Inject constructor(
     }
 
     fun getAlbumArtFile(name: String): File? {
-        return playlistRepository.getAlbumArtFile(name)
+        return albumArtRepository.getAlbumArtFile(name)
+//        return playlistRepository.getAlbumArtFile(name)
     }
 }

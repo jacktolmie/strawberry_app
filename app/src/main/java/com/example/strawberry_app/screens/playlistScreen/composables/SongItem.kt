@@ -2,6 +2,7 @@ package com.example.strawberry_app.screens.playlistScreen.composables
 
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,11 +23,15 @@ import androidx.compose.ui.unit.dp
 import com.example.strawberry_app.data.dao.SongWithPosition
 import com.example.strawberry_app.screens.SongImageComposable
 import com.example.strawberry_app.screens.formatTime
+import com.example.strawberry_app.screens.playlistScreen.PlaylistCallbacks
 import com.example.strawberry_app.ui.theme.icons.more_horiz
 import java.io.File
 
 @Composable
 fun SongItem(
+    callbacks: PlaylistCallbacks,
+    playlistId: Long,
+    position: Long,
     song: SongWithPosition,
     imageArt: File? = null,
     isPlaying: Boolean = false
@@ -34,6 +39,13 @@ fun SongItem(
 ) {
     Row(
         modifier = Modifier
+            .combinedClickable(
+                onClick = {}, // Finish this if needed single click
+                onDoubleClick = {
+                    callbacks.sendActivePlaylistSong(playlistId, position)
+                },
+                onLongClick = {} // Finish this for long press to move song on playlist.
+            )
             .background(
                 color =
                     if ( isPlaying ) MaterialTheme.colorScheme.primaryContainer
@@ -100,6 +112,9 @@ fun SongItem(
 @Composable
 fun SongItemPreview() {
     SongItem(
+        callbacks = PlaylistCallbacks(),
+        playlistId = 1L,
+        position = 1L,
         song = SongWithPosition(
             artist = "The Amazing Band",
             album = "The best of Amazing Band",

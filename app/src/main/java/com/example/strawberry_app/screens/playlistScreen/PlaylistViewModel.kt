@@ -71,6 +71,7 @@ class PlaylistViewModel @Inject constructor(
     )
 
     fun onPlaylistSelected(id: Long) {
+        println("playlistvm onplaylistselected with id: $id")
         playlistRepository.setCurrentPlaylist(id)
     }
 

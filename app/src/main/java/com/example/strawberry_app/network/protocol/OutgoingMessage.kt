@@ -62,7 +62,10 @@ sealed class OutgoingMessage {
     ): OutgoingMessage()
     @Serializable
     @SerialName("send-playlist-song")
-    data class SendActivePlaylistSong(val id: Long, val songIndex: Long): OutgoingMessage()
+    data class SendActivePlaylistSong(
+        val id: Long,
+        @SerialName("song_index")
+        val songIndex: Long): OutgoingMessage()
 
     @Serializable
     @SerialName("send-all-playlists")
