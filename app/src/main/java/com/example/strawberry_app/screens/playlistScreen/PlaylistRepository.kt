@@ -175,15 +175,7 @@ class PlaylistRepository @Inject constructor(
 
     // Get information about playlists and songs in each one.
     fun getAlbumArtFile(coverArt: String): File? {
-
-        return if (albumArtRepository.hasImage(coverArt)){
-            println("playlistrepo getalbumartfile hasimage with name $coverArt")
-            albumArtRepository.getImageFile(coverArt)
-        }else{
-            println("playlistrepo getalbumartfile calling album repo with name $coverArt")
-            albumArtRepository.getAlbumArtFile(coverArt)
-        }
-
+        return albumArtRepository.getAlbumArtFile(coverArt)
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)

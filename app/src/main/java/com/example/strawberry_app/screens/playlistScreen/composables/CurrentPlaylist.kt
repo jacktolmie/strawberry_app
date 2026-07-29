@@ -37,6 +37,7 @@ fun CurrentPlaylist(
             if (!albumArtCollection.contains(song.coverImage)){
                 callbacks.getAlbumArtFile(song.coverImage)
             }
+
             SongItem(
                 callbacks = callbacks,
                 playlistId = playlistScreenState.playlistsData.playlistState.currentPlaylist,

@@ -16,6 +16,7 @@
     <string name="playlist_remove_unavailable">Remove Unavailable Songs</string>
     <string name="playlist_remove_unavailable_from">Remove Unavailable Songs From</string>
     <string name="playlist_rename">Rename</string>
+    <string name="playlist_reorder">Reorder Playlist</string>
     <string name="playlist_repeat">Repeat</string>
     <string name="playlist_repeat_choose">Choose Repeat Option</string>
     <string name="playlist_shuffle">Shuffle Playlist</string>

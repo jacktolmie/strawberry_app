@@ -2,7 +2,6 @@ package com.example.strawberry_app.screens.playlistScreen.composables
 
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -11,6 +10,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.visible
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -22,14 +22,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.strawberry_app.R
 import com.example.strawberry_app.data.dao.SongWithPosition
 import com.example.strawberry_app.screens.SongImageComposable
 import com.example.strawberry_app.screens.formatTime
 import com.example.strawberry_app.screens.playlistScreen.PlaylistCallbacks
-import com.example.strawberry_app.ui.theme.icons.more_horiz
+import com.example.strawberry_app.ui.theme.icons.reorder
 import java.io.File
 
 @Composable
@@ -42,8 +44,9 @@ fun SongItem(
     isPlaying: Boolean = false
 
 ) {
-    var showDropdown by remember { mutableStateOf( false) }
-    var expandAllRows by remember { mutableStateOf( false) }
+    var showDropdown by remember { mutableStateOf(false) }
+    var expandAllRows by remember { mutableStateOf(false) }
+    var showReorder by remember { mutableStateOf(true) }
 //    var expanded by remember { mutableStateOf(false) }
 
 //    if (showDropdown){
@@ -75,6 +78,15 @@ fun SongItem(
         verticalAlignment = Alignment.CenterVertically,
 
     ) {
+        Icon(modifier = Modifier
+            .visible(showReorder),
+            imageVector = reorder,
+            contentDescription = stringResource(R.string.playlist_reorder)
+
+        )
+
+        Spacer(modifier = Modifier.padding(5.dp))
+
         SongImageComposable(
             imageArt = imageArt,
             crossfade = false,
