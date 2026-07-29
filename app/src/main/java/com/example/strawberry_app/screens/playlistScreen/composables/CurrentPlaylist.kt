@@ -28,9 +28,6 @@ fun CurrentPlaylist(
     playlistScreenState: PlaylistScreenState,
     modifier: Modifier = Modifier
 ){
-
-//    var playlistId by remember { mutableLongStateOf(playlistScreenState.playlistsData.playlistState.currentPlaylist) }
-
     LazyColumn(modifier = modifier
         .fillMaxWidth()
         .padding(5.dp)

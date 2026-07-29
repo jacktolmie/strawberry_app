@@ -1,6 +1,7 @@
 package com.example.strawberry_app.screens.playlistScreen.composables
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.visible
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
@@ -16,17 +17,19 @@ import com.example.strawberry_app.ui.theme.icons.playlist_remove
 fun DropdownMenuItemComposable(
     iconImage: ImageVector,
     onConfirm: ()->Unit,
-    playlistName: String,
+    itemName: String,
     text: Int,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isIconVisible: Boolean = true
 ) {
     DropdownMenuItem(
         modifier = modifier,
         text = { DropdownText(text) },
         leadingIcon = {
             Icon(
+                modifier = Modifier.visible(isIconVisible),
                 imageVector = iconImage,
-                contentDescription = "${stringResource(text)} $playlistName"
+                contentDescription = "${stringResource(text)} $itemName"
             )
         },
         onClick = onConfirm
@@ -39,7 +42,7 @@ fun DropdownPreview(){
     DropdownMenuItemComposable(
         iconImage =playlist_remove,
         onConfirm = {},
-        playlistName = "Playlist 1",
+        itemName = "Playlist 1",
         text = R.string.playlist_delete,
         Modifier.background(Color.White)
     )

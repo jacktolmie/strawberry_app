@@ -7,7 +7,9 @@
     <string name="playlist_clear">Clear Playlist</string>
     <string name="playlist_confirm">Confirm</string>
     <string name="playlist_delete">Delete Playlist</string>
+    <string name="playlist_delete_song">Delete Song</string>
     <string name="playlist_length">Length</string>
+    <string name="playlist_multi_select">Multi Select</string>
     <string name="playlist_question">Would you like to</string>
     <string name="playlist_remove_duplicates">Remove Duplicates</string>
     <string name="playlist_remove_duplicates_from">Remove Duplicates From</string>

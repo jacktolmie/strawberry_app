@@ -87,7 +87,7 @@ fun TabDropdownMenu(
                             !playlistsData.playlists[selectedTabIndex].favourite
                         )}, false, false, actionString)
                 },
-                playlistName = playlistName
+                itemName = playlistName
             )
             DropdownMenuItemComposable(
                 text = R.string.playlist_repeat,
@@ -95,7 +95,7 @@ fun TabDropdownMenu(
                 onConfirm = { onConfirm({ },false, false, R.string.playlist_repeat)
                     showRepeatDialog = true
                 },
-                playlistName = playlistName
+                itemName = playlistName
             )
             DropdownMenuItemComposable(
                 text = R.string.playlist_shuffle,
@@ -103,15 +103,16 @@ fun TabDropdownMenu(
                 onConfirm = { onConfirm({ callbacks.shuffleCurrentPlaylist(playlistId) },
                         true, false, R.string.playlist_shuffle)
                 },
-                playlistName = playlistName
+                itemName = playlistName
             )
+
             DropdownMenuItemComposable(
                 text = R.string.playlist_clear,
                 iconImage = clear_all,
                 onConfirm = { onConfirm({ callbacks.clearCurrentPlaylist(playlistId) },
                         true, false, R.string.playlist_clear)
                 },
-                playlistName = playlistName
+                itemName = playlistName
             )
             DropdownMenuItemComposable(
                 text = R.string.playlist_delete,
@@ -119,7 +120,7 @@ fun TabDropdownMenu(
                 onConfirm = { onConfirm({ callbacks.deleteCurrentPlaylist(playlistId) },
                         true, false, R.string.playlist_delete )
                     },
-                playlistName = playlistName
+                itemName = playlistName
             )
             DropdownMenuItemComposable(
                 text = R.string.playlist_remove_duplicates,
@@ -127,7 +128,7 @@ fun TabDropdownMenu(
                 onConfirm = { onConfirm ({ callbacks.removeDuplicatesInPlaylist(playlistId) } ,
                         true, false, R.string.playlist_remove_duplicates_from )
                     },
-                playlistName = playlistName
+                itemName = playlistName
             )
             DropdownMenuItemComposable(
                 text = R.string.playlist_remove_unavailable,
@@ -135,7 +136,7 @@ fun TabDropdownMenu(
                 onConfirm = { onConfirm({ callbacks.removeUnavailableSongs(playlistId) },
                     true, false, R.string.playlist_remove_unavailable_from)
                 },
-                playlistName = playlistName
+                itemName = playlistName
             )
             DropdownMenuItemComposable(
                 text = R.string.playlist_rename,
@@ -144,7 +145,7 @@ fun TabDropdownMenu(
                     false, false, R.string.playlist_rename)
                     showRenameDialog = true
                 },
-                playlistName = playlistName
+                itemName = playlistName
             )
         }
     }

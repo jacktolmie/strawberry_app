@@ -21,7 +21,7 @@ fun MedLrgScreenTabs(
     Column(modifier = modifier
         .fillMaxWidth()
         .padding(5.dp)
-    ){playlistScreenState.playlistsData
+    ){
         // Create the scrollable tab
         if (playlistScreenState.playlistsData.playlists.isNotEmpty()) {
             TabListing(callbacks, playlistScreenState)
