@@ -44,10 +44,13 @@ fun CurrentPlaylist(
                 position = song.position,
                 song = song,
                 imageArt = albumArtCollection[song.coverImage],
-                // If current and active playlist are the same, highlight current song.
+                // If current and active playlist are the same, and the song position
+                // matches the active playlist index, highlight current song.
                 isPlaying = if(
                     playlistScreenState.playlistsData.playlistState.activePlaylist ==
-                    playlistScreenState.playlistsData.playlistState.currentPlaylist
+                    playlistScreenState.playlistsData.playlistState.currentPlaylist &&
+                    playlistScreenState.playlistsData.playlistState.currentSongIndex ==
+                    song.position
                     ) callbacks.isCurrentPlaying(song.id) else false
 
             )
