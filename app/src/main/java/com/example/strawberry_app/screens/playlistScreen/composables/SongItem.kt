@@ -31,6 +31,7 @@ import com.example.strawberry_app.data.dao.SongWithPosition
 import com.example.strawberry_app.screens.SongImageComposable
 import com.example.strawberry_app.screens.formatTime
 import com.example.strawberry_app.screens.playlistScreen.PlaylistCallbacks
+import com.example.strawberry_app.ui.theme.icons.check_circle
 import com.example.strawberry_app.ui.theme.icons.reorder
 import java.io.File
 
@@ -46,9 +47,11 @@ fun SongItem(
 ) {
     var showDropdown by remember { mutableStateOf(false) }
     var expandAllRows by remember { mutableStateOf(false) }
-    var showReorder by remember { mutableStateOf(true) }
+    var showSelectIcon by remember { mutableStateOf(true) }
+    var selectIcon by remember { mutableStateOf( reorder) }
 //    var expanded by remember { mutableStateOf(false) }
 
+    // Do I need this? Add song rating etc.???
 //    if (showDropdown){
 //        SongDropdownMenu(
 //            expanded = true,
@@ -61,11 +64,15 @@ fun SongItem(
     Row(
         modifier = Modifier
             .combinedClickable(
-                onClick = {}, // Finish this if needed single click
+                onClick = {
+                    selectIcon = check_circle
+                },
                 onDoubleClick = {
                     callbacks.sendActivePlaylistSong(playlistId, position)
                 },
-                onLongClick = {} // Finish this for long press to move song on playlist.
+                onLongClick = {
+
+                } // Finish this for long press to move song on playlist.
             )
             .background(
                 color =
@@ -75,11 +82,10 @@ fun SongItem(
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 10.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically,
-
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(modifier = Modifier
-            .visible(showReorder),
+            .visible(showSelectIcon),
             imageVector = reorder,
             contentDescription = stringResource(R.string.playlist_reorder)
 

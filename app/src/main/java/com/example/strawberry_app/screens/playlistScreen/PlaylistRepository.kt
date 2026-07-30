@@ -1,5 +1,7 @@
 package com.example.strawberry_app.screens.playlistScreen
 
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.State
 import androidx.room.withTransaction
 import com.example.strawberry_app.data.dao.PlaylistDao
 import com.example.strawberry_app.data.dao.PlaylistSongDao
@@ -54,7 +56,9 @@ class PlaylistRepository @Inject constructor(
 
     val currentSongData: Flow<SongWithPosition?> = getCurrentSong()
 
-    val latestCover = albumArtRepository.latestCover
+    private val _selectedSongs = mutableStateOf<Set<Long>>(emptySet())
+    val selectedSongs: State<Set<Long>> = _selectedSongs
+
 
     val artAlbumCollection = albumArtRepository.artAlbumCollection
 
