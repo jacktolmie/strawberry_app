@@ -1,5 +1,10 @@
 package com.example.strawberry_app.screens.playlistScreen
 
+import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.strawberry_app.data.dao.SongWithPosition
@@ -70,17 +75,32 @@ class PlaylistViewModel @Inject constructor(
         initialValue = PlaylistsData()
     )
 
-    fun onPlaylistSelected(id: Long) {
-        println("playlistvm onplaylistselected with id: $id")
-        playlistRepository.setCurrentPlaylist(id)
-    }
+    fun onPlaylistSelected(id: Long) =playlistRepository.setCurrentPlaylist(id)
 
-    fun getAlbumArtFile(coverArt: String): File? {
-        return playlistRepository.getAlbumArtFile(coverArt)
-    }
+    fun getAlbumArtFile(coverArt: String): File? = playlistRepository.getAlbumArtFile(coverArt)
 
-    fun isCurrentPlaying(id: Long): Boolean {
-        return id == playlistState.value.currentSongWithPosition?.id
+    fun isCurrentPlaying(id: Long) = id == playlistState.value.currentSongWithPosition?.id
+
+    // Functions etc. for selecting songs in playlist to delete
+    private val _selectedSongs = mutableStateOf<List<Long>>(emptyList())
+    val selectedSongs: State<List<Long>> = _selectedSongs
+
+    val isInSelectedMode: StateFlow<Boolean> = snapshotFlow {
+        _selectedSongs.value.isNotEmpty()
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.Eagerly,
+        initialValue = false
+    )
+
+    fun deleteSelectedSongs(id: Long){
+        removeSongsCurrentPlaylist(id = id,  _selectedSongs.value)
+        _selectedSongs.value = emptyList()
+    }
+    fun toggleSelection(songIndex: Long){
+        _selectedSongs.value = if(_selectedSongs.value.contains(songIndex))
+             _selectedSongs.value.minus(songIndex)
+        else _selectedSongs.value.plus(songIndex)
     }
 
     // Functions to send playlist changes to the server.
@@ -89,6 +109,7 @@ class PlaylistViewModel @Inject constructor(
     fun deleteCurrentPlaylist(id: Long) = playlistRepository.sendCommand(OutgoingMessage.DeleteCurrentPlaylist(id))
     fun removeSongsCurrentPlaylist(id: Long, songsList: List<Long>){
         playlistRepository.sendCommand(OutgoingMessage.RemoveCurrentSongsFromPlaylist(id = id, songsList = songsList))
+        _selectedSongs.value = emptyList()
     }
     fun removeDuplicatesInPlaylist(id: Long) = playlistRepository.sendCommand(OutgoingMessage.RemoveDuplicatesFromPlaylist(id = id))
     fun removeUnavailableSongs(id: Long) = playlistRepository.sendCommand(OutgoingMessage.RemoveUnavailableSongs(id = id))

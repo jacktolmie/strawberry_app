@@ -11,17 +11,19 @@ import java.io.File
 
 data class PlaylistScreenState(
     val playlistsData: PlaylistsData = PlaylistsData(),
-    val albumArtFile: Map<String, File?> = emptyMap()
+    val albumArtFile: Map<String, File?> = emptyMap(),
+    val isInSelectedMode: Boolean = false,
+    val selectedSongs: List<Long> = emptyList()
 )
 
 data class PlaylistCallbacks(
     val clearCurrentPlaylist: (id: Long) -> Unit = {},
     val closeCurrentPlaylist: (id: Long) -> Unit = {},
     val deleteCurrentPlaylist: (id: Long) -> Unit = {},
+    val deleteSelectedSongs: (id: Long) -> Unit = {},
     val getAlbumArtFile: (coverArt: String) -> File? = {null},
     val isCurrentPlaying: (id: Long) -> Boolean = { false },
     val onPlaylistSelected: (id: Long) -> Unit = {},
-    val removeSongsCurrentPlaylist: (id: Long, songsList: List<Long>) -> Unit = { _,_ ->},
     val removeDuplicatesInPlaylist: (id: Long) -> Unit = {},
     val removeUnavailableSongs: (id: Long) -> Unit = {},
     val renameCurrentPlaylist: (id: Long, name: String) -> Unit = { _,_ ->},
@@ -32,7 +34,8 @@ data class PlaylistCallbacks(
     val sendRepeatMode: (mode: String) -> Unit = {},
     val setCurrentPlaylist: (id: Long) -> Unit = {},
     val shuffleAllPlaylists: () -> Unit = {},
-    val shuffleCurrentPlaylist: (id: Long) -> Unit = {}
+    val shuffleCurrentPlaylist: (id: Long) -> Unit = {},
+    val toggleSelection: (id: Long) -> Unit = {}
     )
 
 @Composable
@@ -41,15 +44,17 @@ fun PlaylistRoute(
 ){
     val playlistsData by playlistViewModel.playlistsData.collectAsStateWithLifecycle()
     val albumArtFile by playlistViewModel.albumArtCollection.collectAsStateWithLifecycle()
+    val isInSelectedMode by playlistViewModel.isInSelectedMode.collectAsStateWithLifecycle()
+    val selectedSongs by playlistViewModel.selectedSongs
 
     val callbacks = PlaylistCallbacks(
         clearCurrentPlaylist = playlistViewModel::clearCurrentPlaylist,
         closeCurrentPlaylist = playlistViewModel::closeCurrentPlaylist,
         deleteCurrentPlaylist = playlistViewModel::deleteCurrentPlaylist,
+        deleteSelectedSongs = playlistViewModel::deleteSelectedSongs,
         getAlbumArtFile = playlistViewModel::getAlbumArtFile,
         isCurrentPlaying = playlistViewModel::isCurrentPlaying,
         onPlaylistSelected = playlistViewModel::onPlaylistSelected,
-        removeSongsCurrentPlaylist = playlistViewModel::removeSongsCurrentPlaylist,
         removeDuplicatesInPlaylist = playlistViewModel::removeDuplicatesInPlaylist,
         removeUnavailableSongs = playlistViewModel::removeUnavailableSongs,
         renameCurrentPlaylist = playlistViewModel::renameCurrentPlaylist,
@@ -60,13 +65,15 @@ fun PlaylistRoute(
         sendRepeatMode = playlistViewModel::sendRepeatMode,
         setCurrentPlaylist = playlistViewModel::setCurrentPlaylist,
         shuffleAllPlaylists = playlistViewModel::shuffleAllPlaylists,
-        shuffleCurrentPlaylist = playlistViewModel::shuffleCurrentPlaylist
-
+        shuffleCurrentPlaylist = playlistViewModel::shuffleCurrentPlaylist,
+        toggleSelection = playlistViewModel::toggleSelection
     )
 
     val playlistScreenState = PlaylistScreenState(
         playlistsData = playlistsData,
-        albumArtFile = albumArtFile
+        albumArtFile = albumArtFile,
+        isInSelectedMode = isInSelectedMode,
+        selectedSongs = selectedSongs
     )
 
     PlaylistMediumScreen(

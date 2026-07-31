@@ -31,6 +31,7 @@ import com.example.strawberry_app.data.dao.SongWithPosition
 import com.example.strawberry_app.screens.SongImageComposable
 import com.example.strawberry_app.screens.formatTime
 import com.example.strawberry_app.screens.playlistScreen.PlaylistCallbacks
+import com.example.strawberry_app.screens.playlistScreen.PlaylistScreenState
 import com.example.strawberry_app.ui.theme.icons.check_circle
 import com.example.strawberry_app.ui.theme.icons.reorder
 import java.io.File
@@ -39,17 +40,19 @@ import java.io.File
 fun SongItem(
     callbacks: PlaylistCallbacks,
     playlistId: Long,
+    playlistScreenState: PlaylistScreenState,
     position: Long,
     song: SongWithPosition,
     imageArt: File? = null,
     isPlaying: Boolean = false
 
 ) {
-    var showDropdown by remember { mutableStateOf(false) }
-    var expandAllRows by remember { mutableStateOf(false) }
-    var showSelectIcon by remember { mutableStateOf(true) }
-    var selectIcon by remember { mutableStateOf( reorder) }
+//    var showDropdown by remember { mutableStateOf(false) }
 //    var expanded by remember { mutableStateOf(false) }
+    var expandAllRows by remember { mutableStateOf(false) }
+    var showSelectIcon by remember { mutableStateOf(false) }
+//    var selectIcon by remember { mutableStateOf( reorder) }
+
 
     // Do I need this? Add song rating etc.???
 //    if (showDropdown){
@@ -65,14 +68,15 @@ fun SongItem(
         modifier = Modifier
             .combinedClickable(
                 onClick = {
-                    selectIcon = check_circle
+                    callbacks.toggleSelection(position)
+                    showSelectIcon = !showSelectIcon
                 },
                 onDoubleClick = {
                     callbacks.sendActivePlaylistSong(playlistId, position)
                 },
                 onLongClick = {
-
-                } // Finish this for long press to move song on playlist.
+                    // Finish this for long press to move song on playlist.
+                } 
             )
             .background(
                 color =
@@ -86,7 +90,8 @@ fun SongItem(
     ) {
         Icon(modifier = Modifier
             .visible(showSelectIcon),
-            imageVector = reorder,
+            imageVector = if (playlistScreenState.selectedSongs.contains(position))
+                check_circle else reorder,
             contentDescription = stringResource(R.string.playlist_reorder)
 
         )
@@ -164,6 +169,7 @@ fun SongItemPreview() {
     SongItem(
         callbacks = PlaylistCallbacks(),
         playlistId = 1L,
+        playlistScreenState = PlaylistScreenState(),
         position = 1L,
         song = SongWithPosition(
             artist = "The Amazing Band",

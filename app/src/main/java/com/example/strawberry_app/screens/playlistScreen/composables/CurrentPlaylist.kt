@@ -36,11 +36,15 @@ fun CurrentPlaylist(
     Scaffold(
         floatingActionButton = {
             AnimatedVisibility(
-                visible = callbacks.isInSelectionMode,
+                visible = playlistScreenState.isInSelectedMode,
                 enter = scaleIn(),
                 exit = scaleOut()
             ) {
-                FloatingActionButton(onClick = { callbacks.deleteSelectedSongs() }) {
+                FloatingActionButton(onClick = {
+                    callbacks.deleteSelectedSongs(
+                        playlistScreenState.playlistsData.playlistState.currentPlaylist,
+                    )
+                }) {
                     Icon(
                         imageVector = delete,
                         contentDescription = stringResource(R.string.playlist_delete_song))
@@ -48,7 +52,9 @@ fun CurrentPlaylist(
             }
         }
     ) { paddingValues ->
-        LazyColumn(modifier = modifier
+        LazyColumn(
+            contentPadding = paddingValues,
+            modifier = modifier
             .fillMaxWidth()
             .padding(5.dp)
             .background(MaterialTheme.colorScheme.surfaceContainerLow)
@@ -61,6 +67,7 @@ fun CurrentPlaylist(
                 SongItem(
                     callbacks = callbacks,
                     playlistId = playlistScreenState.playlistsData.playlistState.currentPlaylist,
+                    playlistScreenState = playlistScreenState,
                     position = song.position,
                     song = song,
                     imageArt = albumArtCollection[song.coverImage],
