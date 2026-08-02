@@ -29,6 +29,16 @@ sealed class OutgoingMessage {
     data class FavouritePlaylist(val id: Long, val favourite: Boolean): OutgoingMessage()
 
     @Serializable
+    @SerialName("remote-changed-playlist")
+    data class SendCurrentChangedPlaylist(
+        val id: Long,
+        @SerialName("from-index")
+        val fromIndex: Long,
+        @SerialName("to-index")
+        val toIndex: Long
+    ): OutgoingMessage()
+
+    @Serializable
     @SerialName("remove-duplicates-playlist")
     data class RemoveDuplicatesFromPlaylist(val id: Long): OutgoingMessage()
 
@@ -96,17 +106,9 @@ sealed class OutgoingMessage {
     @SerialName("next")
     data object Next: OutgoingMessage()
 
-//    @Serializable
-//    @SerialName("pause")
-//    data object Pause: OutgoingMessage()
-
     @Serializable
     @SerialName("play-pause")
     data object PlayPause: OutgoingMessage()
-
-//    @Serializable
-//    @SerialName("play")
-//    data object Play: OutgoingMessage()
 
     @Serializable
     @SerialName("previous")

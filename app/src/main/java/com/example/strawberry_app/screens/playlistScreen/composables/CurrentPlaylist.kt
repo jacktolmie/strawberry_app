@@ -1,6 +1,7 @@
 package com.example.strawberry_app.screens.playlistScreen.composables
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.background
@@ -8,12 +9,19 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -23,6 +31,8 @@ import com.example.strawberry_app.data.dao.SongWithPosition
 import com.example.strawberry_app.screens.playlistScreen.PlaylistCallbacks
 import com.example.strawberry_app.screens.playlistScreen.PlaylistScreenState
 import com.example.strawberry_app.ui.theme.icons.delete
+import sh.calvin.reorderable.ReorderableItem
+import sh.calvin.reorderable.rememberReorderableLazyListState
 import java.io.File
 
 @Composable
@@ -33,6 +43,18 @@ fun CurrentPlaylist(
     playlistScreenState: PlaylistScreenState,
     modifier: Modifier = Modifier
 ){
+    var reorderablePlaylist by remember(playlist) { mutableStateOf(playlist) }
+    val lazyListState = rememberLazyListState()
+
+    // Variable to hold index of song being moved on playlist to send to server.
+    var toIndex by remember { mutableLongStateOf(0)}
+
+    val reorderablePlaylistState = rememberReorderableLazyListState(lazyListState) { from, to ->
+        reorderablePlaylist = reorderablePlaylist.toMutableList().apply {
+            add(to.index, removeAt(from.index))
+            toIndex = to.index.toLong()
+        }
+    }
     Scaffold(
         floatingActionButton = {
             AnimatedVisibility(
@@ -53,35 +75,51 @@ fun CurrentPlaylist(
         }
     ) { paddingValues ->
         LazyColumn(
+            state = lazyListState,
             contentPadding = paddingValues,
             modifier = modifier
             .fillMaxWidth()
             .padding(5.dp)
             .background(MaterialTheme.colorScheme.surfaceContainerLow)
         ) {
-            items(playlist){ song ->
-                if (!albumArtCollection.contains(song.coverImage)){
-                    callbacks.getAlbumArtFile(song.coverImage)
+            items(reorderablePlaylist, key = { it.position }) { song ->
+                ReorderableItem(reorderablePlaylistState, key = song.position) { isDragging ->
+                    val elevation by animateDpAsState( if (isDragging) 4.dp else 0.dp)
+
+                    if (!albumArtCollection.contains(song.coverImage)){
+                        callbacks.getAlbumArtFile(song.coverImage)
+                    }
+
+                    Surface(shadowElevation = elevation) {
+                        SongItem(
+                            callbacks = callbacks,
+                            playlistId = playlistScreenState.playlistsData.playlistState.currentPlaylist,
+                            playlistScreenState = playlistScreenState,
+                            song = song,
+                            imageArt = albumArtCollection[song.coverImage],
+                            // If current and active playlist are the same, and the song position
+                            // matches the active playlist index, highlight current song.
+                            isPlaying = if(
+                                playlistScreenState.playlistsData.playlistState.activePlaylist ==
+                                playlistScreenState.playlistsData.playlistState.currentPlaylist &&
+                                playlistScreenState.playlistsData.playlistState.currentSongIndex ==
+                                song.position
+                            ) callbacks.isCurrentPlaying(song.id) else false,
+                            modifier = Modifier.draggableHandle(
+                                onDragStopped = {
+                                    callbacks.sendCurrentChangedPlaylist(
+                                    playlistScreenState.playlistsData.playlistState.currentPlaylist,
+                                    toIndex, song.position
+                                    )
+                                    callbacks.setDragIcon(null)
+                                }
+                            )
+
+                        )
+                    }
+
+                    HorizontalDivider(thickness = 5.dp, color = MaterialTheme.colorScheme.primary)
                 }
-
-                SongItem(
-                    callbacks = callbacks,
-                    playlistId = playlistScreenState.playlistsData.playlistState.currentPlaylist,
-                    playlistScreenState = playlistScreenState,
-                    position = song.position,
-                    song = song,
-                    imageArt = albumArtCollection[song.coverImage],
-                    // If current and active playlist are the same, and the song position
-                    // matches the active playlist index, highlight current song.
-                    isPlaying = if(
-                        playlistScreenState.playlistsData.playlistState.activePlaylist ==
-                        playlistScreenState.playlistsData.playlistState.currentPlaylist &&
-                        playlistScreenState.playlistsData.playlistState.currentSongIndex ==
-                        song.position
-                    ) callbacks.isCurrentPlaying(song.id) else false
-
-                )
-                HorizontalDivider(thickness = 5.dp, color = MaterialTheme.colorScheme.primary)
             }
         }
     }

@@ -41,42 +41,46 @@ fun SongItem(
     callbacks: PlaylistCallbacks,
     playlistId: Long,
     playlistScreenState: PlaylistScreenState,
-    position: Long,
     song: SongWithPosition,
+    modifier: Modifier = Modifier,
     imageArt: File? = null,
     isPlaying: Boolean = false
 
 ) {
-//    var showDropdown by remember { mutableStateOf(false) }
-//    var expanded by remember { mutableStateOf(false) }
-    var expandAllRows by remember { mutableStateOf(false) }
-    var showSelectIcon by remember { mutableStateOf(false) }
-//    var selectIcon by remember { mutableStateOf( reorder) }
-
-
-    // Do I need this? Add song rating etc.???
-//    if (showDropdown){
-//        SongDropdownMenu(
-//            expanded = true,
-//            onConfirm = {},
-//            onChecked = { expandAllRows },
-//            songTitle = song.title
-//        )
-//    }
+    val isSelected = playlistScreenState.selectedSongs.contains(song.position)
+    var showDragIcon by remember { mutableStateOf(false) }
+    val currentIcon = when {
+        showDragIcon -> reorder
+        isSelected -> check_circle
+        else -> reorder
+    }
+    var isVisible by remember { mutableStateOf(false) }
 
     Row(
         modifier = Modifier
             .combinedClickable(
                 onClick = {
-                    callbacks.toggleSelection(position)
-                    showSelectIcon = !showSelectIcon
+                    if (!showDragIcon) callbacks.toggleSelection(song.position)
+                    else showDragIcon = false
+                    isVisible = !isVisible
                 },
                 onDoubleClick = {
-                    callbacks.sendActivePlaylistSong(playlistId, position)
+                    callbacks.sendActivePlaylistSong(playlistId, song.position)
+                    if (playlistScreenState.isInSelectedMode) callbacks.clearSelectedSongs()
+                    showDragIcon = false
                 },
                 onLongClick = {
-                    // Finish this for long press to move song on playlist.
-                } 
+                    if(callbacks.isDragIconSong(song.position)){
+                        callbacks.setDragIcon(null)
+                        showDragIcon = false
+                    }
+                    else {
+                        callbacks.clearSelectedSongs()
+                        callbacks.setDragIcon(song.position)
+                        showDragIcon = true
+                    }
+                    isVisible = !isVisible
+                }
             )
             .background(
                 color =
@@ -88,12 +92,10 @@ fun SongItem(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Icon(modifier = Modifier
-            .visible(showSelectIcon),
-            imageVector = if (playlistScreenState.selectedSongs.contains(position))
-                check_circle else reorder,
-            contentDescription = stringResource(R.string.playlist_reorder)
-
+        Icon(modifier = modifier.visible(isVisible),
+            imageVector = currentIcon,
+            contentDescription = if (isSelected) stringResource(R.string.playlist_multi_select)
+                else stringResource(R.string.playlist_reorder),
         )
 
         Spacer(modifier = Modifier.padding(5.dp))
@@ -139,27 +141,14 @@ fun SongItem(
                     modifier = Modifier.weight(1f)
                 )
 
-                SongDropdownMenu(
-                    expanded = true,
-                    onConfirm = {},
-                    onChecked = { expandAllRows },
-                    songTitle = song.title
-                )
-
-//                Icon(modifier = Modifier
-//                    .clickable(
-//                        onClick = {
-//                            showDropdown = true
-//                        }
-//                    ),
-//                    imageVector = more_horiz, contentDescription = "Song item dropdown"
+//                SongDropdownMenu(
+//                    expanded = true,
+//                    onConfirm = {},
+//                    onChecked = {}, // expandAllRows },
+//                    songTitle = song.title
 //                )
-
-                // We leave the right side blank here so it aligns perfectly
-                // under the clean layout, or you could place an explicit 'IconButton' here later.
             }
         }
-
     }
 }
 
@@ -170,7 +159,6 @@ fun SongItemPreview() {
         callbacks = PlaylistCallbacks(),
         playlistId = 1L,
         playlistScreenState = PlaylistScreenState(),
-        position = 1L,
         song = SongWithPosition(
             artist = "The Amazing Band",
             album = "The best of Amazing Band",
@@ -184,3 +172,28 @@ fun SongItemPreview() {
         )
     )
 }
+
+//    var showDropdown by remember { mutableStateOf(false) }
+//    var expanded by remember { mutableStateOf(false) }
+//    var expandAllRows by remember { mutableStateOf(false) }
+//    var selectIcon by remember { mutableStateOf( reorder) }
+
+// Do I need this? Add song rating etc.???
+//    if (showDropdown){
+//        SongDropdownMenu(
+//            expanded = true,
+//            onConfirm = {},
+//            onChecked = { expandAllRows },
+//            songTitle = song.title
+//        )
+//    }
+
+
+//                Icon(modifier = Modifier
+//                    .clickable(
+//                        onClick = {
+//                            showDropdown = true
+//                        }
+//                    ),
+//                    imageVector = more_horiz, contentDescription = "Song item dropdown"
+//                )

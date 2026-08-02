@@ -37,16 +37,19 @@ fun TabListing(
 
     val scrollState = rememberScrollState()
     var playlistId by remember { mutableLongStateOf(playlistScreenState.playlistsData.playlistState.currentPlaylist) }
+    val onTabSelected: (Int, Long) -> Unit = {tabIndex, id ->
+        selectedTabIndex = tabIndex
+        playlistId = id
+        callbacks.onPlaylistSelected(id)
+        callbacks.clearSelectedSongs()
+    }
 
     if ( playlistScreenState.playlistsData.playlists.size > 4) {
         ScrollableTabs(
             callbacks = callbacks,
             playlists = playlistScreenState.playlistsData.playlists,
             selectedTabIndex = safeIndex,
-            onTabSelected = { tabIndex: Int, id: Long ->
-                selectedTabIndex = tabIndex
-                playlistId = id
-                callbacks.onPlaylistSelected(id)
+            onTabSelected = { tabIndex: Int, id: Long -> onTabSelected(tabIndex, id)
             },
             scrollState = scrollState
         )
@@ -55,10 +58,7 @@ fun TabListing(
             callbacks = callbacks,
             playlists = playlistScreenState.playlistsData.playlists,
             selectedTabIndex = safeIndex,
-            onTabSelected = { tabIndex: Int, id: Long ->
-                selectedTabIndex = tabIndex
-                playlistId = id
-                callbacks.onPlaylistSelected(id)
+            onTabSelected = { tabIndex: Int, id: Long -> onTabSelected(tabIndex, id)
             }
         )
     }

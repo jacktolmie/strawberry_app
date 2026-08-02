@@ -3,7 +3,7 @@ package com.example.strawberry_app.screens.playlistScreen
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -34,6 +34,8 @@ class PlaylistViewModel @Inject constructor(
 ): ViewModel(){
 
     val albumArtCollection = playlistRepository.artAlbumCollection
+
+    var dragIconSongId by mutableStateOf<Long?>(null)
 
     val playlistState = playlistRepository.playlistState
 
@@ -75,6 +77,10 @@ class PlaylistViewModel @Inject constructor(
         initialValue = PlaylistsData()
     )
 
+    // Set drag icon for currently selected song index.
+    fun setDragIcon(songIndex: Long?){ dragIconSongId = songIndex }
+    fun isDragIconSong(songIndex: Long) = songIndex == dragIconSongId
+
     fun onPlaylistSelected(id: Long) =playlistRepository.setCurrentPlaylist(id)
 
     fun getAlbumArtFile(coverArt: String): File? = playlistRepository.getAlbumArtFile(coverArt)
@@ -92,6 +98,10 @@ class PlaylistViewModel @Inject constructor(
         started = SharingStarted.Eagerly,
         initialValue = false
     )
+
+    fun clearSelectedSongs() {
+        _selectedSongs.value = emptyList()
+    }
 
     fun deleteSelectedSongs(id: Long){
         removeSongsCurrentPlaylist(id = id,  _selectedSongs.value)
@@ -120,8 +130,14 @@ class PlaylistViewModel @Inject constructor(
         playlistRepository.sendCommand(OutgoingMessage.SendActivePlaylistSong(id = id, songIndex = songIndex))
     }
     fun sendAllPlaylists(playlists: List<Playlist>) = playlistRepository.sendCommand(OutgoingMessage.SendAllPlaylists(playlists = playlists))
-    fun sendCurrentPlaylist(id: Long, playlist: Playlist){
-        playlistRepository.sendCommand(OutgoingMessage.SendCurrentPlaylist(id = id))
+    fun sendCurrentChangedPlaylist(id: Long, toIndex: Long, fromIndex: Long){
+        playlistRepository.sendCommand(
+            OutgoingMessage.SendCurrentChangedPlaylist(
+                id = id,
+                toIndex = toIndex,
+                fromIndex = fromIndex
+            )
+        )
     }
     fun sendPlaylistFavourite(id: Long, favourite: Boolean){
         playlistRepository.sendCommand(OutgoingMessage.FavouritePlaylist(id = id, favourite = favourite))
