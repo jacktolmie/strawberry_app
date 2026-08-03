@@ -20,14 +20,11 @@ fun Nav(){
         composable(ScreenList.Player.route){
             PlayerRoute()
         }
-
         composable(ScreenList.Playlist.route){
             PlaylistRoute()
         }
-
         composable(ScreenList.Settings.route){
             SettingsRoute()
         }
     }
-
 }

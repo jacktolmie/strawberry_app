@@ -60,9 +60,11 @@ fun SongItem(
         modifier = Modifier
             .combinedClickable(
                 onClick = {
-                    if (!showDragIcon) callbacks.toggleSelection(song.position)
+                    if (!showDragIcon) {
+                        callbacks.toggleSelection(song.position)
+                    }
                     else showDragIcon = false
-                    isVisible = !isVisible
+                    isVisible = playlistScreenState.isInSelectedMode
                 },
                 onDoubleClick = {
                     callbacks.sendActivePlaylistSong(playlistId, song.position)
@@ -92,7 +94,7 @@ fun SongItem(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Icon(modifier = modifier.visible(isVisible),
+        Icon(modifier = modifier.visible(isSelected || showDragIcon), //(isVisible),
             imageVector = currentIcon,
             contentDescription = if (isSelected) stringResource(R.string.playlist_multi_select)
                 else stringResource(R.string.playlist_reorder),

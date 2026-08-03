@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">strawberry_app</string>
 
+    <string name="navbar_player">Player</string>
+    <string name="navbar_playlist">Playlist</string>
+    <string name="navbar_settings">Settings</string>
+
     <string name="player_album_art">Album Art</string>
 
     <string name="playlist_favourites">Favourite</string>

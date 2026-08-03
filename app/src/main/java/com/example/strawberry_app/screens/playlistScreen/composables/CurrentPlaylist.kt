@@ -1,5 +1,6 @@
 package com.example.strawberry_app.screens.playlistScreen.composables
 
+import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.scaleIn
@@ -126,7 +127,11 @@ fun CurrentPlaylist(
 
 }
 
-@Preview
+//@Preview
+@Preview(name = "Phone Portrait", showBackground = true, widthDp = 360, heightDp = 800)
+@Preview(name = "Phone Landscape", showBackground = true, widthDp = 800, heightDp = 360)
+@Preview(name = "Tablet", showBackground = true, widthDp = 1280, heightDp = 800)
+@Preview(name = "Dark Mode", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun CurrentPlaylistPreview(){
     CurrentPlaylist(
