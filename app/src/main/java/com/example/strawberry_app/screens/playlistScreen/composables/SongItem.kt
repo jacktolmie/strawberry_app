@@ -54,7 +54,7 @@ fun SongItem(
         isSelected -> check_circle
         else -> reorder
     }
-    var isVisible by remember { mutableStateOf(false) }
+//    var isVisible by remember { mutableStateOf(false) }
 
     Row(
         modifier = Modifier
@@ -64,7 +64,7 @@ fun SongItem(
                         callbacks.toggleSelection(song.position)
                     }
                     else showDragIcon = false
-                    isVisible = playlistScreenState.isInSelectedMode
+//                    isVisible = playlistScreenState.isInSelectedMode
                 },
                 onDoubleClick = {
                     callbacks.sendActivePlaylistSong(playlistId, song.position)
@@ -72,16 +72,16 @@ fun SongItem(
                     showDragIcon = false
                 },
                 onLongClick = {
-                    if(callbacks.isDragIconSong(song.position)){
+                    if(callbacks.isDragIconSong(song.id)){
                         callbacks.setDragIcon(null)
                         showDragIcon = false
                     }
                     else {
                         callbacks.clearSelectedSongs()
-                        callbacks.setDragIcon(song.position)
+                        callbacks.setDragIcon(song.id)
                         showDragIcon = true
                     }
-                    isVisible = !isVisible
+//                    isVisible = !isVisible
                 }
             )
             .background(
@@ -94,7 +94,7 @@ fun SongItem(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Icon(modifier = modifier.visible(isSelected || showDragIcon), //(isVisible),
+        Icon(modifier = modifier.visible(isSelected || showDragIcon),
             imageVector = currentIcon,
             contentDescription = if (isSelected) stringResource(R.string.playlist_multi_select)
                 else stringResource(R.string.playlist_reorder),

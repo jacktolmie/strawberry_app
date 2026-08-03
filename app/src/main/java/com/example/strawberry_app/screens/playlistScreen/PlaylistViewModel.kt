@@ -81,11 +81,12 @@ class PlaylistViewModel @Inject constructor(
     fun setDragIcon(songIndex: Long?){ dragIconSongId = songIndex }
     fun isDragIconSong(songIndex: Long) = songIndex == dragIconSongId
 
-    fun onPlaylistSelected(id: Long) =playlistRepository.setCurrentPlaylist(id)
+    // Basic playlist GUI functions
+    fun onPlaylistSelected(id: Long) = playlistRepository.setCurrentPlaylist(id)
 
     fun getAlbumArtFile(coverArt: String): File? = playlistRepository.getAlbumArtFile(coverArt)
 
-    fun isCurrentPlaying(id: Long) = id == playlistState.value.currentSongWithPosition?.id
+    fun isCurrentSongPlaying(id: Long) = id == playlistState.value.currentSongWithPosition?.id
 
     // Functions etc. for selecting songs in playlist to delete
     private val _selectedSongs = mutableStateOf<List<Long>>(emptyList())

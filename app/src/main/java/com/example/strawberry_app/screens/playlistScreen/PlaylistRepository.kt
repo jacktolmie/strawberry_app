@@ -190,15 +190,14 @@ class PlaylistRepository @Inject constructor(
         }
     }
 
-    fun getPlaylists(): Flow<List<PlaylistEntity>>{
-        return playlistDao.observeAll()
-    }
+    fun getPlaylists(): Flow<List<PlaylistEntity>>{  return playlistDao.observeAll() }
 
     fun getPlaylistSongs(id: Long): Flow<List<SongWithPosition>>{
         return playlistSongDao.observeSongsForPlaylist(id)
     }
 
     fun setCurrentPlaylist(id: Long) {
+        println("playlistrepo setcurrentplaylist called with id $id")
         _playlistState.update { it.copy(currentPlaylist = id) }
     }
 

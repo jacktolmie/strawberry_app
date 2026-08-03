@@ -56,7 +56,7 @@ fun PlaylistRoute(
         deleteCurrentPlaylist = playlistViewModel::deleteCurrentPlaylist,
         deleteSelectedSongs = playlistViewModel::deleteSelectedSongs,
         getAlbumArtFile = playlistViewModel::getAlbumArtFile,
-        isCurrentPlaying = playlistViewModel::isCurrentPlaying,
+        isCurrentPlaying = playlistViewModel::isCurrentSongPlaying,
         isDragIconSong = playlistViewModel::isDragIconSong,
         onPlaylistSelected = playlistViewModel::onPlaylistSelected,
         removeDuplicatesInPlaylist = playlistViewModel::removeDuplicatesInPlaylist,

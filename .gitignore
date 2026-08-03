@@ -3,6 +3,7 @@
 
 # My changes:
 todo.txt
+icons/
 
 # End of my changes.
 
@@ -166,7 +167,7 @@ fabric.properties
 output-metadata.json
 
 # IntelliJ
-.idea/
+#.idea/
 misc.xml
 deploymentTargetDropDown.xml
 render.experimental.xml

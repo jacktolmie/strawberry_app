@@ -108,6 +108,8 @@ fun CurrentPlaylist(
                             ) callbacks.isCurrentPlaying(song.id) else false,
                             modifier = Modifier.draggableHandle(
                                 onDragStopped = {
+                                    println("currentplaylist drag stopped with playlist id " +
+                                            "${playlistScreenState.playlistsData.playlistState.currentPlaylist}")
                                     callbacks.sendCurrentChangedPlaylist(
                                     playlistScreenState.playlistsData.playlistState.currentPlaylist,
                                     toIndex, song.position
