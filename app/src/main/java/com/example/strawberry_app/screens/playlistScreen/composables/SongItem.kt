@@ -48,13 +48,12 @@ fun SongItem(
 
 ) {
     val isSelected = playlistScreenState.selectedSongs.contains(song.position)
-    var showDragIcon by remember { mutableStateOf(false) }
+    val showDragIcon = playlistScreenState.dragIconSongId == song.id
     val currentIcon = when {
         showDragIcon -> reorder
         isSelected -> check_circle
         else -> reorder
     }
-//    var isVisible by remember { mutableStateOf(false) }
 
     Row(
         modifier = Modifier
@@ -63,25 +62,23 @@ fun SongItem(
                     if (!showDragIcon) {
                         callbacks.toggleSelection(song.position)
                     }
-                    else showDragIcon = false
-//                    isVisible = playlistScreenState.isInSelectedMode
+//                    else showDragIcon = false
                 },
                 onDoubleClick = {
                     callbacks.sendActivePlaylistSong(playlistId, song.position)
                     if (playlistScreenState.isInSelectedMode) callbacks.clearSelectedSongs()
-                    showDragIcon = false
+//                    showDragIcon = false
                 },
                 onLongClick = {
                     if(callbacks.isDragIconSong(song.id)){
                         callbacks.setDragIcon(null)
-                        showDragIcon = false
+//                        showDragIcon = false
                     }
                     else {
                         callbacks.clearSelectedSongs()
                         callbacks.setDragIcon(song.id)
-                        showDragIcon = true
+//                        showDragIcon = true
                     }
-//                    isVisible = !isVisible
                 }
             )
             .background(

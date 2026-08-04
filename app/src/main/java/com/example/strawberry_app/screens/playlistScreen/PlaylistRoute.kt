@@ -8,13 +8,6 @@ import com.example.strawberry_app.music.Playlist
 import com.example.strawberry_app.screens.playlistScreen.screens.PlaylistMediumScreen
 import java.io.File
 
-data class PlaylistScreenState(
-    val playlistsData: PlaylistsData = PlaylistsData(),
-    val albumArtFile: Map<String, File?> = emptyMap(),
-    val isInSelectedMode: Boolean = false,
-    val selectedSongs: List<Long> = emptyList()
-)
-
 data class PlaylistCallbacks(
     val clearCurrentPlaylist: (id: Long) -> Unit = {},
     val clearSelectedSongs: () -> Unit = {},
@@ -44,10 +37,11 @@ data class PlaylistCallbacks(
 fun PlaylistRoute(
     playlistViewModel: PlaylistViewModel = hiltViewModel()
 ){
-    val playlistsData by playlistViewModel.playlistsData.collectAsStateWithLifecycle()
-    val albumArtFile by playlistViewModel.albumArtCollection.collectAsStateWithLifecycle()
-    val isInSelectedMode by playlistViewModel.isInSelectedMode.collectAsStateWithLifecycle()
     val selectedSongs by playlistViewModel.selectedSongs
+    val dragIconSongId = playlistViewModel.dragIconSongId
+    val isInSelectedMode by playlistViewModel.isInSelectedMode.collectAsStateWithLifecycle()
+    val playlistsData by playlistViewModel.playlistsData.collectAsStateWithLifecycle()
+    val albumArtCollection by playlistViewModel.albumArtCollection.collectAsStateWithLifecycle()
 
     val callbacks = PlaylistCallbacks(
         clearCurrentPlaylist = playlistViewModel::clearCurrentPlaylist,
@@ -75,9 +69,10 @@ fun PlaylistRoute(
     )
 
     val playlistScreenState = PlaylistScreenState(
-        playlistsData = playlistsData,
-        albumArtFile = albumArtFile,
+        albumArtFile = albumArtCollection,
+        dragIconSongId = dragIconSongId,
         isInSelectedMode = isInSelectedMode,
+        playlistsData = playlistsData,
         selectedSongs = selectedSongs
     )
 

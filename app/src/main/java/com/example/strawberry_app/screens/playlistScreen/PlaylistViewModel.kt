@@ -28,6 +28,14 @@ data class PlaylistsData(
     val playlistSongs: List<SongWithPosition> = emptyList()
 )
 
+data class PlaylistScreenState(
+    val albumArtFile: Map<String, File?> = emptyMap(),
+    val dragIconSongId: Long? = null,
+    val isInSelectedMode: Boolean = false,
+    val playlistsData: PlaylistsData = PlaylistsData(),
+    val selectedSongs: List<Long> = emptyList(),
+)
+
 @HiltViewModel
 class PlaylistViewModel @Inject constructor(
     private val playlistRepository: PlaylistRepository
@@ -109,11 +117,9 @@ class PlaylistViewModel @Inject constructor(
         _selectedSongs.value = emptyList()
     }
     fun toggleSelection(songIndex: Long){
-        println("playlistvm toggleselection called with song index $songIndex")
         _selectedSongs.value = if(_selectedSongs.value.contains(songIndex))
              _selectedSongs.value.minus(songIndex)
         else _selectedSongs.value.plus(songIndex)
-        println("playlistvm songs in list:${_selectedSongs.value}")
     }
 
     // Functions to send playlist changes to the server.
