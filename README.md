@@ -8,9 +8,9 @@ It will not work without the code I added to the fork I created for it. I will b
 Currently it has the following functionality:
 
 ## <p style="text-align: center;"> Player Screen</p>
-![PlayerScreen](images/player.png) 
+![PlayerScreen](/images/player.png) 
 
-![PlayerScreen with song](images/player_with_song.png)
+![PlayerScreen with song](/images/player_with_song.png)
 
 - Title of song, with band and album below
 - Cover image if available
@@ -28,9 +28,9 @@ Currently it has the following functionality:
     - Seek forward (short or long press available)
     - Next song
 
-![Playlist](images/playlist.png)
+![Playlist](/images/playlist.png)
 
-![Playlist options](images/playlist_options.png)
+![Playlist options](/images/playlist_options.png)
 
 - Playlists with names
 - Length of playlist time and number of songs
@@ -46,7 +46,7 @@ Currently it has the following functionality:
     - Move single song to new row (long press to activate. Use drag icon to move)
     - Delete songs from playlist (short click each song, select delete icon)
 
-![Settings](images/settings.png)
+![Settings](/images/settings.png)
 - Set IP address
 - Set port number
 - Password if wanted. Must match server side under settings
