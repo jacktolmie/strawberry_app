@@ -59,6 +59,7 @@ Currently it has the following functionality:
   - Rename playlist
 - Move single song to new row (long press to activate, use drag icon to move)
 - Delete songs from playlist (short click each song, select delete icon)
+- Double click song to play
 
 ---
 
