@@ -30,7 +30,7 @@ import com.example.strawberry_app.screens.playerScreen.composables.TimerSlider
 import com.example.strawberry_app.screens.playerScreen.composables.VolumeSliderVertComposable
 
 @Composable
-fun PlayerScreenMedium(
+fun PlayerMedLrgPortraitScreen(
     callbacks: PlayerCallbacks,
     playerScreenValues: PlayerScreenState,
     modifier: Modifier = Modifier
@@ -93,8 +93,8 @@ fun PlayerScreenMedium(
 
 @Composable
 @Preview
-fun PlayerScreenMediumPreview(){
-    PlayerScreenMedium(
+fun PlayerMedLrgPortraitScreenPreview(){
+    PlayerMedLrgPortraitScreen(
         callbacks = PlayerCallbacks(),
         playerScreenValues = PlayerScreenState()
     )

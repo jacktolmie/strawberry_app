@@ -1,4 +1,4 @@
-package com.example.strawberry_app
+package com.example.strawberry_app.screens.navigation
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
@@ -14,6 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.strawberry_app.R
+import com.example.strawberry_app.network.ConnectionViewModel
 import com.example.strawberry_app.screens.playerScreen.PlayerRoute
 import com.example.strawberry_app.screens.playlistScreen.PlaylistRoute
 import com.example.strawberry_app.screens.settingsScreen.SettingsRoute

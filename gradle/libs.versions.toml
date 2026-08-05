@@ -7,7 +7,8 @@ kotlin = "2.3.21"
 
 hilt = "2.59.2"
 ksp = "2.3.6"
-material3Version = "1.5.0-alpha23"
+material3Adaptive = "1.1.0"
+material3Version = "1.5.0-alpha25"
 navigationCompose = "2.9.2"
 room = "2.8.4"
 ktor = "3.5.0"
@@ -25,14 +26,18 @@ material3 = "1.4.0"
 
 # For draggable song items
 reorderable = "3.1.0"
+material3WindowSizeClass = "1.4.0"
+adaptive = "1.2.0"
 
 [libraries]
+androidx-compose-material3-adaptive = { module = "androidx.compose.material3:material3-adaptive", version.ref = "material3Adaptive" }
 androidx-compose-material3-v150alpha = { module = "androidx.compose.material3:material3", version.ref = "material3Version" }
 androidx-compose-ui-text-google-fonts = { module = "androidx.compose.ui:ui-text-google-fonts", version.ref = "uiTextGoogleFonts" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
+androidx-material3-window-size-class1 = { module = "androidx.compose.material3:material3-window-size-class" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
 hilt-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt" }
@@ -67,6 +72,8 @@ kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serializa
 
 # For draggable song items
 reorderable = { module = "sh.calvin.reorderable:reorderable", version.ref = "reorderable" }
+androidx-compose-material3-window-size-class1 = { group = "androidx.compose.material3", name = "material3-window-size-class", version.ref = "material3WindowSizeClass" }
+androidx-compose-adaptive = { group = "androidx.compose.material3.adaptive", name = "adaptive", version.ref = "adaptive" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

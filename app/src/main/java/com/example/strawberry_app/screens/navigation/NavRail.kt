@@ -1,4 +1,4 @@
-package com.example.strawberry_app
+package com.example.strawberry_app.screens.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
@@ -10,7 +10,7 @@ import com.example.strawberry_app.screens.playlistScreen.PlaylistRoute
 import com.example.strawberry_app.screens.settingsScreen.SettingsRoute
 
 @Composable
-fun Nav(){
+fun NavRail(){
     val navController = rememberNavController()
 
     NavHost(

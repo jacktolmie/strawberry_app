@@ -5,32 +5,39 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.strawberry_app.screens.playlistScreen.PlaylistRepository
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.window.core.layout.WindowSizeClass
 import com.example.strawberry_app.network.ConnectionViewModel
 import com.example.strawberry_app.ui.theme.Strawberry_appTheme
 import dagger.hilt.android.AndroidEntryPoint
-import jakarta.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private val connectionViewModel: ConnectionViewModel by viewModels()
+
+    @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
         setContent {
             Strawberry_appTheme {
-                connectionViewModel
-                NavBar()
+                val windowSizeClass: WindowSizeClass = currentWindowAdaptiveInfo(supportLargeAndXLargeWidth = true).windowSizeClass
+                MyApp( windowSizeClass = windowSizeClass )
             }
         }
     }
 }
 
+//            MyAppTheme {
+//                val windowSizeClass: WindowSizeClass = currentWindowAdaptiveInfo(supportLargeAndXLargeWidth = true).windowSizeClass
+//                MyApp(
+//                    windowSizeClass = windowSizeClass,
+//                    connectionViewModel = connectionViewModel
+//                )
+//            }
 //@Composable
 //fun Greeting(name: String, modifier: Modifier = Modifier) {
 //    Text(

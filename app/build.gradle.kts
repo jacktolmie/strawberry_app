@@ -39,6 +39,8 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.compose.adaptive)
+    implementation(libs.androidx.compose.material3.window.size.class1)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -84,6 +86,10 @@ dependencies {
 
     // For draggable song items
     implementation(libs.reorderable)
+
+    // For screen orientation
+//    implementation(libs.androidx.compose.material3.adaptive)
+    implementation(libs.androidx.material3.window.size.class1)
 
     // For testing
     testImplementation(libs.junit)
