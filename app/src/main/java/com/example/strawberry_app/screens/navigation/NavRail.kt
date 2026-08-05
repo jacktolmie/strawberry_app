@@ -1,30 +1,27 @@
 package com.example.strawberry_app.screens.navigation
 
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.runtime.Composable
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import com.example.strawberry_app.screens.ScreenList
-import com.example.strawberry_app.screens.playerScreen.PlayerRoute
-import com.example.strawberry_app.screens.playlistScreen.PlaylistRoute
-import com.example.strawberry_app.screens.settingsScreen.SettingsRoute
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.window.core.layout.WindowSizeClass
+import androidx.window.core.layout.computeWindowSizeClass
 
 @Composable
-fun NavRail(){
-    val navController = rememberNavController()
+fun NavRail(
+    windowSizeClass: WindowSizeClass,
+    pagerState: PagerState
+){
 
-    NavHost(
-        navController = navController,
-        startDestination = ScreenList.Player.route
-    ){
-        composable(ScreenList.Player.route){
-            PlayerRoute()
-        }
-        composable(ScreenList.Playlist.route){
-            PlaylistRoute()
-        }
-        composable(ScreenList.Settings.route){
-            SettingsRoute()
-        }
-    }
+
+}
+
+@Preview
+@Composable
+fun NavRailPreview(){
+    val windowSizeClass =
+        WindowSizeClass.BREAKPOINTS_V1.computeWindowSizeClass(widthDp = 900f, heightDp = 400f)
+    NavRail(
+        windowSizeClass = windowSizeClass,
+        pagerState = PagerState { 3 }
+    )
 }

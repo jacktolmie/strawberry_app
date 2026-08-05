@@ -29,10 +29,11 @@ import com.example.strawberry_app.screens.settingsScreen.composables.TextboxPort
 import com.example.strawberry_app.server.SettingsUiState
 
 @Composable
-fun SettingsMedLrgScreen(
+fun SettingsMedLrgPortraitScreen(
     serverUiState: SettingsUiState,
     connectionState: ConnectionState,
     callbacks: SettingsCallbacks,
+    hasNetwork: Boolean,
     settingsGuiData: SettingsGuiData,
     modifier: Modifier = Modifier
 ) {
@@ -63,7 +64,7 @@ fun SettingsMedLrgScreen(
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        MedLrgScreenBtns(serverUiState, callbacks, connectionState)
+        MedLrgScreenBtns(serverUiState, callbacks, connectionState, hasNetwork)
 
         ConnStateMedLrg(settingsGuiData)
 
@@ -74,8 +75,8 @@ fun SettingsMedLrgScreen(
 
 @Preview
 @Composable
-fun SettingsMedLrgPreview(){
-    SettingsMedLrgScreen(
+fun SettingsMedLrgPortraitPreview(){
+    SettingsMedLrgPortraitScreen(
         serverUiState = SettingsUiState(
             ip = "192.168.1.201",
             port = "5000",
@@ -94,6 +95,7 @@ fun SettingsMedLrgPreview(){
             onDisconnectClicked = {},
             onConnectClicked = {}
         ),
-        SettingsGuiData()
+        hasNetwork = true,
+        settingsGuiData = SettingsGuiData()
     )
 }

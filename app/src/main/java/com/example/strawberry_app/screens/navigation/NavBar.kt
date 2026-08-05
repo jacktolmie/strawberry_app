@@ -2,8 +2,8 @@ package com.example.strawberry_app.screens.navigation
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
@@ -11,11 +11,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.window.core.layout.WindowSizeClass
+import androidx.window.core.layout.computeWindowSizeClass
 import com.example.strawberry_app.R
-import com.example.strawberry_app.network.ConnectionViewModel
 import com.example.strawberry_app.screens.playerScreen.PlayerRoute
 import com.example.strawberry_app.screens.playlistScreen.PlaylistRoute
 import com.example.strawberry_app.screens.settingsScreen.SettingsRoute
@@ -24,10 +24,11 @@ import com.example.strawberry_app.ui.theme.icons.queue_music
 import com.example.strawberry_app.ui.theme.icons.settings
 import kotlinx.coroutines.launch
 
-
 @Composable
-fun NavBar() {
-    val pagerState = rememberPagerState(pageCount = { 3 })
+fun NavBar(
+    windowSizeClass: WindowSizeClass,
+    pagerState: PagerState
+) {
     val coroutineScope = rememberCoroutineScope()
 
     Scaffold(
@@ -57,28 +58,26 @@ fun NavBar() {
         }
     ) { paddingValues ->
         HorizontalPager(
+            modifier = Modifier.padding(paddingValues),
             state = pagerState,
-            modifier = Modifier.padding(paddingValues)
+            userScrollEnabled = false
         ) { page ->
             when (page) {
-                0 -> PlayerRoute()
-                1 -> PlaylistRoute()
-                2 -> SettingsRoute()
+                0 -> PlayerRoute(windowSizeClass)
+                1 -> PlaylistRoute(windowSizeClass)
+                2 -> SettingsRoute(windowSizeClass)
             }
         }
     }
 }
 
-@Composable
-fun NavIcon(image: ImageVector, description: Int){
-    Icon(
-        imageVector = image,
-        contentDescription = stringResource(description)
-    )
-}
-
 @Preview
 @Composable
 fun NavBarPreview(){
-    NavBar()
+    val windowSizeClass =
+        WindowSizeClass.BREAKPOINTS_V1.computeWindowSizeClass(widthDp = 400f, heightDp = 800f)
+    NavBar(
+        windowSizeClass = windowSizeClass,
+        pagerState = PagerState { 3 }
+    )
 }

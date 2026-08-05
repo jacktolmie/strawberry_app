@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.visible
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Button
@@ -40,6 +41,7 @@ fun MedLrgScreenBtns(
     serverUiState: SettingsUiState,
     callbacks: SettingsCallbacks,
     connectionState: ConnectionState,
+    hasNetwork: Boolean,
     modifier: Modifier = Modifier
 ){
     Row(modifier = modifier
@@ -55,7 +57,10 @@ fun MedLrgScreenBtns(
     }
 
     Spacer(modifier = Modifier.height(10.dp))
-    ConnectButton(callbacks = callbacks, connectionState)
+    ConnectButton(callbacks = callbacks,
+        connectionState = connectionState,
+        hasNetwork = hasNetwork
+    )
 }
 
 @Composable
@@ -63,9 +68,9 @@ fun SmallScreenBtns(
     serverUiState: SettingsUiState,
     callbacks: SettingsCallbacks,
     connectionState: ConnectionState,
+    hasNetwork: Boolean,
     modifier: Modifier = Modifier
 ){
-//    val isConnected = connectionState == Connected
     Row(modifier = modifier
         .fillMaxWidth()
         .padding(10.dp),
@@ -130,13 +135,16 @@ fun CancelButton(
 fun ConnectButton(
     callbacks: SettingsCallbacks,
     connectionState: ConnectionState,
+    hasNetwork: Boolean,
     modifier: Modifier = Modifier
 ){
     Button(
         modifier = modifier,
         onClick ={
-            if (isConnected(connectionState) == "Connect") callbacks.onConnectClicked() else callbacks.onDisconnectClicked()
-        }
+            if (isConnected(connectionState) == "Connect")
+                callbacks.onConnectClicked() else callbacks.onDisconnectClicked()
+        },
+        enabled = hasNetwork
     )
     {
         ButtonText(
@@ -166,8 +174,9 @@ fun SaveButton(
 @Composable
 fun ButtonsPreview(){
     MedLrgScreenBtns(
-        SettingsUiState(),
-        SettingsCallbacks(),
+        serverUiState = SettingsUiState(),
+        callbacks = SettingsCallbacks(),
+        hasNetwork = true,
         connectionState = Connected
     )
 }

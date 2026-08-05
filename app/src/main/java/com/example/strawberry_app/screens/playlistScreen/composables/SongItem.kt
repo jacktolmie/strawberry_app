@@ -58,22 +58,18 @@ fun SongItem(
                     if (!showDragIcon) {
                         callbacks.toggleSelection(song.position)
                     }
-//                    else showDragIcon = false
                 },
                 onDoubleClick = {
                     callbacks.sendActivePlaylistSong(playlistId, song.position)
                     if (playlistScreenState.isInSelectedMode) callbacks.clearSelectedSongs()
-//                    showDragIcon = false
                 },
                 onLongClick = {
                     if(callbacks.isDragIconSong(song.id)){
                         callbacks.setDragIcon(null)
-//                        showDragIcon = false
                     }
                     else {
                         callbacks.clearSelectedSongs()
                         callbacks.setDragIcon(song.id)
-//                        showDragIcon = true
                     }
                 }
             )

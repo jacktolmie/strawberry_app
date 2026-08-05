@@ -90,7 +90,7 @@ fun CurrentPlaylist(
                     if (!albumArtCollection.contains(song.coverImage)){
                         callbacks.getAlbumArtFile(song.coverImage)
                     }
-
+                    println("currentplaylist currentsongindex: ${playlistScreenState.playlistsData.playlistState.currentSongIndex} and song position: ${song.position} ")
                     Surface(shadowElevation = elevation) {
                         SongItem(
                             callbacks = callbacks,
@@ -108,8 +108,6 @@ fun CurrentPlaylist(
                             ) callbacks.isCurrentPlaying(song.id) else false,
                             modifier = Modifier.draggableHandle(
                                 onDragStopped = {
-                                    println("currentplaylist drag stopped with playlist id " +
-                                            "${playlistScreenState.playlistsData.playlistState.currentPlaylist}")
                                     callbacks.sendCurrentChangedPlaylist(
                                     playlistScreenState.playlistsData.playlistState.currentPlaylist,
                                     toIndex, song.position
@@ -117,7 +115,6 @@ fun CurrentPlaylist(
                                     callbacks.setDragIcon(null)
                                 }
                             )
-
                         )
                     }
 
@@ -126,7 +123,6 @@ fun CurrentPlaylist(
             }
         }
     }
-
 }
 
 //@Preview

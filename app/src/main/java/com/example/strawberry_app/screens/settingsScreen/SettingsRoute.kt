@@ -5,8 +5,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.window.core.layout.WindowSizeClass
 import com.example.strawberry_app.network.ConnectionViewModel
-import com.example.strawberry_app.screens.settingsScreen.screens.SettingsMedLrgScreen
+import com.example.strawberry_app.screens.settingsScreen.screens.SettingsMedLrgPortraitScreen
 import com.example.strawberry_app.server.ServerViewModel
 
 
@@ -22,6 +23,7 @@ class SettingsCallbacks(
 
 @Composable
 fun SettingsRoute(
+    windowSizeClass: WindowSizeClass,
     serverViewModel: ServerViewModel = hiltViewModel(),
     connectionViewModel: ConnectionViewModel = hiltViewModel()
 ) {
@@ -29,6 +31,7 @@ fun SettingsRoute(
     val connectionState by connectionViewModel
         .connectionState
         .collectAsStateWithLifecycle()
+    val hasNetwork by connectionViewModel.hasNetwork.collectAsStateWithLifecycle()
 
     val callbacks = remember {
         SettingsCallbacks(
@@ -44,10 +47,11 @@ fun SettingsRoute(
 
     val routeData by connectionViewModel.routeData.collectAsStateWithLifecycle()
 
-    SettingsMedLrgScreen(
+    SettingsMedLrgPortraitScreen(
         serverUiState = uiState,
         connectionState = connectionState,
         callbacks = callbacks,
+        hasNetwork = hasNetwork,
         settingsGuiData = routeData
     )
 }

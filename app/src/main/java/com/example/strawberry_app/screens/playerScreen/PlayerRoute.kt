@@ -5,6 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.window.core.layout.WindowSizeClass
 import com.example.strawberry_app.screens.ServerGuiValues
 import com.example.strawberry_app.screens.playerScreen.screens.PlayerMedLrgPortraitScreen
 import java.io.File
@@ -33,6 +34,7 @@ class PlayerCallbacks(
 
 @Composable
 fun PlayerRoute(
+    windowSizeClass: WindowSizeClass,
     playerViewModel: PlayerViewModel = hiltViewModel()
 ){
     val playerValues by playerViewModel.serverUpdates.collectAsStateWithLifecycle()

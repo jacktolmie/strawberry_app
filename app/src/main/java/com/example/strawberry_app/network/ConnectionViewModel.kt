@@ -2,7 +2,6 @@ package com.example.strawberry_app.network
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.strawberry_app.network.ConnectionState.Connected
 import com.example.strawberry_app.network.ConnectionState.Connecting
 import com.example.strawberry_app.network.ConnectionState.Disconnected
@@ -34,6 +33,7 @@ class ConnectionViewModel @Inject constructor(
 ) : ViewModel()
 {
     val connectionState = networkManager.connectionStateFlow
+    val hasNetwork = networkManager.hasNetwork
 
     val routeData: StateFlow<SettingsGuiData> = connectionState
         .map{ state ->

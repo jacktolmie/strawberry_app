@@ -1,10 +1,15 @@
 package com.example.strawberry_app.network
 
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkCapabilities
 import android.util.Log
 import com.example.strawberry_app.network.protocol.IncomingMessage
 import com.example.strawberry_app.network.protocol.OutgoingMessage
 import com.example.strawberry_app.server.ServerInfo
 import com.example.strawberry_app.server.ServerRepository
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -36,8 +41,24 @@ import kotlin.time.Duration.Companion.milliseconds
 @Singleton
 class NetworkManager @Inject constructor(
     private val serverRepository: ServerRepository,
-    @param:ApplicationScope private val scope: CoroutineScope
+    @param:ApplicationScope private val scope: CoroutineScope,
+    @ApplicationContext context: Context
 ) {
+    // Connectivity Manager to check network connection status
+    private val connectivityManager =
+        context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    private val _hasNetwork = MutableStateFlow(false)
+    val hasNetwork = _hasNetwork.asStateFlow()
+    private val networkCallback = object : ConnectivityManager.NetworkCallback() {
+        override fun onAvailable(network: Network) {
+            _hasNetwork.value = true
+        }
+
+        override fun onLost(network: Network) {
+            _hasNetwork.value = false
+        }
+    }
+
     private val _connectionState = MutableStateFlow<ConnectionState>(ConnectionState.Disconnected)
     val connectionStateFlow: StateFlow<ConnectionState> = _connectionState.asStateFlow()
 
@@ -61,7 +82,6 @@ class NetworkManager @Inject constructor(
     private val delayTime = MutableStateFlow<Long>(3000)
 
     init {
-
         scope.launch {
             serverRepository.serverInfoFlow
                 .distinctUntilChanged()
@@ -74,11 +94,27 @@ class NetworkManager @Inject constructor(
                     connect(info)
             }
         }
+        startNetworkMonitoring()
     }
     companion object {
         private const val MAX_MESSAGE_SIZE = 1_048_576
         private const val MAX_CONNECTION_ATTEMPTS = 11
     }
+
+    private fun currentNetworkAvailable(): Boolean {
+        val network = connectivityManager.activeNetwork ?: return false
+        val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
+        return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+    }
+
+    fun startNetworkMonitoring() {
+        _hasNetwork.value = currentNetworkAvailable()
+        connectivityManager.registerDefaultNetworkCallback(networkCallback)
+    }
+
+//    fun stopNetworkingMonitoring() {
+//        connectivityManager.unregisterNetworkCallback(networkCallback)
+//    }
 
     suspend fun connect(serverInfo: ServerInfo?) {
         connectionMutex.withLock {
