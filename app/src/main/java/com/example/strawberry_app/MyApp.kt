@@ -14,23 +14,27 @@ import com.example.strawberry_app.screens.navigation.NavRail
 fun MyApp(windowSizeClass: WindowSizeClass) {
     val configuration = LocalConfiguration.current
     val isPortrait = configuration.orientation == Configuration.ORIENTATION_PORTRAIT
-
+    println("MyApp Width: ${configuration.screenWidthDp}dp, isPortrait: $isPortrait")
     when {
         !windowSizeClass.isHeightAtLeastBreakpoint(WindowSizeClass.HEIGHT_DP_MEDIUM_LOWER_BOUND) && !isPortrait -> {
             // Phone in landscape (height drops below 480dp when rotated)
             NavRail()
+            println("MyApp navrail with height was called")
         }
         windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND) && !isPortrait -> {
             // Tablet in landscape
             NavRail()
+            println("MyApp navrail with width was called")
         }
         windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND) && isPortrait -> {
             // Tablet in portrait
             NavBar()
+            println("MyApp navbar with width was called")
         }
         else -> {
             // Phone in portrait
             NavBar()
+            println("MyApp navbar 'else' was called")
         }
     }
 }

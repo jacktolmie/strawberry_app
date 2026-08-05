@@ -31,6 +31,7 @@ class MessageRepository @Inject constructor(
             networkManager.connectionStateFlow.collect { state ->
                 if (state is ConnectionState.Disconnected || state is ConnectionState.Connecting){
                     resetServerValues()
+                    playlistRepository.deletePlaylists()
                 }
                 if (state is ConnectionState.Connected){
                     observeNetworkMessages()

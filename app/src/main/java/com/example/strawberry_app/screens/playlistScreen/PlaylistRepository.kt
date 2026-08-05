@@ -79,6 +79,7 @@ class PlaylistRepository @Inject constructor(
     }
 
     // Playlist database changes.
+    suspend fun deletePlaylists(){ playlistDao.deleteAll() }
     suspend fun makeAllPlaylists(playlists: List<Playlist>) {
         db.withTransaction {
             playlistDao.deleteAll()
