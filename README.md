@@ -16,7 +16,7 @@ Currently it has the following functionality:
 
 ## Player Screen
 
-<img src="/images/player.png" width="45%"/> <img src="/images/player_with_song.png" width="45%"/>
+<img src="images/player.png" width="45%"/> <img src="images/player_with_song.png" width="45%"/>
 
 </div>
 
