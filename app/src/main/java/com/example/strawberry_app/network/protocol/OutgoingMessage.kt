@@ -81,11 +81,8 @@ sealed class OutgoingMessage {
 
     @Serializable
     @SerialName("send-active-playlist-song")
-    data object SendActivePlaylistSong : OutgoingMessage()
-//    data class SendActivePlaylistSong(
-//        val id: Long,
-//        @SerialName("song_index")
-//        val songIndex: Long): OutgoingMessage()
+    // Cannot find a way to not use data classes to send commands. Sends "" if not a data class
+    data class SendActivePlaylistSong(val test: Boolean = true) : OutgoingMessage()
 
     @Serializable
     @SerialName("send-all-playlists")

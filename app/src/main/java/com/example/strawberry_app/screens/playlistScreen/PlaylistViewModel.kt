@@ -146,7 +146,7 @@ class PlaylistViewModel @Inject constructor(
     fun renameCurrentPlaylist(id: Long, name: String) {
         playlistRepository.sendCommand(OutgoingMessage.RenamePlaylist(id = id, name = name))
     }
-    fun sendActivePlaylistSong(){ playlistRepository.sendCommand(OutgoingMessage.SendActivePlaylistSong) }
+    fun sendActivePlaylistSong(){ playlistRepository.sendCommand(OutgoingMessage.SendActivePlaylistSong()) }
     fun sendAllPlaylists(playlists: List<Playlist>) = playlistRepository.sendCommand(OutgoingMessage.SendAllPlaylists(playlists = playlists))
     fun sendCurrentChangedPlaylist(id: Long, toIndex: Long, fromIndex: Long){
         playlistRepository.sendCommand(

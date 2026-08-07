@@ -112,7 +112,7 @@ fun CurrentPlaylist(
                                     toIndex, song.position
                                     )
                                     callbacks.setDragIcon(null)
-                                    callbacks.sendActivePlaylistSong()
+                                    callbacks.sendActivePlaylistSong() // This messes up playlist changes
                                 }
                             )
                         )
