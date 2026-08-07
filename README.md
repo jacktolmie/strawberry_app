@@ -74,3 +74,13 @@ Currently it has the following functionality:
 - Set IP address
 - Set port number
 - Password if wanted — must match server side under settings
+
+---
+
+<div align="center">
+
+## Remote Screen on Strawberry
+
+<img src="/images/RemoteSettings.png"/>
+
+</div>
