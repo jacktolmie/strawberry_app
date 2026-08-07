@@ -17,8 +17,10 @@ object ResponseTypeSerializer : JsonContentPolymorphicSerializer<ResponseType>(R
     override fun selectDeserializer(element: JsonElement): DeserializationStrategy<ResponseType> {
         return when (element.jsonObject["response"]?.jsonPrimitive?.content) {
             "cleared_playlist" -> ResponseType.ClearedPlaylist.serializer()
+            "current_song" -> ResponseType.CurrentSong.serializer()
             "deleted_playlist_with_id" -> ResponseType.DeletedPlaylistWithId.serializer()
             "is_playlist_a_favourite" -> ResponseType.IsPlaylistAFavourite.serializer()
+            "playlist_changed" -> ResponseType.PlaylistChanged.serializer()
             "playlist_closed" -> ResponseType.PlaylistClosed.serializer()
             "removed_duplicates_from_playlist" -> ResponseType.RemovedDuplicatesFromPlaylist.serializer()
             "removed_unavailable_songs" -> ResponseType.RemoveUnavailableSongs.serializer()
@@ -46,6 +48,15 @@ sealed  class ResponseType: IncomingMessage() {
     data class ClearedPlaylist(val name: String = ""): ResponseType()
 
     @Serializable
+    @SerialName("current_song")
+    data class CurrentSong(
+            @SerialName("playlist_id")
+            val playlistId: Long,
+            @SerialName("current_song")
+            val songIndex: Long
+            ): ResponseType()
+
+    @Serializable
     @JsonIgnoreUnknownKeys
     @SerialName("deleted_playlist_with_id")
     data class DeletedPlaylistWithId(val id: Long = -1L): ResponseType()
@@ -57,6 +68,10 @@ sealed  class ResponseType: IncomingMessage() {
         val id: Long = -1L,
         @SerialName("is_favourite")
         val isFavourite: Boolean = false): ResponseType()
+
+    @Serializable
+    @SerialName("playlist_changed")
+    data object PlaylistChanged: ResponseType()
 
     @Serializable
     @JsonIgnoreUnknownKeys
@@ -92,6 +107,11 @@ sealed  class ResponseType: IncomingMessage() {
 
     @Serializable
     @JsonIgnoreUnknownKeys
+    @SerialName("send_requested_playlist")
+    data class SendRequestedPlaylist(val playlist: Playlist): ResponseType()
+
+    @Serializable
+    @JsonIgnoreUnknownKeys
     @SerialName("sent_active_playlist")
     data class SentActivePlaylist(val id: Long = -1L): ResponseType()
 
@@ -99,10 +119,6 @@ sealed  class ResponseType: IncomingMessage() {
     @SerialName("sent_album_cover")
     data object SentAlbumCover: ResponseType()
 
-    @Serializable
-    @JsonIgnoreUnknownKeys
-    @SerialName("send_requested_playlist")
-    data class SendRequestedPlaylist(val playlist: Playlist): ResponseType()
     @Serializable
     @JsonIgnoreUnknownKeys
     @SerialName("set_current_playlist_to")

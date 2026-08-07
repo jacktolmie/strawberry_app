@@ -116,16 +116,27 @@ class PlaylistViewModel @Inject constructor(
         removeSongsCurrentPlaylist(id = id,  _selectedSongs.value)
         _selectedSongs.value = emptyList()
     }
+
     fun toggleSelection(songIndex: Long){
         _selectedSongs.value = if(_selectedSongs.value.contains(songIndex))
              _selectedSongs.value.minus(songIndex)
         else _selectedSongs.value.plus(songIndex)
     }
 
+    fun updateCurrentSong(playlistId: Long, songIndex: Long){
+        playlistRepository.updateCurrentSong(
+            playlistId = playlistId,
+            songIndex = songIndex
+        )
+    }
+
     // Functions to send playlist changes to the server.
     fun clearCurrentPlaylist(id: Long) = playlistRepository.sendCommand(OutgoingMessage.ClearPlaylist(id))
     fun closeCurrentPlaylist(id: Long) = playlistRepository.sendCommand(OutgoingMessage.CloseCurrent(id))
     fun deleteCurrentPlaylist(id: Long) = playlistRepository.sendCommand(OutgoingMessage.DeleteCurrentPlaylist(id))
+    fun remoteSentActive(id: Long, songIndex: Long){
+        playlistRepository.sendCommand(OutgoingMessage.RemoteSentActive(id = id, songIndex = songIndex))
+    }
     fun removeSongsCurrentPlaylist(id: Long, songsList: List<Long>){
         playlistRepository.sendCommand(OutgoingMessage.RemoveCurrentSongsFromPlaylist(id = id, songsList = songsList))
         _selectedSongs.value = emptyList()
@@ -135,13 +146,11 @@ class PlaylistViewModel @Inject constructor(
     fun renameCurrentPlaylist(id: Long, name: String) {
         playlistRepository.sendCommand(OutgoingMessage.RenamePlaylist(id = id, name = name))
     }
-    fun sendActivePlaylistSong(id: Long, songIndex: Long){
-        playlistRepository.sendCommand(OutgoingMessage.SendActivePlaylistSong(id = id, songIndex = songIndex))
-    }
+    fun sendActivePlaylistSong(){ playlistRepository.sendCommand(OutgoingMessage.SendActivePlaylistSong) }
     fun sendAllPlaylists(playlists: List<Playlist>) = playlistRepository.sendCommand(OutgoingMessage.SendAllPlaylists(playlists = playlists))
     fun sendCurrentChangedPlaylist(id: Long, toIndex: Long, fromIndex: Long){
         playlistRepository.sendCommand(
-            OutgoingMessage.SendCurrentChangedPlaylist(
+            OutgoingMessage.RemoteChangedPlaylist(
                 id = id,
                 toIndex = toIndex,
                 fromIndex = fromIndex

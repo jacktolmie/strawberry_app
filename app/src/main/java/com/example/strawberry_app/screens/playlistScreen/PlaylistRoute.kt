@@ -6,6 +6,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.window.core.layout.WindowSizeClass
 import com.example.strawberry_app.music.Playlist
+import com.example.strawberry_app.network.protocol.OutgoingMessage
 import com.example.strawberry_app.screens.playlistScreen.screens.PlaylistMediumScreen
 import java.io.File
 
@@ -19,10 +20,11 @@ data class PlaylistCallbacks(
     val isCurrentPlaying: (id: Long) -> Boolean = { false },
     val isDragIconSong: (songIndex: Long) -> Boolean = { false },
     val onPlaylistSelected: (id: Long) -> Unit = {},
+    val remoteSentActive: (id: Long, songIndex: Long) -> Unit = {_,_->},
     val removeDuplicatesInPlaylist: (id: Long) -> Unit = {},
     val removeUnavailableSongs: (id: Long) -> Unit = {},
     val renameCurrentPlaylist: (id: Long, name: String) -> Unit = { _,_ ->},
-    val sendActivePlaylistSong: (id: Long, songIndex: Long) -> Unit = { _,_ ->},
+    val sendActivePlaylistSong: () -> Unit = {},
     val sendAllPlaylists: (playlists: List<Playlist>) -> Unit = {},
     val sendCurrentChangedPlaylist: (id: Long, toIndex: Long, fromIndex: Long) -> Unit = { _,_,_ ->},
     val sendPlaylistFavourite: (id: Long, favourite: Boolean) -> Unit = { _,_ ->},
@@ -31,7 +33,8 @@ data class PlaylistCallbacks(
     val setDragIcon: (songIndex: Long?) -> Unit = {},
     val shuffleAllPlaylists: () -> Unit = {},
     val shuffleCurrentPlaylist: (id: Long) -> Unit = {},
-    val toggleSelection: (id: Long) -> Unit = {}
+    val toggleSelection: (id: Long) -> Unit = {},
+    val updateCurrentSong: (id: Long, songIndex: Long) -> Unit = {_,_ ->}
     )
 
 @Composable
@@ -55,6 +58,7 @@ fun PlaylistRoute(
         isCurrentPlaying = playlistViewModel::isCurrentSongPlaying,
         isDragIconSong = playlistViewModel::isDragIconSong,
         onPlaylistSelected = playlistViewModel::onPlaylistSelected,
+        remoteSentActive = playlistViewModel::remoteSentActive,
         removeDuplicatesInPlaylist = playlistViewModel::removeDuplicatesInPlaylist,
         removeUnavailableSongs = playlistViewModel::removeUnavailableSongs,
         renameCurrentPlaylist = playlistViewModel::renameCurrentPlaylist,
@@ -67,7 +71,8 @@ fun PlaylistRoute(
         setDragIcon = playlistViewModel::setDragIcon,
         shuffleAllPlaylists = playlistViewModel::shuffleAllPlaylists,
         shuffleCurrentPlaylist = playlistViewModel::shuffleCurrentPlaylist,
-        toggleSelection = playlistViewModel::toggleSelection
+        toggleSelection = playlistViewModel::toggleSelection,
+        updateCurrentSong = playlistViewModel::updateCurrentSong
     )
 
     val playlistScreenState = PlaylistScreenState(

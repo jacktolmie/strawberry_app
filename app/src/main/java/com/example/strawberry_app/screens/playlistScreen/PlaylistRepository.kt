@@ -198,11 +198,11 @@ class PlaylistRepository @Inject constructor(
     }
 
     fun setCurrentPlaylist(id: Long) {
-        println("playlistrepo setcurrentplaylist called with id $id")
         _playlistState.update { it.copy(currentPlaylist = id) }
     }
 
     fun updateCurrentSong(playlistId: Long, songIndex: Long) {
+        println("playlistrepo updatecurrentsong called")
         _playlistState.update {
             it.copy(
                 activePlaylist = playlistId,

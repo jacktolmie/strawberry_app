@@ -163,8 +163,12 @@ class MessageRepository @Inject constructor(
 
                     // Server Response messages.
                     is ResponseType.ClearedPlaylist -> { serverResponseMessage("Cleared playlist ${message.name}.") }
+                    is ResponseType.CurrentSong -> {
+                        println("messagerepo current song called with playlist: ${message.playlistId} and song: ${message.songIndex}")
+                        playlistRepository.updateCurrentSong(message.playlistId, message.songIndex)}
                     is ResponseType.DeletedPlaylistWithId -> { serverResponseMessage("Deleted playlist with ID: ${message.id}.") }
                     is ResponseType.IsPlaylistAFavourite -> { serverResponseMessage("Is playlist ${message.id} a favourite? ${message.isFavourite}.") }
+                    is ResponseType.PlaylistChanged -> { serverResponseMessage("Playlist changed") }
                     is ResponseType.PlaylistClosed -> { serverResponseMessage("Playlist ${message.id} closed.") }
                     is ResponseType.RemovedDuplicatesFromPlaylist -> { serverResponseMessage("Removed duplicates from playlist.") }
                     is ResponseType.RemoveUnavailableSongs -> { serverResponseMessage("removed_unavailable_songs") }

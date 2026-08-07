@@ -44,7 +44,7 @@ fun SongItem(
 
 ) {
     val isSelected = playlistScreenState.selectedSongs.contains(song.position)
-    val showDragIcon = playlistScreenState.dragIconSongId == song.id
+    val showDragIcon = playlistScreenState.dragIconSongId == song.position
     val currentIcon = when {
         showDragIcon -> reorder
         isSelected -> check_circle
@@ -58,18 +58,20 @@ fun SongItem(
                     if (!showDragIcon) {
                         callbacks.toggleSelection(song.position)
                     }
+                    callbacks.setDragIcon(null)
                 },
                 onDoubleClick = {
-                    callbacks.sendActivePlaylistSong(playlistId, song.position)
+                    callbacks.remoteSentActive(playlistId, song.position)
                     if (playlistScreenState.isInSelectedMode) callbacks.clearSelectedSongs()
+                    callbacks.setDragIcon(null)
                 },
                 onLongClick = {
-                    if(callbacks.isDragIconSong(song.id)){
+                    if(callbacks.isDragIconSong(song.position)){
                         callbacks.setDragIcon(null)
                     }
                     else {
                         callbacks.clearSelectedSongs()
-                        callbacks.setDragIcon(song.id)
+                        callbacks.setDragIcon(song.position)
                     }
                 }
             )

@@ -90,7 +90,6 @@ fun CurrentPlaylist(
                     if (!albumArtCollection.contains(song.coverImage)){
                         callbacks.getAlbumArtFile(song.coverImage)
                     }
-                    println("currentplaylist currentsongindex: ${playlistScreenState.playlistsData.playlistState.currentSongIndex} and song position: ${song.position} ")
                     Surface(shadowElevation = elevation) {
                         SongItem(
                             callbacks = callbacks,
@@ -113,6 +112,7 @@ fun CurrentPlaylist(
                                     toIndex, song.position
                                     )
                                     callbacks.setDragIcon(null)
+                                    callbacks.sendActivePlaylistSong()
                                 }
                             )
                         )

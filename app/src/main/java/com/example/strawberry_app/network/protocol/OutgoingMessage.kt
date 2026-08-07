@@ -28,9 +28,17 @@ sealed class OutgoingMessage {
     @SerialName("favourite-playlist")
     data class FavouritePlaylist(val id: Long, val favourite: Boolean): OutgoingMessage()
 
+    // Send currently selected playlist id and song index to server
+    @Serializable
+    @SerialName("remote-sent-active")
+    data class RemoteSentActive(
+        val id: Long,
+        @SerialName("song_index")
+        val songIndex: Long): OutgoingMessage()
+
     @Serializable
     @SerialName("remote-changed-playlist")
-    data class SendCurrentChangedPlaylist(
+    data class RemoteChangedPlaylist(
         val id: Long,
         @SerialName("from-index")
         val fromIndex: Long,
@@ -70,12 +78,14 @@ sealed class OutgoingMessage {
         @SerialName("cover_art")
         val coverArt: String
     ): OutgoingMessage()
+
     @Serializable
-    @SerialName("send-playlist-song")
-    data class SendActivePlaylistSong(
-        val id: Long,
-        @SerialName("song_index")
-        val songIndex: Long): OutgoingMessage()
+    @SerialName("send-active-playlist-song")
+    data object SendActivePlaylistSong : OutgoingMessage()
+//    data class SendActivePlaylistSong(
+//        val id: Long,
+//        @SerialName("song_index")
+//        val songIndex: Long): OutgoingMessage()
 
     @Serializable
     @SerialName("send-all-playlists")
