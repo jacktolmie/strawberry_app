@@ -16,7 +16,7 @@ Currently it has the following functionality:
 
 ## Player Screen
 
-<img src="images/player.png" width="45%"/> <img src="images/player_with_song.png" width="45%"/>
+<img src="/images/player.png" width="45%"/> <img src="/images/player_with_song.png" width="45%"/>
 
 </div>
 
@@ -42,7 +42,7 @@ Currently it has the following functionality:
 
 ## Playlists
 
-<img src="images/playlist.png" width="45%"/> <img src="images/playlist_options.png" width="45%"/>
+<img src="/images/playlist.png" width="45%"/> <img src="/images/playlist_options.png" width="45%"/>
 
 </div>
 
@@ -67,12 +67,10 @@ Currently it has the following functionality:
 
 ## Settings
 
-<img src="images/settings.png" width="45%"/>
+<img src="/images/settings.png" width="45%"/>
 
 </div>
 
 - Set IP address
 - Set port number
 - Password if wanted — must match server side under settings
-
-<img src="images/RemoteSettings.png" width="45%"/> <img src="images/playlist_options.png" width="45%"/>
