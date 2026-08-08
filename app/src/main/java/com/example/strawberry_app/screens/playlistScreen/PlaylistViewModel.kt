@@ -5,6 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.res.pluralStringResource
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.strawberry_app.data.dao.SongWithPosition
@@ -162,6 +163,17 @@ class PlaylistViewModel @Inject constructor(
     }
     fun setCurrentPlaylist(id: Long) = playlistRepository.sendCommand(OutgoingMessage.SetCurrentPlaylist(id = id))
     fun sendRepeatMode(repeatMode: String) = playlistRepository.sendCommand(OutgoingMessage.RepeatMode(repeatMode))
+
+    // For shuffling playlists
+    fun selectShuffleMode(mode: String, id: Long = -1){
+        when (mode) {
+            "all" -> playlistRepository.sendCommand(OutgoingMessage.ShuffleAllPlaylists)
+            "current" -> playlistRepository.sendCommand(
+                OutgoingMessage.ShuffleCurrentPlaylist(
+                    playlistRepository.playlistState.value.currentPlaylist
+                ))
+        }
+    }
     fun shuffleAllPlaylists() = playlistRepository.sendCommand(OutgoingMessage.ShuffleAllPlaylists)
     fun shuffleCurrentPlaylist(id: Long) = playlistRepository.sendCommand(OutgoingMessage.ShuffleCurrentPlaylist(id = id))
 }

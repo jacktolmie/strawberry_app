@@ -88,6 +88,7 @@ class MessageRepository @Inject constructor(
                                     else ->         PlayState.STOPPED
                                 },
                                 repeatMode =        message.repeatMode,
+                                shuffleMode =       message.shuffleMode,
                                 volume =            message.volume
                             )
                         )
@@ -174,6 +175,7 @@ class MessageRepository @Inject constructor(
                     is ResponseType.RemoveUnavailableSongs -> { serverResponseMessage("removed_unavailable_songs") }
                     is ResponseType.RenamePlaylist -> { serverResponseMessage("Renamed playlist ${message.id} to ${message.name}.") }
                     is ResponseType.RemovedSongFromPlaylist -> { serverResponseMessage("Removed songs from playlist ${message.id}.") }
+                    is ResponseType.RepeatMode -> { serverResponseMessage("Repeat mode changed to ${message.repeatMode}") }
                     is ResponseType.RunningCommand -> { serverResponseMessage("Running command ${message.command}.") }
                     is ResponseType.SentActivePlaylist -> { serverResponseMessage("Active playlist ID: ${message.id}.") }
                     is ResponseType.SentAlbumCover -> {serverResponseMessage("Sent album cover")}

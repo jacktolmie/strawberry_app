@@ -24,6 +24,7 @@
     <string name="playlist_repeat">Repeat</string>
     <string name="playlist_repeat_choose">Choose Repeat Option</string>
     <string name="playlist_shuffle">Shuffle Playlist</string>
+    <string name="playlist_shuffle_choose">Choose Shuffle Option</string>
     <string name="playlist_song_count">Songs</string>
 
 

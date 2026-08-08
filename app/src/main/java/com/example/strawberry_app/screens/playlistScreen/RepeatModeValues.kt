@@ -1,6 +1,6 @@
 package com.example.strawberry_app.screens.playlistScreen
 
-enum class RepeatModeValues(val serverValue: String) {
+enum class RepeatModeValues(val repeatValue: String) {
     ALBUM("album"),
     OFF("off"),
     PLAYLIST("playlist"),
@@ -9,6 +9,6 @@ enum class RepeatModeValues(val serverValue: String) {
 
     companion object {
         fun fromString(value: String): RepeatModeValues =
-            entries.find { it.serverValue == value.lowercase() } ?: UNKNOWN
+            entries.find { it.repeatValue == value.lowercase() } ?: UNKNOWN
     }
 }

@@ -19,16 +19,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.strawberry_app.R
-import com.example.strawberry_app.screens.playlistScreen.RepeatModeValues
+import com.example.strawberry_app.screens.playlistScreen.ShuffleModeValues
 
 @Composable
-fun RepeatAlert(
-    currentRepeatMode: RepeatModeValues,
-    onConfirm: (RepeatModeValues) -> Unit,
+fun ShuffleAlert(
+    currentShuffleMode: ShuffleModeValues,
+    onConfirm: (ShuffleModeValues) -> Unit,
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier
 ){
-    var selected by remember { mutableStateOf(currentRepeatMode) }
+    var selected by remember { mutableStateOf(currentShuffleMode)}
 
     AlertDialog(
         modifier = modifier,
@@ -41,35 +41,33 @@ fun RepeatAlert(
             TextButton(onClick = onDismiss) {
                 Text(text = stringResource(R.string.cancel))
             }
-
         },
-        onDismissRequest = onDismiss,
+        onDismissRequest = {},
         text = {
-            RepeatRadioBtn(
+            ShuffleRadioBtn(
                 selected = selected,
                 onOptionSelected = { selected = it }
             )
         },
-        title = { Text(text = stringResource(R.string.playlist_repeat_choose))}
-        )
+        title = { Text(text = stringResource(R.string.playlist_shuffle_choose))}
+    )
 }
 
 @Composable
-fun RepeatRadioBtn(
-    selected: RepeatModeValues,
-    onOptionSelected: (RepeatModeValues) -> Unit
+fun ShuffleRadioBtn(
+    selected: ShuffleModeValues,
+    onOptionSelected: (ShuffleModeValues) -> Unit
 ){
-    val repeatOptions = listOf(
-        RepeatModeValues.OFF,
-        RepeatModeValues.ALBUM,
-        RepeatModeValues.PLAYLIST,
-        RepeatModeValues.TRACK
+    val shuffleOptions = listOf(
+        ShuffleModeValues.OFF,
+        ShuffleModeValues.ALL,
+        ShuffleModeValues.CURRENT
     )
 
     Column(
         modifier = Modifier.selectableGroup()
     ) {
-        repeatOptions.forEach { option ->
+        shuffleOptions.forEach { option ->
             Row( modifier = Modifier
                 .selectable(
                     selected = (option == selected),
@@ -90,9 +88,9 @@ fun RepeatRadioBtn(
 
 @Preview
 @Composable
-fun RepeatRadioBtnPreview(){
-    RepeatRadioBtn(
-        selected = RepeatModeValues.OFF,
+fun ShuffleRadioBtnPreview(){
+    ShuffleRadioBtn(
+        selected = ShuffleModeValues.OFF,
         onOptionSelected = {}
     )
 }

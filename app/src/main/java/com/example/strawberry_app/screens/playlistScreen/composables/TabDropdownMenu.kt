@@ -39,6 +39,7 @@ fun TabDropdownMenu(
 ){
     var showRenameDialog by remember { mutableStateOf(false)}
     var showRepeatDialog by remember { mutableStateOf(false) }
+    var showShuffleDialog by remember { mutableStateOf(false)}
     var newPlaylistName by remember(playlistName) { mutableStateOf(playlistName)}
 
     // If showRepeatDialog is true, display RepeatAlert.
@@ -64,6 +65,12 @@ fun TabDropdownMenu(
             onDismiss = { showRenameDialog = false }
         )
     }
+
+//    if (showShuffleDialog){
+//        ShuffleAlert(
+//
+//        )
+//    }
 
     Box( modifier = modifier )
     {

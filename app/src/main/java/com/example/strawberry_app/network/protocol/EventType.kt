@@ -92,6 +92,8 @@ sealed class EventType: IncomingMessage() {
         val playlists: MakeAllPlaylists? = null,
         @SerialName("repeat_mode")
         val repeatMode: String,
+        @SerialName("shuffle_mode")
+        val shuffleMode: String,
         val time: Long = 0L,
         val volume: Int = 0
     ) : EventType()

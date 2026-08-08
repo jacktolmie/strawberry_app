@@ -26,6 +26,7 @@ object ResponseTypeSerializer : JsonContentPolymorphicSerializer<ResponseType>(R
             "removed_unavailable_songs" -> ResponseType.RemoveUnavailableSongs.serializer()
             "rename_playlist" -> ResponseType.RenamePlaylist.serializer()
             "removed_songs_from_playlist" -> ResponseType.RemovedSongFromPlaylist.serializer()
+            "repeat_mode" -> ResponseType.RepeatMode.serializer()
             "running_command" -> ResponseType.RunningCommand.serializer()
             "sent_active_playlist" -> ResponseType.SentActivePlaylist.serializer()
             "sent_album_cover" -> ResponseType.SentAlbumCover.serializer()
@@ -99,6 +100,14 @@ sealed  class ResponseType: IncomingMessage() {
     @JsonIgnoreUnknownKeys
     @SerialName("removed_songs_from_playlist")
     data class RemovedSongFromPlaylist(val id: Long = -1L): ResponseType()
+
+    @Serializable
+    @SerialName("repeat_mode")
+    data class RepeatMode(
+        @SerialName("repeat_mode")
+        val repeatMode: String
+    ): ResponseType()
+
 
     @Serializable
     @JsonIgnoreUnknownKeys
