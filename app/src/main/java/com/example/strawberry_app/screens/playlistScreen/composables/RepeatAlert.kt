@@ -61,9 +61,11 @@ fun RepeatRadioBtn(
 ){
     val repeatOptions = listOf(
         RepeatModeValues.OFF,
+        RepeatModeValues.TRACK,
         RepeatModeValues.ALBUM,
         RepeatModeValues.PLAYLIST,
-        RepeatModeValues.TRACK
+        RepeatModeValues.STOP,
+        RepeatModeValues.INTRO
     )
 
     Column(
@@ -82,7 +84,7 @@ fun RepeatRadioBtn(
                     selected = (option == selected),
                     onClick = null
                 )
-                Text(text = option.toString())
+                Text(text = RepeatModeValues.toString(option))
             }
         }
     }
