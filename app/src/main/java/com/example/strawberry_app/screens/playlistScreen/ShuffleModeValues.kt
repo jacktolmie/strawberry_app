@@ -11,5 +11,15 @@ enum class ShuffleModeValues(val shuffleValue: String) {
     companion object {
         fun fromString(value: String): ShuffleModeValues =
             entries.find { it.shuffleValue == value.lowercase() } ?: UNKNOWN
+
+        fun toString(value: ShuffleModeValues) =
+            when (value) {
+                ALBUMS -> "Albums"
+                ALL -> "All"
+                GROUPING -> "Grouping"
+                OFF -> "Off"
+                TRACKS -> "Tracks"
+                UNKNOWN -> "Unknown"
+            }
     }
 }

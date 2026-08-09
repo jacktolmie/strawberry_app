@@ -82,7 +82,7 @@ fun ShuffleRadioBtn(
                     selected = (option == selected),
                     onClick = null
                 )
-                Text(text = option.toString())
+                Text(text = ShuffleModeValues.toString(option))
             }
         }
     }
