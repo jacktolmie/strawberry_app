@@ -6,7 +6,6 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.window.core.layout.WindowSizeClass
 import com.example.strawberry_app.music.Playlist
-import com.example.strawberry_app.network.protocol.OutgoingMessage
 import com.example.strawberry_app.screens.playlistScreen.screens.PlaylistMediumScreen
 import java.io.File
 
@@ -29,10 +28,11 @@ data class PlaylistCallbacks(
     val sendCurrentChangedPlaylist: (id: Long, toIndex: Long, fromIndex: Long) -> Unit = { _,_,_ ->},
     val sendPlaylistFavourite: (id: Long, favourite: Boolean) -> Unit = { _,_ ->},
     val sendRepeatMode: (mode: String) -> Unit = {},
+    val sendShuffleMode: (mode: String) -> Unit = {},
     val setCurrentPlaylist: (id: Long) -> Unit = {},
     val setDragIcon: (songIndex: Long?) -> Unit = {},
-    val shuffleAllPlaylists: () -> Unit = {},
-    val shuffleCurrentPlaylist: (id: Long) -> Unit = {},
+//    val shuffleAllPlaylists: () -> Unit = {},
+//    val shuffleCurrentPlaylist: (id: Long) -> Unit = {},
     val toggleSelection: (id: Long) -> Unit = {},
     val updateCurrentSong: (id: Long, songIndex: Long) -> Unit = {_,_ ->}
     )
@@ -69,8 +69,9 @@ fun PlaylistRoute(
         sendRepeatMode = playlistViewModel::sendRepeatMode,
         setCurrentPlaylist = playlistViewModel::setCurrentPlaylist,
         setDragIcon = playlistViewModel::setDragIcon,
-        shuffleAllPlaylists = playlistViewModel::shuffleAllPlaylists,
-        shuffleCurrentPlaylist = playlistViewModel::shuffleCurrentPlaylist,
+        sendShuffleMode = playlistViewModel::sendShuffleMode,
+//        shuffleAllPlaylists = playlistViewModel::shuffleAllPlaylists,
+//        shuffleCurrentPlaylist = playlistViewModel::shuffleCurrentPlaylist,
         toggleSelection = playlistViewModel::toggleSelection,
         updateCurrentSong = playlistViewModel::updateCurrentSong
     )

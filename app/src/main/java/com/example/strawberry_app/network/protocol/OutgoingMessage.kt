@@ -97,12 +97,18 @@ sealed class OutgoingMessage {
     data class SetCurrentPlaylist(val id: Long): OutgoingMessage()
 
     @Serializable
-    @SerialName("shuffle-all-playlists")
-    data object ShuffleAllPlaylists: OutgoingMessage()
-
-    @Serializable
-    @SerialName("shuffle-current-playlist")
-    data class ShuffleCurrentPlaylist(val id: Long): OutgoingMessage()
+    @SerialName("shuffle-mode")
+    data class ShuffleMode(
+        @SerialName("shuffle-mode")
+        val shuffleMode: String
+    ): OutgoingMessage()
+//    @Serializable
+//    @SerialName("shuffle-all-playlists")
+//    data object ShuffleAllPlaylists: OutgoingMessage()
+//
+//    @Serializable
+//    @SerialName("shuffle-current-playlist")
+//    data class ShuffleCurrentPlaylist(val id: Long): OutgoingMessage()
 
     // Player controls
     @Serializable

@@ -33,7 +33,8 @@ data class PlaylistState(
     val currentPlaylist: Long = -1,
     val currentSongIndex: Long = -1,
     val currentSongWithPosition: SongWithPosition? = null,
-    val repeatMode: String = ""
+    val repeatMode: String = "",
+    val shuffleMode: String = ""
 )
 
 @Singleton
@@ -67,7 +68,8 @@ class PlaylistRepository @Inject constructor(
                 it.copy(
                     activePlaylist = it.activePlaylist,
                     currentPlaylist = it.currentPlaylist,
-                    repeatMode = it.repeatMode
+                    repeatMode = it.repeatMode,
+                    shuffleMode = it.shuffleMode
                 )
             }
         }
@@ -216,7 +218,8 @@ class PlaylistRepository @Inject constructor(
         currentPlaylist: Long,
         currentSongIndex: Long,
         currentCoverImage: String,
-        repeatMode: String
+        repeatMode: String,
+        shuffleMode: String
     ) {
         _playlistState.update {
             it.copy(
@@ -224,14 +227,17 @@ class PlaylistRepository @Inject constructor(
                 currentPlaylist = currentPlaylist,
                 currentSongIndex = currentSongIndex,
                 currentCoverImage = currentCoverImage,
-                repeatMode = repeatMode
+                repeatMode = repeatMode,
+                shuffleMode = shuffleMode
             )
         }
     }
 
     fun updateRepeatMode(repeatMode: String){
-        _playlistState.update {
-            it.copy(repeatMode = repeatMode)
-        }
+        _playlistState.update { it.copy(repeatMode = repeatMode) }
+    }
+
+    fun updateShuffleMode(shuffleMode: String){
+        _playlistState.update { it.copy(shuffleMode = shuffleMode) }
     }
 }

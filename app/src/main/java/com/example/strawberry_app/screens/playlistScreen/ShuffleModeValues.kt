@@ -1,9 +1,11 @@
 package com.example.strawberry_app.screens.playlistScreen
 
 enum class ShuffleModeValues(val shuffleValue: String) {
+    ALBUMS("albums"),
     ALL("all"),
-    CURRENT("current"),
+    GROUPING("grouping"),
     OFF("off"),
+    TRACKS("tracks"),
     UNKNOWN("unknown");
 
     companion object {

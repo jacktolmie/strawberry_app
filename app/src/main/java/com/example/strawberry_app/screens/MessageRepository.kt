@@ -63,7 +63,8 @@ class MessageRepository @Inject constructor(
                             currentPlaylist = message.currentPlaylist,
                             currentSongIndex = message.currentSong,
                             currentCoverImage = message.coverImage,
-                            repeatMode = message.repeatMode
+                            repeatMode = message.repeatMode,
+                            shuffleMode = message.shuffleMode
                         )
                         playlistRepository.getAlbumArtFile(coverArt = message.coverImage)
 
@@ -119,6 +120,7 @@ class MessageRepository @Inject constructor(
                     is EventType.RenamePlaylist -> playlistRepository.serverRenamedPlaylist(id = message.id, name = message.name)
                     is EventType.RepeatMode -> playlistRepository.updateRepeatMode(message.repeatMode)
                     is EventType.SeekTo -> playerRepository.getGuiUpdates(serverUpdates.value.copy(currentTime = message.time) )
+                    is EventType.ShuffleMode -> playlistRepository.updateShuffleMode(message.shuffleMode)
                     is EventType.SongChanged -> {
                         playerRepository.getGuiUpdates(serverUpdates.value.copy(currentSongId = message.row))
                     }
@@ -181,8 +183,8 @@ class MessageRepository @Inject constructor(
                     is ResponseType.SentAlbumCover -> {serverResponseMessage("Sent album cover")}
                     is ResponseType.SendRequestedPlaylist -> { serverResponseMessage("Send requested playlist with ID: ${message.playlist.id}.") }
                     is ResponseType.SetActivePlaylistTo -> { serverResponseMessage("Set active playlist to ${message.id}.") }
-                    is ResponseType.ShuffledPlaylist -> { serverResponseMessage("Shuffled playlist.") }
-                    is ResponseType.ShuffledALlPlaylists -> { serverResponseMessage("Shuffled all playlists.") }
+                    is ResponseType.ShuffledPlaylist -> { serverResponseMessage("Shuffle playlist mode: ${message.mode}.") }
+//                    is ResponseType.ShuffledALlPlaylists -> { serverResponseMessage("Shuffled all playlists.") }
                     is ResponseType.Songs -> { serverResponseMessage("List of songs sent.") }
 
                     else -> Unit

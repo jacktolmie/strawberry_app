@@ -31,6 +31,7 @@ object EventTypeSerializer : JsonContentPolymorphicSerializer<EventType>(EventTy
             "seek_backward" -> EventType.SeekBackward.serializer()
             "seek_forward" -> EventType.SeekForward.serializer()
             "seek_to" -> EventType.SeekTo.serializer()
+            "shuffle_mode" -> EventType.ShuffleMode.serializer()
             "song_changed" -> EventType.SongChanged.serializer()
             "song_info" -> EventType.SongInfo.serializer()
             "stop" -> EventType.Stop.serializer()
@@ -160,6 +161,13 @@ sealed class EventType: IncomingMessage() {
     @JsonIgnoreUnknownKeys
     @SerialName("seek_to")
     data class SeekTo(val time: Long) : EventType()
+
+    @Serializable
+    @SerialName("shuffle_mode")
+    data class ShuffleMode(
+        @SerialName("shuffle_mode")
+        val shuffleMode: String
+    ): EventType()
 
     @Serializable
     @JsonIgnoreUnknownKeys

@@ -15,6 +15,7 @@ import com.example.strawberry_app.R
 import com.example.strawberry_app.screens.playlistScreen.PlaylistCallbacks
 import com.example.strawberry_app.screens.playlistScreen.PlaylistsData
 import com.example.strawberry_app.screens.playlistScreen.RepeatModeValues
+import com.example.strawberry_app.screens.playlistScreen.ShuffleModeValues
 import com.example.strawberry_app.ui.theme.icons.clear_all
 import com.example.strawberry_app.ui.theme.icons.delete_sweep
 import com.example.strawberry_app.ui.theme.icons.drive_file_rename
@@ -66,11 +67,16 @@ fun TabDropdownMenu(
         )
     }
 
-//    if (showShuffleDialog){
-//        ShuffleAlert(
-//
-//        )
-//    }
+    if (showShuffleDialog){
+        ShuffleAlert(
+            currentShuffleMode = ShuffleModeValues.fromString(playlistsData.playlistState.shuffleMode),
+            onConfirm = {mode ->
+                showShuffleDialog = false
+                callbacks.sendShuffleMode(mode.toString())
+            },
+            onDismiss = { showShuffleDialog = false }
+        )
+    }
 
     Box( modifier = modifier )
     {
@@ -99,7 +105,7 @@ fun TabDropdownMenu(
             DropdownMenuItemComposable(
                 text = R.string.playlist_repeat,
                 iconImage = repeat,
-                onConfirm = { onConfirm({ },false, false, R.string.playlist_repeat)
+                onConfirm = { onConfirm({ }, false, false, R.string.playlist_repeat)
                     showRepeatDialog = true
                 },
                 itemName = playlistName
@@ -107,8 +113,8 @@ fun TabDropdownMenu(
             DropdownMenuItemComposable(
                 text = R.string.playlist_shuffle,
                 iconImage = shuffle,
-                onConfirm = { onConfirm({ callbacks.shuffleCurrentPlaylist(playlistId) },
-                        true, false, R.string.playlist_shuffle)
+                onConfirm = { onConfirm({ }, false, false, R.string.playlist_shuffle)
+                    showShuffleDialog = true
                 },
                 itemName = playlistName
             )
