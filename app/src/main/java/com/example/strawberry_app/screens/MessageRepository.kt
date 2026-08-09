@@ -184,7 +184,6 @@ class MessageRepository @Inject constructor(
                     is ResponseType.SendRequestedPlaylist -> { serverResponseMessage("Send requested playlist with ID: ${message.playlist.id}.") }
                     is ResponseType.SetActivePlaylistTo -> { serverResponseMessage("Set active playlist to ${message.id}.") }
                     is ResponseType.ShuffledPlaylist -> { serverResponseMessage("Shuffle playlist mode: ${message.mode}.") }
-//                    is ResponseType.ShuffledALlPlaylists -> { serverResponseMessage("Shuffled all playlists.") }
                     is ResponseType.Songs -> { serverResponseMessage("List of songs sent.") }
 
                     else -> Unit

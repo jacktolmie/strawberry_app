@@ -61,9 +61,9 @@ fun ShuffleRadioBtn(
     val shuffleOptions = listOf(
         ShuffleModeValues.OFF,
         ShuffleModeValues.ALL,
+        ShuffleModeValues.TRACKS,
         ShuffleModeValues.ALBUMS,
-        ShuffleModeValues.GROUPING,
-        ShuffleModeValues.TRACKS
+        ShuffleModeValues.GROUPING
     )
 
     Column(

@@ -45,7 +45,6 @@ fun TabDropdownMenu(
 
     // If showRepeatDialog is true, display RepeatAlert.
     if (showRepeatDialog) {
-        println("tabdrop repeat mode: ${RepeatModeValues.fromString(playlistsData.playlistState.repeatMode)}")
         RepeatAlert(
             currentRepeatMode = RepeatModeValues.fromString(playlistsData.playlistState.repeatMode),
             onConfirm = { mode ->
@@ -69,6 +68,7 @@ fun TabDropdownMenu(
     }
 
     if (showShuffleDialog){
+        println("tabdrop repeat mode: ${ShuffleModeValues.fromString(playlistsData.playlistState.shuffleMode)}")
         ShuffleAlert(
             currentShuffleMode = ShuffleModeValues.fromString(playlistsData.playlistState.shuffleMode),
             onConfirm = {mode ->
