@@ -42,7 +42,7 @@ fun ShuffleAlert(
                 Text(text = stringResource(R.string.cancel))
             }
         },
-        onDismissRequest = {},
+        onDismissRequest = onDismiss,
         text = {
             ShuffleRadioBtn(
                 selected = selected,
