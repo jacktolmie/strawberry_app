@@ -34,7 +34,7 @@ class PlayerCallbacks(
 
 @Composable
 fun PlayerRoute(
-    windowSizeClass: WindowSizeClass,
+    isCompact: Boolean,
     playerViewModel: PlayerViewModel = hiltViewModel()
 ){
     val playerValues by playerViewModel.serverUpdates.collectAsStateWithLifecycle()
@@ -61,5 +61,11 @@ fun PlayerRoute(
 
     val playerScreenData = PlayerScreenState(playerValues, albumArtFile)
 
-    PlayerMedLrgPortraitScreen(callbacks, playerScreenData)
+    if(isCompact){
+//        PlayerSmallScreenPortrait()
+        println("nada")
+    } else {
+        PlayerMedLrgPortraitScreen(callbacks, playerScreenData)
+    }
+
 }

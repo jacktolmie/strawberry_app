@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -19,87 +20,79 @@ import com.example.strawberry_app.R
 import com.example.strawberry_app.network.ConnectionState
 import com.example.strawberry_app.network.ConnectionState.Connected
 import com.example.strawberry_app.network.SettingsGuiData
-import com.example.strawberry_app.screens.settingsScreen.SettingsCallbacks
-import com.example.strawberry_app.screens.settingsScreen.composables.ConnStateMedLrg
-import com.example.strawberry_app.screens.settingsScreen.composables.MedLrgScreenBtns
 import com.example.strawberry_app.screens.TextBox
-import com.example.strawberry_app.screens.settingsScreen.composables.TextboxIpHoriz
-import com.example.strawberry_app.screens.settingsScreen.composables.TextboxPasswordHoriz
-import com.example.strawberry_app.screens.settingsScreen.composables.TextboxPortHoriz
+import com.example.strawberry_app.screens.settingsScreen.SettingsCallbacks
+import com.example.strawberry_app.screens.settingsScreen.composables.ConnStateSmall
+import com.example.strawberry_app.screens.settingsScreen.composables.SmallScreenBtns
+import com.example.strawberry_app.screens.settingsScreen.composables.TextboxIpVert
+import com.example.strawberry_app.screens.settingsScreen.composables.TextboxPasswordVert
+import com.example.strawberry_app.screens.settingsScreen.composables.TextboxPortVert
 import com.example.strawberry_app.server.SettingsUiState
 
 @Composable
-fun SettingsMedLrgPortraitScreen(
+fun SettingsSmallPortraitScreen(
     serverUiState: SettingsUiState,
     connectionState: ConnectionState,
     callbacks: SettingsCallbacks,
     hasNetwork: Boolean,
     settingsGuiData: SettingsGuiData,
     modifier: Modifier = Modifier
-) {
-
+){
     Column(modifier = modifier
         .statusBarsPadding()
-        .fillMaxWidth()
+        .fillMaxSize()
         .navigationBarsPadding()
         .padding(10.dp)
         .background(MaterialTheme.colorScheme.background),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
-    )
-    {
+    ) {
         TextBox(
             color = MaterialTheme.colorScheme.onSurface,
             textRes = R.string.settings_title,
-            textStyle = MaterialTheme.typography.headlineLarge
+            textStyle = MaterialTheme.typography.headlineMedium
         )
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        TextboxIpHoriz(serverUiState, callbacks)
+        TextboxIpVert(serverUiState, callbacks)
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        TextboxPortHoriz(serverUiState, callbacks)
+        TextboxPortVert(serverUiState, callbacks)
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        TextboxPasswordHoriz(serverUiState, callbacks)
+        TextboxPasswordVert(serverUiState, callbacks)
 
-        Spacer(modifier = Modifier.height(10.dp))
+        SmallScreenBtns(serverUiState, callbacks, connectionState, hasNetwork)
 
-        MedLrgScreenBtns(serverUiState, callbacks, connectionState, hasNetwork)
-
-        ConnStateMedLrg(settingsGuiData)
-
+        ConnStateSmall(settingsGuiData)
     }
 }
 
-
-
 @Preview
 @Composable
-fun SettingsMedLrgPortraitPreview(){
-    SettingsMedLrgPortraitScreen(
-        serverUiState = SettingsUiState(
-            ip = "192.168.1.201",
-            port = "5000",
-            password = "",
-            hasChanged = false,
-            isPortValid = true
-        ),
-
-        connectionState = Connected,
-        callbacks = SettingsCallbacks(
-            onIpChanged = {},
-            onPortChanged = {},
-            onPasswordChanged = {},
-            onSaveClicked = {},
-            onCancelClicked = {},
-            onDisconnectClicked = {},
-            onConnectClicked = {}
-        ),
-        hasNetwork = true,
-        settingsGuiData = SettingsGuiData()
+fun SettingsSmallPortraitPreview(){
+    SettingsSmallPortraitScreen(
+            serverUiState = SettingsUiState(
+                ip = "192.168.1.201",
+                port = "5000",
+                password = "",
+                hasChanged = false,
+                isPortValid = true
+            ),
+            connectionState = Connected,
+            callbacks = SettingsCallbacks(
+                onIpChanged = {},
+                onPortChanged = {},
+                onPasswordChanged = {},
+                onSaveClicked = {},
+                onCancelClicked = {},
+                onDisconnectClicked = {},
+                onConnectClicked = {}
+            ),
+            hasNetwork = true,
+            settingsGuiData = SettingsGuiData()
     )
 }

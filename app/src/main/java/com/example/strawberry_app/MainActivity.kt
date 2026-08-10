@@ -14,8 +14,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    private val connectionViewModel: ConnectionViewModel by viewModels()
-
+//    private val connectionViewModel: ConnectionViewModel by viewModels()
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,26 +29,3 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
-//            MyAppTheme {
-//                val windowSizeClass: WindowSizeClass = currentWindowAdaptiveInfo(supportLargeAndXLargeWidth = true).windowSizeClass
-//                MyApp(
-//                    windowSizeClass = windowSizeClass,
-//                    connectionViewModel = connectionViewModel
-//                )
-//            }
-//@Composable
-//fun Greeting(name: String, modifier: Modifier = Modifier) {
-//    Text(
-//        text = "Hello $name!",
-//        modifier = modifier
-//    )
-//}
-//
-//@Preview(showBackground = true)
-//@Composable
-//fun GreetingPreview() {
-//    Strawberry_appTheme {
-//        Greeting("Android")
-//    }
-//}

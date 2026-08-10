@@ -80,7 +80,7 @@ fun ConnStateSmall(
         TextBox(
             color = MaterialTheme.colorScheme.onSurface,
             textRes = R.string.settings_connection_status,
-            textStyle = MaterialTheme.typography.bodyLarge)
+            textStyle = MaterialTheme.typography.bodyMedium)
 
         Spacer(modifier = Modifier.width(5.dp))
 
@@ -100,7 +100,7 @@ fun ConnStateSmall(
         TextBox(
             color = MaterialTheme.colorScheme.onSurface,
             text = settingsGuiData.connectionState,
-            textStyle = MaterialTheme.typography.bodyLarge
+            textStyle = MaterialTheme.typography.bodySmall
         )
     }
 }

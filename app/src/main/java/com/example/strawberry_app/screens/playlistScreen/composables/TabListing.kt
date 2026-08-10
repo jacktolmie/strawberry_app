@@ -22,7 +22,8 @@ fun TabListing(
     modifier: Modifier = Modifier
 ){
     var selectedTabIndex by remember { mutableIntStateOf(0) }
-    val safeIndex = selectedTabIndex.coerceAtMost((playlistScreenState.playlistsData.playlists.size - 1).coerceAtLeast(0))
+    val safeIndex = selectedTabIndex
+        .coerceAtMost((playlistScreenState.playlistsData.playlists.size - 1).coerceAtLeast(0))
 
     LaunchedEffect(playlistScreenState.playlistsData.playlistState.currentPlaylist) {
         val playlist = playlistScreenState.playlistsData.playlists.firstOrNull {

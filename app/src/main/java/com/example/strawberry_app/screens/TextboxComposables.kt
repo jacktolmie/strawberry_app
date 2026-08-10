@@ -11,6 +11,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -19,12 +20,14 @@ fun TextBox(
     textRes: Int,
     textStyle: TextStyle,
     modifier: Modifier = Modifier,
+    textAlign: TextAlign = TextAlign.Start,
     maxLines: Int = 1,
 ){
     Text(
         color = color,
         maxLines = maxLines,
         text = stringResource(textRes),
+        textAlign = textAlign,
         style = textStyle,
         modifier = modifier
     )
@@ -53,7 +56,7 @@ fun TextFieldBox(
     onValue: (String) -> Unit,
     modifier: Modifier = Modifier,
     label: Int? = null,
-    keyboard: KeyboardType = KeyboardType.Text,
+    keyboard: KeyboardType = KeyboardType.Decimal,
     error: Int? = null
 ){
     TextField(modifier = modifier

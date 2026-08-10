@@ -17,20 +17,31 @@ fun MyApp(windowSizeClass: WindowSizeClass) {
     val pagerState = rememberPagerState(pageCount = { 3 })
     println("MyApp Width: ${configuration.screenWidthDp}dp, Height: ${configuration.screenHeightDp} isPortrait: $isPortrait")
     when {
+
         !windowSizeClass.isHeightAtLeastBreakpoint(WindowSizeClass.HEIGHT_DP_MEDIUM_LOWER_BOUND) && !isPortrait -> {
             // Phone in landscape (height drops below 480dp when rotated)
-            NavRail(
-                windowSizeClass = windowSizeClass,
-                pagerState = pagerState
+            NavBar(
+                isCompact = false,
+                pagerState = pagerState,
+                showLabel = false
             )
-            println("MyApp navrail with height was called")
+            println("MyApp navBar phone in landscape height mode was called")
         }
+        windowSizeClass.isHeightAtLeastBreakpoint(WindowSizeClass.HEIGHT_DP_MEDIUM_LOWER_BOUND) && isPortrait -> {
+            NavBar(
+                isCompact = false,
+                pagerState = pagerState,
+                showLabel = true
+            )
+            println("MyApp navBar phone in portrait height mode was called")
+        }
+
         windowSizeClass.isHeightAtLeastBreakpoint(WindowSizeClass.HEIGHT_DP_MEDIUM_LOWER_BOUND) && !isPortrait -> {
             NavRail(
                 windowSizeClass = windowSizeClass,
                 pagerState = pagerState
             )
-            println("MyApp no nav or rail with height was called")
+            println("MyApp navRail tablet in landscape height was called")
         }
         windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND) && !isPortrait -> {
             // Tablet in landscape
@@ -38,21 +49,23 @@ fun MyApp(windowSizeClass: WindowSizeClass) {
                 windowSizeClass = windowSizeClass,
                 pagerState = pagerState
             )
-            println("MyApp navrail with width was called")
+            println("MyApp navRail with width breakpoint in landscape was called")
         }
         windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND) && isPortrait -> {
             // Tablet in portrait
             NavBar(
-                windowSizeClass = windowSizeClass,
-                pagerState = pagerState
+                isCompact = false,
+                pagerState = pagerState,
+                showLabel = true
             )
-            println("MyApp navbar with width was called")
+            println("MyApp navbar with tablet width in portrait was called")
         }
         else -> {
-            // Phone in portrait
+            // Compact phone in portrait
             NavBar(
-                windowSizeClass = windowSizeClass,
-                pagerState = pagerState
+                isCompact = true,
+                pagerState = pagerState,
+                showLabel = false
             )
             println("MyApp navbar 'else' was called")
         }

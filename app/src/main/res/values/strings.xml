@@ -39,7 +39,7 @@
     <string name="settings_port_number_error">Port must be a number</string>
     <string name="settings_port_range_error">Port range is 1000–65535</string>
 
-    <string name="settings_password">Server Password</string>
+    <string name="settings_password">Password</string>
 
     <string name="settings_connection_status">Connection Status:</string>
     <string name="settings_connected">Connected</string>
