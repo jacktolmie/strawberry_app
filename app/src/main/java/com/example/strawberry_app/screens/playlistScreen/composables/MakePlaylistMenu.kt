@@ -74,9 +74,15 @@ fun MakePlaylistMenu(
         )
 
         val length = "${stringResource(R.string.playlist_length)}: ${formatTime(playlistsData.playlists[selectedTabIndex].playlistLength)}"
-        TextBox(text = length, textStyle = MaterialTheme.typography.bodyMedium)
+        TextBox(
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            text = length,
+            textStyle = MaterialTheme.typography.bodyMedium)
 
         val tracks = "${stringResource(R.string.playlist_song_count)}: ${playlistsData.playlists[selectedTabIndex].playlistSize}"
-        TextBox(text = tracks, textStyle = MaterialTheme.typography.bodyMedium)
+        TextBox(
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            text = tracks,
+            textStyle = MaterialTheme.typography.bodyMedium)
     }
 }

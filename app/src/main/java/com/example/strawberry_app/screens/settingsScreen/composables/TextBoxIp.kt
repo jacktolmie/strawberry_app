@@ -15,7 +15,10 @@ fun TextboxIp(
     callbacks: SettingsCallbacks,
     modifier: Modifier = Modifier
 ){
-    TextBox(R.string.settings_ip, MaterialTheme.typography.bodyLarge)
+    TextBox(
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        textRes = R.string.settings_ip,
+        textStyle = MaterialTheme.typography.bodyLarge)
 
     TextFieldBox(
         valueField = serverUiState.ip,

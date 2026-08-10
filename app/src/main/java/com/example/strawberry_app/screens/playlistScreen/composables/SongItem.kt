@@ -110,14 +110,16 @@ fun SongItem(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 SongText(
+                    color = MaterialTheme.colorScheme.onSurface,
                     text = song.title,
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.weight(1f),
                     fontWeight = FontWeight.SemiBold
                 )
                 SongText(
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     text = formatTime(song.length),
-                    style = MaterialTheme.typography.bodyMedium
+                    style = MaterialTheme.typography.bodyMedium,
                 )
             }
             Row(
@@ -129,6 +131,7 @@ fun SongItem(
                     .joinToString(separator = " • ")
 
                 SongText(
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     text = text,
                     style = MaterialTheme.typography.bodySmall,
                     modifier = Modifier.weight(1f)

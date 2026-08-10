@@ -35,7 +35,11 @@ fun ConnStateMedLrg(
 
     )
     {
-        TextBox(R.string.settings_connection_status, MaterialTheme.typography.bodyLarge)
+        TextBox(
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            maxLines = 1,
+            textRes = R.string.settings_connection_status,
+            textStyle = MaterialTheme.typography.bodyLarge)
 
         Spacer(modifier = modifier.width(5.dp))
 
@@ -53,6 +57,8 @@ fun ConnStateMedLrg(
         Spacer(modifier = modifier.width(5.dp))
 
         TextBox(
+            color = MaterialTheme.colorScheme.onSurface,
+            maxLines = 1,
             text = settingsGuiData.connectionState,
             textStyle = MaterialTheme.typography.bodyLarge
         )
@@ -71,7 +77,10 @@ fun ConnStateSmall(
         horizontalArrangement = Arrangement.Center
     )
     {
-        TextBox(R.string.settings_connection_status, MaterialTheme.typography.bodyLarge)
+        TextBox(
+            color = MaterialTheme.colorScheme.onSurface,
+            textRes = R.string.settings_connection_status,
+            textStyle = MaterialTheme.typography.bodyLarge)
 
         Spacer(modifier = Modifier.width(5.dp))
 
@@ -89,6 +98,7 @@ fun ConnStateSmall(
         Spacer(modifier = Modifier.width(5.dp))
 
         TextBox(
+            color = MaterialTheme.colorScheme.onSurface,
             text = settingsGuiData.connectionState,
             textStyle = MaterialTheme.typography.bodyLarge
         )

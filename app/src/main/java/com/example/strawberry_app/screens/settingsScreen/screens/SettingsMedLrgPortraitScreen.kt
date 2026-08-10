@@ -48,7 +48,11 @@ fun SettingsMedLrgPortraitScreen(
         verticalArrangement = Arrangement.Top
     )
     {
-        TextBox(R.string.settings_title, MaterialTheme.typography.headlineLarge)
+        TextBox(
+            color = MaterialTheme.colorScheme.onSurface,
+            textRes = R.string.settings_title,
+            textStyle = MaterialTheme.typography.headlineLarge
+        )
 
         Spacer(modifier = Modifier.height(10.dp))
 

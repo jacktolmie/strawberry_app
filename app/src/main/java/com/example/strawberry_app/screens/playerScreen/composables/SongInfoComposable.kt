@@ -1,30 +1,30 @@
 package com.example.strawberry_app.screens.playerScreen.composables
 
 import androidx.compose.foundation.MarqueeSpacing
-import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
-import androidx.compose.material3.Text
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.strawberry_app.screens.ServerGuiValues
+import com.example.strawberry_app.screens.TextBox
 import com.example.strawberry_app.screens.playerScreen.PlayerScreenState
 
 @Composable
 fun SongInfoComposable(
-    playerScreenValues: PlayerScreenState,
-    modifier: Modifier = Modifier
+    playerScreenValues: PlayerScreenState
 ){
     // Song text for the song playing
-    Text(
+    TextBox(
+        color = MaterialTheme.colorScheme.onSurface,
         text = playerScreenValues.playerValues.currentSong.title,
-        modifier = modifier.basicMarquee(
-            iterations = Int.MAX_VALUE,
-            repeatDelayMillis = 10000,
-            spacing = MarqueeSpacing.fractionOfContainer(0.1f)
-        ),
-        maxLines = 1
+        textStyle = MaterialTheme.typography.bodyMedium,
+        modifier = Modifier
+            .basicMarquee(
+                iterations = Int.MAX_VALUE,
+                repeatDelayMillis = 10000,
+                spacing = MarqueeSpacing.fractionOfContainer(0.1f)
+            )
     )
 
     val artistAlbum = listOfNotNull(
@@ -33,14 +33,16 @@ fun SongInfoComposable(
     ).joinToString(if(playerScreenValues.playerValues.currentSong.artist.isNotBlank()) " • " else "")
 
     // Album/Artist text.
-    Text(
+    TextBox(
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        textStyle = MaterialTheme.typography.bodyMedium,
         text = artistAlbum,
-        modifier = modifier.basicMarquee(
+        modifier = Modifier
+            .basicMarquee(
             iterations = Int.MAX_VALUE,
             repeatDelayMillis = 10000,
             spacing = MarqueeSpacing.fractionOfContainer(0.1f)
-        ),
-        maxLines = 1
+        )
     )
 }
 
@@ -48,7 +50,6 @@ fun SongInfoComposable(
 @Composable
 fun SongInfoPreview(){
     SongInfoComposable(
-        PlayerScreenState(ServerGuiValues()),
-        Modifier.background(Color.White)
+        PlayerScreenState(ServerGuiValues())
     )
 }

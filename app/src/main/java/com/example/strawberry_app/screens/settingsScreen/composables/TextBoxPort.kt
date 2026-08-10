@@ -16,7 +16,10 @@ fun TextboxPort(
     callbacks: SettingsCallbacks,
     modifier: Modifier = Modifier
 ){
-    TextBox(R.string.settings_port, MaterialTheme.typography.bodyLarge)
+    TextBox(
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        textRes = R.string.settings_port,
+        textStyle = MaterialTheme.typography.bodyLarge)
 
     TextFieldBox(
         valueField = serverUiState.port,

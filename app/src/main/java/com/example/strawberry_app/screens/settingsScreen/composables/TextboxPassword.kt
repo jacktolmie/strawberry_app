@@ -15,7 +15,10 @@ fun TextboxPassword(
     callbacks: SettingsCallbacks,
     modifier: Modifier = Modifier
 ){
-    TextBox(R.string.settings_password, MaterialTheme.typography.bodyLarge)
+    TextBox(
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        textRes = R.string.settings_password,
+        textStyle = MaterialTheme.typography.bodyLarge)
 
     TextFieldBox(
         valueField = serverUiState.password,

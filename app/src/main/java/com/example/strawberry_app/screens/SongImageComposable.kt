@@ -1,9 +1,11 @@
 package com.example.strawberry_app.screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -33,7 +35,7 @@ fun SongImageComposable(
         error = painterResource(R.drawable.strawberry),
         contentDescription = stringResource(R.string.player_album_art),
         contentScale = ContentScale.Crop,
-        modifier = modifier
+        modifier = modifier.background(MaterialTheme.colorScheme.background)
     )
 }
 
