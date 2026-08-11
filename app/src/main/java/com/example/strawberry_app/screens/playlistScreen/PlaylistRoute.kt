@@ -4,7 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.window.core.layout.WindowSizeClass
 import com.example.strawberry_app.music.Playlist
 import com.example.strawberry_app.screens.navigation.ScreenType
 import com.example.strawberry_app.screens.playlistScreen.screens.PlaylistMedLrgPortraitScreen
