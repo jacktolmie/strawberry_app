@@ -6,6 +6,7 @@ import androidx.compose.runtime.remember
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.strawberry_app.network.ConnectionViewModel
+import com.example.strawberry_app.screens.navigation.ScreenType
 import com.example.strawberry_app.screens.settingsScreen.screens.SettingsMedLrgPortraitScreen
 import com.example.strawberry_app.screens.settingsScreen.screens.SettingsSmallPortraitScreen
 import com.example.strawberry_app.server.ServerViewModel
@@ -23,7 +24,7 @@ class SettingsCallbacks(
 
 @Composable
 fun SettingsRoute(
-    isCompact: Boolean,
+    screenType: ScreenType,
     serverViewModel: ServerViewModel = hiltViewModel(),
     connectionViewModel: ConnectionViewModel = hiltViewModel()
 ) {
@@ -47,7 +48,7 @@ fun SettingsRoute(
 
     val routeData by connectionViewModel.routeData.collectAsStateWithLifecycle()
 
-    if (isCompact){
+    if (screenType == ScreenType.SMALL_PHONE){
         SettingsSmallPortraitScreen(
             serverUiState = uiState,
             connectionState = connectionState,

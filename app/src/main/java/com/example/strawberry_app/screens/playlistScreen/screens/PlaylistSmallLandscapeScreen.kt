@@ -6,7 +6,7 @@ import com.example.strawberry_app.screens.playlistScreen.PlaylistCallbacks
 import com.example.strawberry_app.screens.playlistScreen.PlaylistScreenState
 
 @Composable
-fun PlaylistSmallPortraitScreen(
+fun PlaylistSmallLandscapeScreen(
     callbacks: PlaylistCallbacks,
     playlistScreenState: PlaylistScreenState,
     modifier: Modifier = Modifier

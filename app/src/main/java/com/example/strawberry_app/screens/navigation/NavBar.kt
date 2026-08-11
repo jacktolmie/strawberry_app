@@ -25,7 +25,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun NavBar(
-    isCompact: Boolean,
+    screenType: ScreenType,
     pagerState: PagerState,
     showLabel: Boolean
 ) {
@@ -34,7 +34,7 @@ fun NavBar(
     Scaffold(
         bottomBar = {
             NavigationBar(
-                modifier = if (isCompact) Modifier.height(70.dp) else Modifier
+                modifier = if (screenType == ScreenType.SMALL_PHONE) Modifier.height(70.dp) else Modifier
             ) {
                 NavigationBarItem(
                     selected = pagerState.currentPage == 0,
@@ -65,9 +65,9 @@ fun NavBar(
             userScrollEnabled = false
         ) { page ->
             when (page) {
-                0 -> PlayerRoute(isCompact = isCompact)
-                1 -> PlaylistRoute(isCompact = isCompact)
-                2 -> SettingsRoute(isCompact = isCompact)
+                0 -> PlayerRoute(screenType = screenType)
+                1 -> PlaylistRoute(screenType = screenType)
+                2 -> SettingsRoute(screenType = screenType)
             }
         }
     }
@@ -77,7 +77,7 @@ fun NavBar(
 @Composable
 fun NavBarPreview(){
     NavBar(
-        isCompact = false,
+        screenType = ScreenType.MEDIUM_PHONE,
         pagerState = PagerState { 3 },
         showLabel = true
     )

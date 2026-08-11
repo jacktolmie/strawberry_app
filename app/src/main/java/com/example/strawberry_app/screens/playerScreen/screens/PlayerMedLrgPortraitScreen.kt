@@ -26,6 +26,7 @@ import com.example.strawberry_app.screens.playerScreen.PlayerCallbacks
 import com.example.strawberry_app.screens.playerScreen.PlayerScreenState
 import com.example.strawberry_app.screens.playerScreen.composables.MediaBtnComposable
 import com.example.strawberry_app.screens.SongImageComposable
+import com.example.strawberry_app.screens.navigation.ScreenType
 import com.example.strawberry_app.screens.playerScreen.composables.SongInfoComposable
 import com.example.strawberry_app.screens.playerScreen.composables.TimerSlider
 import com.example.strawberry_app.screens.playerScreen.composables.VolumeSliderVertComposable
@@ -34,6 +35,7 @@ import com.example.strawberry_app.screens.playerScreen.composables.VolumeSliderV
 fun PlayerMedLrgPortraitScreen(
     callbacks: PlayerCallbacks,
     playerScreenValues: PlayerScreenState,
+    screenType: ScreenType,
     modifier: Modifier = Modifier
 )
 {
@@ -54,7 +56,8 @@ fun PlayerMedLrgPortraitScreen(
             SongInfoComposable( playerScreenValues)
         }
 
-        Spacer(modifier = Modifier.height(10.dp))
+        if (screenType != ScreenType.SMALL_PHONE)
+            Spacer(modifier = Modifier.height(10.dp))
 
         // Row for cover image and volume controls
         Row(modifier = Modifier
@@ -76,13 +79,15 @@ fun PlayerMedLrgPortraitScreen(
                     .padding(10.dp)
             )
 
-            Spacer(modifier = Modifier.width(10.dp).border(2.dp, Color.Blue))
+            if (screenType != ScreenType.SMALL_PHONE)
+                Spacer(modifier = Modifier.width(10.dp))
 
             // Vertical volume slider
             VolumeSliderVertComposable(callbacks, playerScreenValues)
         }
 
-        Spacer(modifier = Modifier.height(10.dp))
+        if (screenType != ScreenType.SMALL_PHONE)
+            Spacer(modifier = Modifier.height(10.dp))
 
         // Time slider
         TimerSlider(callbacks, playerScreenValues)
@@ -97,6 +102,7 @@ fun PlayerMedLrgPortraitScreen(
 fun PlayerMedLrgPortraitScreenPreview(){
     PlayerMedLrgPortraitScreen(
         callbacks = PlayerCallbacks(),
-        playerScreenValues = PlayerScreenState()
+        playerScreenValues = PlayerScreenState(),
+        screenType = ScreenType.MEDIUM_PHONE
     )
 }

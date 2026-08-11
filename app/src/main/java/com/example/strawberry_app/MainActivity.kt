@@ -4,17 +4,14 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.window.core.layout.WindowSizeClass
-import com.example.strawberry_app.network.ConnectionViewModel
 import com.example.strawberry_app.ui.theme.Strawberry_appTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-//    private val connectionViewModel: ConnectionViewModel by viewModels()
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 
     override fun onCreate(savedInstanceState: Bundle?) {

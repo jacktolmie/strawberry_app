@@ -6,6 +6,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.window.core.layout.WindowSizeClass
 import com.example.strawberry_app.music.Playlist
+import com.example.strawberry_app.screens.navigation.ScreenType
 import com.example.strawberry_app.screens.playlistScreen.screens.PlaylistMedLrgPortraitScreen
 import java.io.File
 
@@ -37,7 +38,7 @@ data class PlaylistCallbacks(
 
 @Composable
 fun PlaylistRoute(
-    isCompact: Boolean,
+    screenType: ScreenType,
     playlistViewModel: PlaylistViewModel = hiltViewModel()
 ){
     val selectedSongs by playlistViewModel.selectedSongs
@@ -80,13 +81,20 @@ fun PlaylistRoute(
         selectedSongs = selectedSongs
     )
 
-    if (isCompact){
-        println("Nada")
-    } else {
-        PlaylistMedLrgPortraitScreen(
-            callbacks = callbacks,
-            playlistScreenState = playlistScreenState
-        )
+    when (screenType) {
+        ScreenType.SMALL_PHONE,
+        ScreenType.MEDIUM_PHONE,
+        ScreenType.LARGE_PHONE -> {
+            PlaylistMedLrgPortraitScreen(
+                callbacks = callbacks,
+                playlistScreenState = playlistScreenState
+            )
+        }
+        ScreenType.FOLDABLE -> {
+            println("myapp foldable called")
+        }
+        ScreenType.TABLET -> {
+            println("myapp tablet called")
+        }
     }
-
 }

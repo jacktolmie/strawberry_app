@@ -5,8 +5,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.window.core.layout.WindowSizeClass
 import com.example.strawberry_app.screens.ServerGuiValues
+import com.example.strawberry_app.screens.navigation.ScreenType
 import com.example.strawberry_app.screens.playerScreen.screens.PlayerMedLrgPortraitScreen
 import java.io.File
 
@@ -34,7 +34,7 @@ class PlayerCallbacks(
 
 @Composable
 fun PlayerRoute(
-    isCompact: Boolean,
+    screenType: ScreenType,
     playerViewModel: PlayerViewModel = hiltViewModel()
 ){
     val playerValues by playerViewModel.serverUpdates.collectAsStateWithLifecycle()
@@ -61,11 +61,16 @@ fun PlayerRoute(
 
     val playerScreenData = PlayerScreenState(playerValues, albumArtFile)
 
-    if(isCompact){
-//        PlayerSmallScreenPortrait()
-        println("nada")
-    } else {
-        PlayerMedLrgPortraitScreen(callbacks, playerScreenData)
+    when (screenType) {
+        ScreenType.SMALL_PHONE,
+        ScreenType.MEDIUM_PHONE,
+        ScreenType.LARGE_PHONE -> {
+            PlayerMedLrgPortraitScreen(
+                callbacks = callbacks,
+                playerScreenValues = playerScreenData,
+                screenType = screenType
+            )
+        }
+        else -> {}
     }
-
 }
