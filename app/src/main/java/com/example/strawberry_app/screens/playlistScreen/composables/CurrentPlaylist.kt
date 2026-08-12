@@ -117,7 +117,6 @@ fun CurrentPlaylist(
                             )
                         )
                     }
-
                     HorizontalDivider(thickness = 5.dp, color = MaterialTheme.colorScheme.primary)
                 }
             }

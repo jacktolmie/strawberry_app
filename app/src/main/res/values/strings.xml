@@ -29,7 +29,7 @@
 
 
     <string name="settings_title">Settings</string>
-    <string name="settings_ip">IP Address</string>
+    <string name="settings_ip">Server IP Address</string>
     <string name="settings_ip_info">IPv4 or IPv6</string>
     <string name="settings_ip_error">Valid IP address required</string>
 

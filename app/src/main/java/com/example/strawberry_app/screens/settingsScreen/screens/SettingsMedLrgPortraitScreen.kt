@@ -16,13 +16,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.strawberry_app.R
-import com.example.strawberry_app.network.ConnectionState
 import com.example.strawberry_app.network.ConnectionState.Connected
 import com.example.strawberry_app.network.SettingsGuiData
+import com.example.strawberry_app.screens.TextBox
 import com.example.strawberry_app.screens.settingsScreen.SettingsCallbacks
+import com.example.strawberry_app.screens.settingsScreen.SettingsScreenState
 import com.example.strawberry_app.screens.settingsScreen.composables.ConnStateMedLrg
 import com.example.strawberry_app.screens.settingsScreen.composables.MedLrgScreenBtns
-import com.example.strawberry_app.screens.TextBox
 import com.example.strawberry_app.screens.settingsScreen.composables.TextboxIpHoriz
 import com.example.strawberry_app.screens.settingsScreen.composables.TextboxPasswordHoriz
 import com.example.strawberry_app.screens.settingsScreen.composables.TextboxPortHoriz
@@ -30,14 +30,11 @@ import com.example.strawberry_app.server.SettingsUiState
 
 @Composable
 fun SettingsMedLrgPortraitScreen(
-    serverUiState: SettingsUiState,
-    connectionState: ConnectionState,
     callbacks: SettingsCallbacks,
-    hasNetwork: Boolean,
-    settingsGuiData: SettingsGuiData,
+    state: SettingsScreenState,
+    isPortrait: Boolean,
     modifier: Modifier = Modifier
 ) {
-
     Column(modifier = modifier
         .statusBarsPadding()
         .fillMaxWidth()
@@ -56,40 +53,41 @@ fun SettingsMedLrgPortraitScreen(
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        TextboxIpHoriz(serverUiState, callbacks)
+        TextboxIpHoriz(state.serverUiState, callbacks)
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        TextboxPortHoriz(serverUiState, callbacks)
+        TextboxPortHoriz(state.serverUiState, callbacks)
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        TextboxPasswordHoriz(serverUiState, callbacks)
+        TextboxPasswordHoriz(state.serverUiState, callbacks)
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        MedLrgScreenBtns(serverUiState, callbacks, connectionState, hasNetwork)
+        MedLrgScreenBtns(state.serverUiState, callbacks, state.connectionState, state.hasNetwork)
 
-        ConnStateMedLrg(settingsGuiData)
+        ConnStateMedLrg(state.settingsGuiData)
 
     }
 }
-
-
 
 @Preview
 @Composable
 fun SettingsMedLrgPortraitPreview(){
     SettingsMedLrgPortraitScreen(
-        serverUiState = SettingsUiState(
-            ip = "192.168.1.201",
-            port = "5000",
-            password = "",
-            hasChanged = false,
-            isPortValid = true
+        state = SettingsScreenState(
+            serverUiState = SettingsUiState(
+                ip = "192.168.1.201",
+                port = "5000",
+                password = "",
+                hasChanged = false,
+                isPortValid = true
+            ),
+            connectionState = Connected,
+            hasNetwork = true,
+            settingsGuiData = SettingsGuiData()
         ),
-
-        connectionState = Connected,
         callbacks = SettingsCallbacks(
             onIpChanged = {},
             onPortChanged = {},
@@ -99,7 +97,6 @@ fun SettingsMedLrgPortraitPreview(){
             onDisconnectClicked = {},
             onConnectClicked = {}
         ),
-        hasNetwork = true,
-        settingsGuiData = SettingsGuiData()
+        isPortrait = true
     )
 }

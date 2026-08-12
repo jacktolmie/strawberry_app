@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
@@ -17,11 +16,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.strawberry_app.R
-import com.example.strawberry_app.network.ConnectionState
 import com.example.strawberry_app.network.ConnectionState.Connected
 import com.example.strawberry_app.network.SettingsGuiData
 import com.example.strawberry_app.screens.TextBox
 import com.example.strawberry_app.screens.settingsScreen.SettingsCallbacks
+import com.example.strawberry_app.screens.settingsScreen.SettingsScreenState
 import com.example.strawberry_app.screens.settingsScreen.composables.ConnStateSmall
 import com.example.strawberry_app.screens.settingsScreen.composables.SmallScreenBtns
 import com.example.strawberry_app.screens.settingsScreen.composables.TextboxIpVert
@@ -31,11 +30,9 @@ import com.example.strawberry_app.server.SettingsUiState
 
 @Composable
 fun SettingsSmallPortraitScreen(
-    serverUiState: SettingsUiState,
-    connectionState: ConnectionState,
     callbacks: SettingsCallbacks,
-    hasNetwork: Boolean,
-    settingsGuiData: SettingsGuiData,
+    state: SettingsScreenState,
+    isPortrait: Boolean,
     modifier: Modifier = Modifier
 ){
     Column(modifier = modifier
@@ -55,19 +52,19 @@ fun SettingsSmallPortraitScreen(
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        TextboxIpVert(serverUiState, callbacks)
+        TextboxIpVert(state.serverUiState, callbacks)
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        TextboxPortVert(serverUiState, callbacks)
+        TextboxPortVert(state.serverUiState, callbacks)
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        TextboxPasswordVert(serverUiState, callbacks)
+        TextboxPasswordVert(state.serverUiState, callbacks)
 
-        SmallScreenBtns(serverUiState, callbacks, connectionState, hasNetwork)
+        SmallScreenBtns(state.serverUiState, callbacks, state.connectionState, state.hasNetwork)
 
-        ConnStateSmall(settingsGuiData)
+        ConnStateSmall(state.settingsGuiData)
     }
 }
 
@@ -75,6 +72,7 @@ fun SettingsSmallPortraitScreen(
 @Composable
 fun SettingsSmallPortraitPreview(){
     SettingsSmallPortraitScreen(
+        state = SettingsScreenState(
             serverUiState = SettingsUiState(
                 ip = "192.168.1.201",
                 port = "5000",
@@ -83,7 +81,10 @@ fun SettingsSmallPortraitPreview(){
                 isPortValid = true
             ),
             connectionState = Connected,
-            callbacks = SettingsCallbacks(
+            hasNetwork = true,
+            settingsGuiData = SettingsGuiData()
+        ),
+        callbacks = SettingsCallbacks(
                 onIpChanged = {},
                 onPortChanged = {},
                 onPasswordChanged = {},
@@ -92,7 +93,6 @@ fun SettingsSmallPortraitPreview(){
                 onDisconnectClicked = {},
                 onConnectClicked = {}
             ),
-            hasNetwork = true,
-            settingsGuiData = SettingsGuiData()
+        isPortrait = true
     )
 }
