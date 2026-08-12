@@ -19,6 +19,7 @@ fun MyApp(windowSizeClass: WindowSizeClass) {
     when {
         isPortrait && !windowSizeClass.isHeightAtLeastBreakpoint(600) -> {
             NavBar(
+                isPortrait = isPortrait,
                 screenType = ScreenType.SMALL_PHONE,
                 pagerState = pagerState,
                 showLabel = false
@@ -28,6 +29,7 @@ fun MyApp(windowSizeClass: WindowSizeClass) {
 
         isPortrait && !windowSizeClass.isHeightAtLeastBreakpoint(1000) -> {
             NavBar(
+                isPortrait = isPortrait,
                 screenType = ScreenType.MEDIUM_PHONE,
                 pagerState = pagerState,
                 showLabel = true
@@ -37,6 +39,7 @@ fun MyApp(windowSizeClass: WindowSizeClass) {
 
         !isPortrait && !windowSizeClass.isHeightAtLeastBreakpoint(400) -> {
             NavBar(
+                isPortrait = isPortrait,
                 screenType = ScreenType.SMALL_PHONE,
                 pagerState = pagerState,
                 showLabel = false
@@ -46,6 +49,7 @@ fun MyApp(windowSizeClass: WindowSizeClass) {
 
         !isPortrait &&!windowSizeClass.isHeightAtLeastBreakpoint(600) -> {
             NavBar(
+                isPortrait = isPortrait,
                 screenType = ScreenType.MEDIUM_PHONE,
                 pagerState = pagerState,
                 showLabel = true

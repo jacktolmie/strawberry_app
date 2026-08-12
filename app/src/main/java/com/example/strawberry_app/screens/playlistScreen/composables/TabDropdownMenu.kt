@@ -94,7 +94,7 @@ fun TabDropdownMenu(
             onDismissRequest = { onConfirm({}, false, false, actionString)}
         ) {
             DropdownMenuItemComposable(
-                text = R.string.playlist_favourites,
+                text = R.string.playlist_favourite,
                 iconImage = favorite,
                 onConfirm = { onConfirm( { callbacks.sendPlaylistFavourite(
                             playlistId,

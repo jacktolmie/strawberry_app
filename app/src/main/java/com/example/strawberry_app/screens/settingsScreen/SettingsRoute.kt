@@ -24,6 +24,7 @@ class SettingsCallbacks(
 
 @Composable
 fun SettingsRoute(
+    isPortrait: Boolean,
     screenType: ScreenType,
     serverViewModel: ServerViewModel = hiltViewModel(),
     connectionViewModel: ConnectionViewModel = hiltViewModel()

@@ -34,6 +34,7 @@ class PlayerCallbacks(
 
 @Composable
 fun PlayerRoute(
+    isPortrait: Boolean,
     screenType: ScreenType,
     playerViewModel: PlayerViewModel = hiltViewModel()
 ){

@@ -10,15 +10,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.strawberry_app.screens.navigation.ScreenType
 import com.example.strawberry_app.screens.playlistScreen.PlaylistCallbacks
 import com.example.strawberry_app.screens.playlistScreen.PlaylistScreenState
 import com.example.strawberry_app.screens.playlistScreen.PlaylistsData
 
-
 @Composable
 fun TabListing(
     callbacks: PlaylistCallbacks,
+    isPortrait: Boolean,
     playlistScreenState: PlaylistScreenState,
+    screenType: ScreenType,
     modifier: Modifier = Modifier
 ){
     var selectedTabIndex by remember { mutableIntStateOf(0) }
@@ -48,6 +50,7 @@ fun TabListing(
     if ( playlistScreenState.playlistsData.playlists.size > 4) {
         ScrollableTabs(
             callbacks = callbacks,
+            isPortrait = isPortrait,
             playlists = playlistScreenState.playlistsData.playlists,
             selectedTabIndex = safeIndex,
             onTabSelected = { tabIndex: Int, id: Long -> onTabSelected(tabIndex, id)
@@ -57,6 +60,7 @@ fun TabListing(
     }else{
         StaticTabs(
             callbacks = callbacks,
+            isPortrait = isPortrait,
             playlists = playlistScreenState.playlistsData.playlists,
             selectedTabIndex = safeIndex,
             onTabSelected = { tabIndex: Int, id: Long -> onTabSelected(tabIndex, id)
@@ -66,6 +70,7 @@ fun TabListing(
 
     MakePlaylistMenu(
         callbacks = callbacks,
+        isPortrait = isPortrait,
         playlistId = playlistId,
         playlistsData = playlistScreenState.playlistsData,
         playlistName = getPlaylistName(
@@ -89,6 +94,8 @@ fun getPlaylistName(
 fun TabListingPreview(){
     TabListing(
         callbacks = PlaylistCallbacks(),
+        isPortrait = true,
+        screenType = ScreenType.MEDIUM_PHONE,
         playlistScreenState = PlaylistScreenState()
     )
 }

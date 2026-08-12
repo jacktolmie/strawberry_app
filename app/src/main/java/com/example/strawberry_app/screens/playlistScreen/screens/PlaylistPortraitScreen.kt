@@ -7,15 +7,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.strawberry_app.screens.navigation.ScreenType
 import com.example.strawberry_app.screens.playlistScreen.PlaylistCallbacks
 import com.example.strawberry_app.screens.playlistScreen.PlaylistScreenState
 import com.example.strawberry_app.screens.playlistScreen.composables.CurrentPlaylist
 import com.example.strawberry_app.screens.playlistScreen.composables.TabListing
 
 @Composable
-fun PlaylistMedLrgPortraitScreen(
+fun PlaylistPortraitScreen(
     callbacks: PlaylistCallbacks,
+    isPortrait: Boolean,
     playlistScreenState: PlaylistScreenState,
+    screenType: ScreenType,
     modifier: Modifier = Modifier
 ){
     Column(modifier = modifier
@@ -24,7 +27,12 @@ fun PlaylistMedLrgPortraitScreen(
     ){
         // Create the scrollable tab
         if (playlistScreenState.playlistsData.playlists.isNotEmpty()) {
-            TabListing(callbacks, playlistScreenState)
+            TabListing(
+                callbacks = callbacks,
+                isPortrait = isPortrait,
+                playlistScreenState = playlistScreenState,
+                screenType = screenType
+            )
         }
         // Create the playlists for each tab.
         if (playlistScreenState.playlistsData.playlistSongs.isNotEmpty()) {
@@ -41,8 +49,10 @@ fun PlaylistMedLrgPortraitScreen(
 @Composable
 @Preview
 fun PlaylistPreview(){
-    PlaylistMedLrgPortraitScreen(
+    PlaylistPortraitScreen(
         callbacks = PlaylistCallbacks(),
-        playlistScreenState = PlaylistScreenState()
+        isPortrait = true,
+        playlistScreenState = PlaylistScreenState(),
+        screenType = ScreenType.MEDIUM_PHONE
     )
 }

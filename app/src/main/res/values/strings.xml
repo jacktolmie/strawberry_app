@@ -7,7 +7,7 @@
 
     <string name="player_album_art">Album Art</string>
 
-    <string name="playlist_favourites">Favourite</string>
+    <string name="playlist_favourite">Favourite</string>
     <string name="playlist_clear">Clear Playlist</string>
     <string name="playlist_confirm">Confirm</string>
     <string name="playlist_delete">Delete Playlist</string>

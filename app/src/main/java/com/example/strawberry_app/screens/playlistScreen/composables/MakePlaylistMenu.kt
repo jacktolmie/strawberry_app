@@ -22,6 +22,7 @@ import com.example.strawberry_app.screens.playlistScreen.PlaylistsData
 @Composable
 fun MakePlaylistMenu(
     callbacks: PlaylistCallbacks,
+    isPortrait: Boolean,
     playlistId: Long,
     playlistsData: PlaylistsData,
     playlistName: String,
@@ -77,12 +78,16 @@ fun MakePlaylistMenu(
         TextBox(
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             text = length,
-            textStyle = MaterialTheme.typography.bodyMedium)
+            textStyle = if (isPortrait) MaterialTheme.typography.bodyMedium
+                        else MaterialTheme.typography.bodySmall
+        )
 
         val tracks = "${stringResource(R.string.playlist_song_count)}: ${playlistsData.playlists[selectedTabIndex].playlistSize}"
         TextBox(
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             text = tracks,
-            textStyle = MaterialTheme.typography.bodyMedium)
+            textStyle = if (isPortrait) MaterialTheme.typography.bodyMedium
+                        else MaterialTheme.typography.bodySmall
+        )
     }
 }

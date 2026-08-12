@@ -25,8 +25,9 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun NavBar(
-    screenType: ScreenType,
+    isPortrait: Boolean,
     pagerState: PagerState,
+    screenType: ScreenType,
     showLabel: Boolean
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -65,9 +66,18 @@ fun NavBar(
             userScrollEnabled = false
         ) { page ->
             when (page) {
-                0 -> PlayerRoute(screenType = screenType)
-                1 -> PlaylistRoute(screenType = screenType)
-                2 -> SettingsRoute(screenType = screenType)
+                0 -> PlayerRoute(
+                    isPortrait = isPortrait,
+                    screenType = screenType
+                )
+                1 -> PlaylistRoute(
+                    isPortrait = isPortrait,
+                    screenType = screenType
+                )
+                2 -> SettingsRoute(
+                    isPortrait = isPortrait,
+                    screenType = screenType
+                )
             }
         }
     }
@@ -79,6 +89,7 @@ fun NavBarPreview(){
     NavBar(
         screenType = ScreenType.MEDIUM_PHONE,
         pagerState = PagerState { 3 },
-        showLabel = true
+        showLabel = true,
+        isPortrait = true
     )
 }
