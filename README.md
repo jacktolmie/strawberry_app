@@ -71,8 +71,8 @@ Currently it has the following functionality:
 
 ## Settings
 
-<img src="/images/settings_land_light.png" width="45%"/><img src="/images/settings_land_dark.png" width"45%"/>
-<img src="/images/settings_port_light.png" width="45%"/><img src="/images/settings_port_dark.png" width"45%"/>
+<img src="/images/settings_land_light.png" width="45%"/> <img src="/images/settings_land_dark.png" width"45%"/>
+<img src="/images/settings_port_light.png" width="45%"/> <img src="/images/settings_port_dark.png" width"45%"/>
 
 </div>
 
