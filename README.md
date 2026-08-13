@@ -16,8 +16,10 @@ Currently it has the following functionality:
 
 ## Player Screen
 
-<img src="images/player_land_light.png" width="45%"/> <img src="images/player_land_dark.png" width="45%"/>
-<img src="images/player_port_light.png" width="45%"/> <img src="images/player_port_dark.png" width="45%"/>
+| | |
+|:---:|:---:|
+| <img src="images/player_land_light.png" width="350"/> | <img src="images/player_land_dark.png" width="350"/> |
+| <img src="images/player_port_light.png" width="350"/> | <img src="images/player_port_dark.png" width="350"/> |
 
 </div>
 
@@ -44,9 +46,11 @@ Currently it has the following functionality:
 
 ## Playlists
 
-<img src="images/playlist_port_options_light.png" width="45%"/> <img src="images/playlist_port_options_dark.png" width="45%"/>
-<img src="images/playlist_land_light.png" width="45%"/> <img src="images/playlist_land_dark.png" width="45%"/>
-<img src="images/playlist_port_light.png" width="45%"/> <img src="images/playlist_port_dark.png" width="45%"/>
+| | |
+|:---:|:---:|
+| <img src="images/playlist_port_options_light.png" width="350"/> | <img src="images/playlist_port_options_dark.png" width="350"/> |
+| <img src="images/playlist_land_light.png" width="350"/> | <img src="images/playlist_land_dark.png" width="350"/> |
+| <img src="images/playlist_port_light.png" width="350"/> | <img src="images/playlist_port_dark.png" width="350"/> |
 
 </div>
 
@@ -71,8 +75,10 @@ Currently it has the following functionality:
 
 ## Settings
 
-<img src="images/settings_land_light.png" width="45%"/> <img src="images/settings_land_dark.png" width"45%"/>
-<img src="images/settings_port_light.png" width="45%"/> <img src="images/settings_port_dark.png" width"45%"/>
+| | |
+|:---:|:---:|
+| <img src="images/settings_land_light.png" width="350"/> | <img src="images/settings_land_dark.png" width="350"/> |
+| <img src="images/settings_port_light.png" width="350"/> | <img src="images/settings_port_dark.png" width="350"/> |
 
 </div>
 
@@ -86,6 +92,6 @@ Currently it has the following functionality:
 
 ## Remote Screen on Strawberry
 
-<img src="images/RemoteSettings.png"/>
+<img src="images/RemoteSettings.png" width="500"/>
 
 </div>
