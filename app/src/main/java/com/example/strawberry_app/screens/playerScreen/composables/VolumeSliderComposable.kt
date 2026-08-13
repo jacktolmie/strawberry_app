@@ -3,9 +3,12 @@ package com.example.strawberry_app.screens.playerScreen.composables
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.progressSemantics
-import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.Slider
 import androidx.compose.material3.VerticalSlider
 import androidx.compose.material3.rememberSliderState
 import androidx.compose.runtime.Composable
@@ -21,9 +24,38 @@ import com.example.strawberry_app.ui.theme.icons.volume_down
 import com.example.strawberry_app.ui.theme.icons.volume_off
 import com.example.strawberry_app.ui.theme.icons.volume_up
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun VolumeSliderVertComposable(
+fun VolumeSliderHoriz(
+    callbacks: PlayerCallbacks,
+    playerScreenValues: PlayerScreenState,
+    modifier: Modifier = Modifier
+){
+    val volumeSliderState = rememberSliderState(valueRange = 0f..100f)
+    LaunchedEffect(playerScreenValues.playerValues.volume) { volumeSliderState.value = playerScreenValues.playerValues.volume.toFloat() }
+
+    volumeSliderState.onValueChangeFinished = { callbacks.setVolume(volumeSliderState.value.toInt())}
+
+    Row(
+        modifier = modifier
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        CreateButton(volume_off, "Volume off", callbacks.sendMute)
+        CreateButton(volume_down, "Volume down", callbacks.sendVolumeDown)
+
+        Slider(
+            modifier = Modifier.fillMaxWidth(.75F),
+            state = volumeSliderState
+        )
+
+        CreateButton(volume_up, "Volume up", callbacks.sendVolumeUp)
+
+    }
+}
+
+@Composable
+fun VolumeSliderVert(
     callbacks: PlayerCallbacks,
     playerScreenValues: PlayerScreenState,
     modifier: Modifier = Modifier
@@ -56,8 +88,19 @@ fun VolumeSliderVertComposable(
 
 @Preview
 @Composable
-fun VolumeSliderPreview(){
-    VolumeSliderVertComposable(
+fun VolumeSliderVirtPreview(){
+
+    VolumeSliderVert(
+        callbacks = PlayerCallbacks(),
+        playerScreenValues = PlayerScreenState(ServerGuiValues()),
+        Modifier.background(Color.White)
+    )
+}
+
+@Preview
+@Composable
+fun VolumeSliderHorizPreview(){
+    VolumeSliderHoriz(
         callbacks = PlayerCallbacks(),
         playerScreenValues = PlayerScreenState(ServerGuiValues()),
         Modifier.background(Color.White)

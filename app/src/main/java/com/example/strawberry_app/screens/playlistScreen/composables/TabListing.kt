@@ -1,6 +1,8 @@
 package com.example.strawberry_app.screens.playlistScreen.composables
 
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material3.Tab
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -10,10 +12,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.strawberry_app.data.entity.PlaylistEntity
 import com.example.strawberry_app.screens.navigation.ScreenType
 import com.example.strawberry_app.screens.playlistScreen.PlaylistCallbacks
 import com.example.strawberry_app.screens.playlistScreen.PlaylistScreenState
 import com.example.strawberry_app.screens.playlistScreen.PlaylistsData
+
+data class TabScreenState(
+    val onTabSelected: (Int, Long) -> Unit,
+    val playlists: List<PlaylistEntity>,
+    val screenType: ScreenType,
+    val scrollState: ScrollState,
+    val selectedTabIndex: Int
+)
 
 @Composable
 fun TabListing(
@@ -38,7 +49,6 @@ fun TabListing(
         selectedTabIndex = index
     }
 
-    val scrollState = rememberScrollState()
     var playlistId by remember { mutableLongStateOf(playlistScreenState.playlistsData.playlistState.currentPlaylist) }
     val onTabSelected: (Int, Long) -> Unit = {tabIndex, id ->
         selectedTabIndex = tabIndex
@@ -47,24 +57,27 @@ fun TabListing(
         callbacks.clearSelectedSongs()
     }
 
+    val scrollState = rememberScrollState()
+
+    val tabScreenState = TabScreenState(
+        onTabSelected = { tabIndex: Int, id: Long -> onTabSelected(tabIndex, id) },
+        playlists = playlistScreenState.playlistsData.playlists,
+        screenType = screenType,
+        scrollState = scrollState,
+        selectedTabIndex = selectedTabIndex
+    )
+
     if ( playlistScreenState.playlistsData.playlists.size > 4) {
         ScrollableTabs(
             callbacks = callbacks,
             isPortrait = isPortrait,
-            playlists = playlistScreenState.playlistsData.playlists,
-            selectedTabIndex = safeIndex,
-            onTabSelected = { tabIndex: Int, id: Long -> onTabSelected(tabIndex, id)
-            },
-            scrollState = scrollState
+            tabScreenState = tabScreenState
         )
     }else{
         StaticTabs(
             callbacks = callbacks,
             isPortrait = isPortrait,
-            playlists = playlistScreenState.playlistsData.playlists,
-            selectedTabIndex = safeIndex,
-            onTabSelected = { tabIndex: Int, id: Long -> onTabSelected(tabIndex, id)
-            }
+           tabScreenState = tabScreenState
         )
     }
 

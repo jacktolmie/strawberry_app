@@ -29,7 +29,7 @@ fun TextboxPasswordHoriz(
 
     ){
         TextFieldBox(
-            valueField = settingsUiState.password.ifEmpty { stringResource(R.string.settings_password) },
+            valueField = settingsUiState.password,
             label = R.string.settings_password,
             onValue = callbacks.onPasswordChanged,
             keyboard = KeyboardType.Text,
@@ -67,7 +67,7 @@ fun TextboxPasswordPreview(){
         val settingsUiState = SettingsUiState()
         val callbacks = SettingsCallbacks()
         TextboxPasswordHoriz(
-            settingsUiState =settingsUiState,
+            settingsUiState = settingsUiState,
             callbacks = callbacks,
             modifier = Modifier.background(Color.White)
         )

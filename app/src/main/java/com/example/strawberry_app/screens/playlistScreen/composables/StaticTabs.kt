@@ -1,5 +1,6 @@
 package com.example.strawberry_app.screens.playlistScreen.composables
 
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
@@ -8,22 +9,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.strawberry_app.data.entity.PlaylistEntity
+import com.example.strawberry_app.screens.navigation.ScreenType
 import com.example.strawberry_app.screens.playlistScreen.PlaylistCallbacks
 
 @Composable
 fun StaticTabs(
     callbacks: PlaylistCallbacks,
     isPortrait: Boolean,
-    playlists: List<PlaylistEntity>,
-    selectedTabIndex: Int,
-    onTabSelected: (Int, Long) -> Unit,
+    tabScreenState: TabScreenState,
     modifier: Modifier = Modifier
 ){
     SecondaryTabRow(
         modifier = modifier
             .fillMaxWidth(),
-        selectedTabIndex = selectedTabIndex,
+        selectedTabIndex = tabScreenState.selectedTabIndex,
         containerColor = MaterialTheme.colorScheme.surface,
         contentColor = MaterialTheme.colorScheme.onSurface,
         divider = {
@@ -37,9 +36,9 @@ fun StaticTabs(
         MakeTabs(
             callbacks = callbacks,
             isPortrait = isPortrait,
-            playlists = playlists,
-            selectedTabIndex = selectedTabIndex,
-            onTabSelected = onTabSelected
+            playlists = tabScreenState.playlists,
+            selectedTabIndex = tabScreenState.selectedTabIndex,
+            onTabSelected = tabScreenState.onTabSelected
         )
     }
 }
@@ -47,11 +46,16 @@ fun StaticTabs(
 @Preview
 @Composable
 fun StaticTabPreview(){
+    val tabScreenState = TabScreenState(
+        onTabSelected = {_,_->},
+        playlists = samplePlaylists(),
+        scrollState = ScrollState(0),
+        selectedTabIndex = 0,
+        screenType = ScreenType.MEDIUM_PHONE
+    )
     StaticTabs(
         callbacks = PlaylistCallbacks(),
         isPortrait = true,
-        playlists = samplePlaylists(),
-        selectedTabIndex = 1,
-        onTabSelected = {_,_ ->}
+        tabScreenState = tabScreenState
     )
 }

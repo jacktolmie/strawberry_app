@@ -7,7 +7,8 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.strawberry_app.screens.ServerGuiValues
 import com.example.strawberry_app.screens.navigation.ScreenType
-import com.example.strawberry_app.screens.playerScreen.screens.PlayerMedLrgPortraitScreen
+import com.example.strawberry_app.screens.playerScreen.screens.PlayerLandscapeScreen
+import com.example.strawberry_app.screens.playerScreen.screens.PlayerPortraitScreen
 import java.io.File
 
 data class PlayerScreenState(
@@ -66,11 +67,20 @@ fun PlayerRoute(
         ScreenType.SMALL_PHONE,
         ScreenType.MEDIUM_PHONE,
         ScreenType.LARGE_PHONE -> {
-            PlayerMedLrgPortraitScreen(
-                callbacks = callbacks,
-                playerScreenValues = playerScreenData,
-                screenType = screenType
-            )
+            if (isPortrait) {
+                PlayerPortraitScreen(
+                    callbacks = callbacks,
+                    playerScreenValues = playerScreenData,
+                    screenType = screenType
+                )
+            } else {
+                PlayerLandscapeScreen(
+                    callbacks = callbacks,
+                    playerScreenValues = playerScreenData,
+                    screenType = screenType
+                )
+            }
+
         }
         else -> {}
     }

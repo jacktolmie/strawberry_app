@@ -51,7 +51,6 @@ fun TextboxPortVert(
 
     ){
         TextFieldBox(
-            modifier = Modifier.weight(2.25F),
             valueField = settingsUiState.port,
             onValue = callbacks.onPortChanged,
             label = R.string.settings_port,

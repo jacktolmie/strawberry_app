@@ -48,14 +48,14 @@ fun NavBar(
                     selected = pagerState.currentPage == 1,
                     onClick = { coroutineScope.launch { pagerState.animateScrollToPage(1) }},
                     icon = { NavIcon(queue_music, R.string.navbar_playlist) },
-                    label = { if (showLabel) Text(text= stringResource(R.string.navbar_player))}
+                    label = { if (showLabel) Text(text= stringResource(R.string.navbar_playlist))}
                 )
 
                 NavigationBarItem(
                     selected = pagerState.currentPage == 2,
                     onClick = { coroutineScope.launch { pagerState.animateScrollToPage(2) }},
                     icon = { NavIcon(settings, R.string.navbar_settings) },
-                    label = { if (showLabel) Text(text= stringResource(R.string.navbar_player))}
+                    label = { if (showLabel) Text(text= stringResource(R.string.navbar_settings))}
                 )
             }
         }

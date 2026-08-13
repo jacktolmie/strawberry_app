@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -27,16 +26,18 @@ import com.example.strawberry_app.screens.playerScreen.PlayerScreenState
 import com.example.strawberry_app.screens.playerScreen.composables.MediaBtnComposable
 import com.example.strawberry_app.screens.playerScreen.composables.SongInfoComposable
 import com.example.strawberry_app.screens.playerScreen.composables.TimerSlider
-import com.example.strawberry_app.screens.playerScreen.composables.VolumeSliderVertComposable
+import com.example.strawberry_app.screens.playerScreen.composables.VolumeSliderVert
 
 @Composable
-fun PlayerMedLrgPortraitScreen(
+fun PlayerPortraitScreen(
     callbacks: PlayerCallbacks,
     playerScreenValues: PlayerScreenState,
     screenType: ScreenType,
     modifier: Modifier = Modifier
 )
 {
+    val space = if (screenType == ScreenType.SMALL_PHONE) 0.dp else 10.dp
+
     Column(modifier = modifier
         .fillMaxSize()
         .statusBarsPadding()
@@ -54,8 +55,7 @@ fun PlayerMedLrgPortraitScreen(
             SongInfoComposable( playerScreenValues)
         }
 
-        if (screenType != ScreenType.SMALL_PHONE)
-            Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(space))
 
         // Row for cover image and volume controls
         Row(modifier = Modifier
@@ -74,18 +74,16 @@ fun PlayerMedLrgPortraitScreen(
                     .fillMaxHeight()
                     .fillMaxWidth(.75f)
                     .aspectRatio(1f)
-                    .padding(10.dp)
+                    .padding(space)
             )
 
-            if (screenType != ScreenType.SMALL_PHONE)
-                Spacer(modifier = Modifier.width(10.dp))
+            Spacer(modifier = Modifier.height(space))
 
             // Vertical volume slider
-            VolumeSliderVertComposable(callbacks, playerScreenValues)
+            VolumeSliderVert(callbacks, playerScreenValues)
         }
 
-        if (screenType != ScreenType.SMALL_PHONE)
-            Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(space))
 
         // Time slider
         TimerSlider(callbacks, playerScreenValues)
@@ -97,8 +95,8 @@ fun PlayerMedLrgPortraitScreen(
 
 @Composable
 @Preview
-fun PlayerMedLrgPortraitScreenPreview(){
-    PlayerMedLrgPortraitScreen(
+fun PlayerPortraitScreenPreview(){
+    PlayerPortraitScreen(
         callbacks = PlayerCallbacks(),
         playerScreenValues = PlayerScreenState(),
         screenType = ScreenType.MEDIUM_PHONE

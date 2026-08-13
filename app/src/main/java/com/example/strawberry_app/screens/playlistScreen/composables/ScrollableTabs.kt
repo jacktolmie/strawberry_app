@@ -2,7 +2,6 @@ package com.example.strawberry_app.screens.playlistScreen.composables
 
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SecondaryScrollableTabRow
@@ -10,22 +9,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.strawberry_app.data.entity.PlaylistEntity
+import com.example.strawberry_app.screens.navigation.ScreenType
 import com.example.strawberry_app.screens.playlistScreen.PlaylistCallbacks
 
 @Composable
 fun ScrollableTabs(
     callbacks: PlaylistCallbacks,
     isPortrait: Boolean,
-    onTabSelected: (Int, Long) -> Unit,
-    playlists: List<PlaylistEntity>,
-    scrollState: ScrollState,
-    selectedTabIndex: Int,
+    tabScreenState: TabScreenState,
     modifier: Modifier = Modifier
 ){
     SecondaryScrollableTabRow( modifier = modifier.fillMaxWidth(),
-        selectedTabIndex = selectedTabIndex,
-        scrollState = scrollState,
+        selectedTabIndex = tabScreenState.selectedTabIndex,
+        scrollState = tabScreenState.scrollState,
         containerColor = MaterialTheme.colorScheme.surface,
         contentColor = MaterialTheme.colorScheme.onSurface,
         divider = {
@@ -38,9 +34,9 @@ fun ScrollableTabs(
         MakeTabs(
             callbacks = callbacks,
             isPortrait = isPortrait,
-            playlists = playlists,
-            selectedTabIndex = selectedTabIndex,
-            onTabSelected = onTabSelected
+            playlists = tabScreenState.playlists,
+            selectedTabIndex = tabScreenState.selectedTabIndex,
+            onTabSelected = tabScreenState.onTabSelected
         )
     }
 }
@@ -48,14 +44,17 @@ fun ScrollableTabs(
 @Preview
 @Composable
 fun ScrollablePreview(){
-    val scrollState = rememberScrollState()
+    val tabScreenState = TabScreenState(
+        onTabSelected = {_,_->},
+        playlists = samplePlaylists(),
+        scrollState = ScrollState(0),
+        selectedTabIndex = 0,
+        screenType = ScreenType.MEDIUM_PHONE
+    )
     ScrollableTabs(
         callbacks = PlaylistCallbacks(),
         isPortrait = true,
-        playlists = samplePlaylists(),
-        selectedTabIndex = 0,
-        onTabSelected = {_,_ -> },
-        scrollState = scrollState,
+        tabScreenState = tabScreenState,
         modifier = Modifier
     )
 }

@@ -10,7 +10,6 @@ import com.example.strawberry_app.network.ConnectionViewModel
 import com.example.strawberry_app.network.SettingsGuiData
 import com.example.strawberry_app.screens.navigation.ScreenType
 import com.example.strawberry_app.screens.settingsScreen.screens.SettingsMedLrgPortraitScreen
-import com.example.strawberry_app.screens.settingsScreen.screens.SettingsSmallPortraitScreen
 import com.example.strawberry_app.server.ServerViewModel
 import com.example.strawberry_app.server.SettingsUiState
 
@@ -64,18 +63,12 @@ fun SettingsRoute(
         hasNetwork = hasNetwork,
         settingsGuiData = routeData
     )
-    if (screenType == ScreenType.SMALL_PHONE){
-        SettingsSmallPortraitScreen(
-            callbacks = callbacks,
-            isPortrait = isPortrait,
-            state = settingsScreenState
-        )
-    } else {
-        SettingsMedLrgPortraitScreen(
-            callbacks = callbacks,
-            isPortrait = isPortrait,
-            state = settingsScreenState
-        )
-    }
+
+    SettingsMedLrgPortraitScreen(
+        callbacks = callbacks,
+        isPortrait = isPortrait,
+        state = settingsScreenState,
+        screenType = screenType
+    )
 
 }

@@ -16,7 +16,8 @@ Currently it has the following functionality:
 
 ## Player Screen
 
-<img src="images/player.png" width="45%"/> <img src="images/player_with_song.png" width="45%"/>
+<img src="images/player_land_light.png" width="45%"/> <img src="images/player_land_dark.png" width="45%"/>
+<img src="images/player_port_light.png" width="45%"/> <img src="images/player_port_dark.png" width="45%"/>
 
 </div>
 
@@ -32,7 +33,8 @@ Currently it has the following functionality:
 - Player controls:
   - Restart or previous song
   - Seek back (short or long press available)
-  - Play/Pause/Stop
+  - Play/Pause
+  - Stop/Stop After Track (long press)
   - Seek forward (short or long press available)
   - Next song
 
@@ -42,7 +44,9 @@ Currently it has the following functionality:
 
 ## Playlists
 
-<img src="/images/playlist.png" width="45%"/> <img src="/images/playlist_options.png" width="45%"/>
+<img src="/images/playlist_port_options_light.png" width="45%"/> <img src="/images/playlist_port_options_dark" width="45%"/>
+<img src="/images/playlist_land_light.png" width="45%"/> <img src="/images/playlist_land_dark" width="45%"/>
+<img src="/images/playlist_port_light.png" width="45%"/> <img src="/images/playlist_port_dark" width="45%"/>
 
 </div>
 
@@ -67,7 +71,8 @@ Currently it has the following functionality:
 
 ## Settings
 
-<img src="/images/settings.png" width="45%"/>
+<img src="/images/settings_land_light.png" width="45%"/><img src="/images/settings_land_dark.png" width"45%"/>
+<img src="/images/settings_port_light.png" width="45%"/><img src="/images/settings_port_dark.png" width"45%"/>
 
 </div>
 

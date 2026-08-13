@@ -34,7 +34,7 @@ fun CreateButton(
             imageVector = image,
             contentDescription = description,
             tint = MaterialTheme.colorScheme.onSurface,
-            modifier = Modifier.size(24.dp)
+            modifier = Modifier.size(36.dp)
         )
     }
 }
@@ -57,7 +57,8 @@ fun CreateLongPressButton(
         Icon(
             imageVector = image,
             contentDescription = description,
-            tint = MaterialTheme.colorScheme.onSurface
+            tint = MaterialTheme.colorScheme.onSurface,
+            modifier = Modifier.size(36.dp)
         )
     }
 }
