@@ -5,8 +5,10 @@ import androidx.compose.runtime.getValue
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.strawberry_app.music.Playlist
-import com.example.strawberry_app.screens.navigation.ScreenType
-import com.example.strawberry_app.screens.playlistScreen.screens.PlaylistPortraitScreen
+import com.example.strawberry_app.screens.devices.DeviceTypes
+import com.example.strawberry_app.screens.devices.DeviceTypesBreakdown
+import com.example.strawberry_app.screens.devices.getDeviceType
+import com.example.strawberry_app.screens.playlistScreen.screens.PlaylistScreen
 import java.io.File
 
 data class PlaylistCallbacks(
@@ -38,7 +40,7 @@ data class PlaylistCallbacks(
 @Composable
 fun PlaylistRoute(
     isPortrait: Boolean,
-    screenType: ScreenType,
+    deviceType: DeviceTypesBreakdown,
     playlistViewModel: PlaylistViewModel = hiltViewModel()
 ){
     val selectedSongs by playlistViewModel.selectedSongs
@@ -81,21 +83,19 @@ fun PlaylistRoute(
         selectedSongs = selectedSongs
     )
 
-    when (screenType) {
-        ScreenType.SMALL_PHONE,
-        ScreenType.MEDIUM_PHONE,
-        ScreenType.LARGE_PHONE -> {
-            PlaylistPortraitScreen(
+    when (getDeviceType(deviceType)) {
+        DeviceTypes.PHONE -> {
+            PlaylistScreen(
                 callbacks = callbacks,
                 isPortrait = isPortrait,
                 playlistScreenState = playlistScreenState,
-                screenType = screenType
+                deviceType = deviceType
             )
         }
-        ScreenType.FOLDABLE -> {
+        DeviceTypes.FOLDABLE -> {
             println("myapp foldable called")
         }
-        ScreenType.TABLET -> {
+        DeviceTypes.TABLET -> {
             println("myapp tablet called")
         }
     }

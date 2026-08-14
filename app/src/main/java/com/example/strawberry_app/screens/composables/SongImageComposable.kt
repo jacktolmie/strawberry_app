@@ -1,4 +1,4 @@
-package com.example.strawberry_app.screens
+package com.example.strawberry_app.screens.composables
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.aspectRatio

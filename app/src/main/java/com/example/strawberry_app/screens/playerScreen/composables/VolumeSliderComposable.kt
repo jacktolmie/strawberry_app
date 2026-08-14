@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.progressSemantics
 import androidx.compose.material3.Slider
 import androidx.compose.material3.VerticalSlider
@@ -17,7 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.strawberry_app.screens.ServerGuiValues
+import com.example.strawberry_app.screens.classes.ServerGuiValues
 import com.example.strawberry_app.screens.playerScreen.PlayerCallbacks
 import com.example.strawberry_app.screens.playerScreen.PlayerScreenState
 import com.example.strawberry_app.ui.theme.icons.volume_down
@@ -88,7 +87,7 @@ fun VolumeSliderVert(
 
 @Preview
 @Composable
-fun VolumeSliderVirtPreview(){
+fun VolumeSliderVertPreview(){
 
     VolumeSliderVert(
         callbacks = PlayerCallbacks(),

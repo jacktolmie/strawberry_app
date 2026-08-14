@@ -10,8 +10,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.strawberry_app.screens.PlayState
-import com.example.strawberry_app.screens.ServerGuiValues
+import com.example.strawberry_app.screens.classes.PlayState
+import com.example.strawberry_app.screens.classes.ServerGuiValues
 import com.example.strawberry_app.screens.playerScreen.PlayerCallbacks
 import com.example.strawberry_app.screens.playerScreen.PlayerScreenState
 import com.example.strawberry_app.ui.theme.icons.fast_forward

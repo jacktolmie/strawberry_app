@@ -15,6 +15,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.strawberry_app.R
+import com.example.strawberry_app.screens.devices.DeviceTypesBreakdown
+import com.example.strawberry_app.screens.devices.isSmallDevice
 import com.example.strawberry_app.screens.playerScreen.PlayerRoute
 import com.example.strawberry_app.screens.playlistScreen.PlaylistRoute
 import com.example.strawberry_app.screens.settingsScreen.SettingsRoute
@@ -27,7 +29,7 @@ import kotlinx.coroutines.launch
 fun NavBar(
     isPortrait: Boolean,
     pagerState: PagerState,
-    screenType: ScreenType,
+    deviceType: DeviceTypesBreakdown,
     showLabel: Boolean
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -35,7 +37,7 @@ fun NavBar(
     Scaffold(
         bottomBar = {
             NavigationBar(
-                modifier = if (screenType == ScreenType.SMALL_PHONE) Modifier.height(70.dp) else Modifier
+                modifier = if (isSmallDevice(deviceType)) Modifier.height(70.dp) else Modifier
             ) {
                 NavigationBarItem(
                     selected = pagerState.currentPage == 0,
@@ -68,15 +70,15 @@ fun NavBar(
             when (page) {
                 0 -> PlayerRoute(
                     isPortrait = isPortrait,
-                    screenType = screenType
+                    deviceType = deviceType
                 )
                 1 -> PlaylistRoute(
                     isPortrait = isPortrait,
-                    screenType = screenType
+                    deviceType = deviceType
                 )
                 2 -> SettingsRoute(
                     isPortrait = isPortrait,
-                    screenType = screenType
+                    deviceType = deviceType
                 )
             }
         }
@@ -87,7 +89,7 @@ fun NavBar(
 @Composable
 fun NavBarPreview(){
     NavBar(
-        screenType = ScreenType.MEDIUM_PHONE,
+        deviceType = DeviceTypesBreakdown.PHONE_PORTRAIT,
         pagerState = PagerState { 3 },
         showLabel = true,
         isPortrait = true

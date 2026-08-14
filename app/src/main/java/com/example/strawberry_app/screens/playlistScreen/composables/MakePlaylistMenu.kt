@@ -14,8 +14,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.example.strawberry_app.R
-import com.example.strawberry_app.screens.TextBox
-import com.example.strawberry_app.screens.formatTime
+import com.example.strawberry_app.screens.composables.TextBox
+import com.example.strawberry_app.screens.functions.formatTime
 import com.example.strawberry_app.screens.playlistScreen.PlaylistCallbacks
 import com.example.strawberry_app.screens.playlistScreen.PlaylistsData
 

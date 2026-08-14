@@ -1,24 +1,26 @@
 package com.example.strawberry_app.screens.playlistScreen.screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.strawberry_app.screens.navigation.ScreenType
+import com.example.strawberry_app.screens.devices.DeviceTypesBreakdown
 import com.example.strawberry_app.screens.playlistScreen.PlaylistCallbacks
 import com.example.strawberry_app.screens.playlistScreen.PlaylistScreenState
 import com.example.strawberry_app.screens.playlistScreen.composables.CurrentPlaylist
 import com.example.strawberry_app.screens.playlistScreen.composables.TabListing
 
 @Composable
-fun PlaylistPortraitScreen(
+fun PlaylistScreen(
     callbacks: PlaylistCallbacks,
     isPortrait: Boolean,
     playlistScreenState: PlaylistScreenState,
-    screenType: ScreenType,
+    deviceType: DeviceTypesBreakdown,
     modifier: Modifier = Modifier
 ){
     Column(modifier = modifier
@@ -31,7 +33,7 @@ fun PlaylistPortraitScreen(
                 callbacks = callbacks,
                 isPortrait = isPortrait,
                 playlistScreenState = playlistScreenState,
-                screenType = screenType
+                deviceType = deviceType
             )
         }
         // Create the playlists for each tab.
@@ -49,10 +51,11 @@ fun PlaylistPortraitScreen(
 @Composable
 @Preview
 fun PlaylistPreview(){
-    PlaylistPortraitScreen(
+    PlaylistScreen(
         callbacks = PlaylistCallbacks(),
         isPortrait = true,
         playlistScreenState = PlaylistScreenState(),
-        screenType = ScreenType.MEDIUM_PHONE
+        deviceType = DeviceTypesBreakdown.PHONE_PORTRAIT,
+        modifier = Modifier.background(Color.White)
     )
 }

@@ -3,8 +3,8 @@ package com.example.strawberry_app.screens.playerScreen
 import com.example.strawberry_app.music.SongInfo
 import com.example.strawberry_app.network.ApplicationScope
 import com.example.strawberry_app.network.protocol.OutgoingMessage
-import com.example.strawberry_app.screens.AlbumArtRepository
-import com.example.strawberry_app.screens.ServerGuiValues
+import com.example.strawberry_app.screens.repositories.AlbumArtRepository
+import com.example.strawberry_app.screens.classes.ServerGuiValues
 import com.example.strawberry_app.screens.playlistScreen.PlaylistRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow

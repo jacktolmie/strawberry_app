@@ -3,7 +3,7 @@ package com.example.strawberry_app.screens.playerScreen
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.strawberry_app.network.protocol.OutgoingMessage
-import com.example.strawberry_app.screens.PlayState
+import com.example.strawberry_app.screens.classes.PlayState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.SharingStarted

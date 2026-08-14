@@ -24,8 +24,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.strawberry_app.R
 import com.example.strawberry_app.data.dao.SongWithPosition
-import com.example.strawberry_app.screens.SongImageComposable
-import com.example.strawberry_app.screens.formatTime
+import com.example.strawberry_app.screens.composables.SongImageComposable
+import com.example.strawberry_app.screens.functions.formatTime
 import com.example.strawberry_app.screens.playlistScreen.PlaylistCallbacks
 import com.example.strawberry_app.screens.playlistScreen.PlaylistScreenState
 import com.example.strawberry_app.ui.theme.icons.check_circle

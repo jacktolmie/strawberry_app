@@ -1,4 +1,4 @@
-package com.example.strawberry_app.screens
+package com.example.strawberry_app.screens.repositories
 
 import android.util.Log
 import com.example.strawberry_app.music.SongInfo
@@ -8,6 +8,8 @@ import com.example.strawberry_app.network.NetworkManager
 import com.example.strawberry_app.network.protocol.ErrorType
 import com.example.strawberry_app.network.protocol.EventType
 import com.example.strawberry_app.network.protocol.ResponseType
+import com.example.strawberry_app.screens.classes.PlayState
+import com.example.strawberry_app.screens.classes.ServerGuiValues
 import com.example.strawberry_app.screens.playerScreen.PlayerRepository
 import com.example.strawberry_app.screens.playlistScreen.PlaylistRepository
 import kotlinx.coroutines.CoroutineScope
@@ -77,20 +79,20 @@ class MessageRepository @Inject constructor(
 
                         playerRepository.getGuiUpdates(
                             ServerGuiValues(
-                                activePlaylist =    message.activePlaylist,
-                                coverImage =        message.coverImage,
-                                currentPlaylist =   message.currentPlaylist,
-                                currentSong =       serverUpdates.value.currentSong,
-                                currentSongId =     message.currentSong,
-                                currentTime =       message.time,
-                                playState =         when(message.playing){
-                                    "paused" ->     PlayState.PAUSED
-                                    "playing" ->    PlayState.PLAYING
-                                    else ->         PlayState.STOPPED
+                                activePlaylist = message.activePlaylist,
+                                coverImage = message.coverImage,
+                                currentPlaylist = message.currentPlaylist,
+                                currentSong = serverUpdates.value.currentSong,
+                                currentSongId = message.currentSong,
+                                currentTime = message.time,
+                                playState = when (message.playing) {
+                                    "paused" -> PlayState.PAUSED
+                                    "playing" -> PlayState.PLAYING
+                                    else -> PlayState.STOPPED
                                 },
-                                repeatMode =        message.repeatMode,
-                                shuffleMode =       message.shuffleMode,
-                                volume =            message.volume
+                                repeatMode = message.repeatMode,
+                                shuffleMode = message.shuffleMode,
+                                volume = message.volume
                             )
                         )
                     }
@@ -193,7 +195,7 @@ class MessageRepository @Inject constructor(
     }
 
     fun resetServerValues() {
-        playerRepository.getGuiUpdates( ServerGuiValues() )
+        playerRepository.getGuiUpdates(ServerGuiValues())
         albumArtRepository.notifyAlbumArtReady("")
     }
 

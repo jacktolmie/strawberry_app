@@ -1,4 +1,4 @@
-package com.example.strawberry_app.screens
+package com.example.strawberry_app.screens.repositories
 
 import android.content.Context
 import android.util.Base64

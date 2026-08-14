@@ -8,8 +8,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.strawberry_app.network.ConnectionState
 import com.example.strawberry_app.network.ConnectionViewModel
 import com.example.strawberry_app.network.SettingsGuiData
-import com.example.strawberry_app.screens.navigation.ScreenType
-import com.example.strawberry_app.screens.settingsScreen.screens.SettingsMedLrgPortraitScreen
+import com.example.strawberry_app.screens.devices.DeviceTypesBreakdown
+import com.example.strawberry_app.screens.settingsScreen.screens.SettingsScreen
 import com.example.strawberry_app.server.ServerViewModel
 import com.example.strawberry_app.server.SettingsUiState
 
@@ -33,7 +33,7 @@ class SettingsCallbacks(
 @Composable
 fun SettingsRoute(
     isPortrait: Boolean,
-    screenType: ScreenType,
+    deviceType: DeviceTypesBreakdown,
     serverViewModel: ServerViewModel = hiltViewModel(),
     connectionViewModel: ConnectionViewModel = hiltViewModel()
 ) {
@@ -64,11 +64,11 @@ fun SettingsRoute(
         settingsGuiData = routeData
     )
 
-    SettingsMedLrgPortraitScreen(
+    SettingsScreen(
         callbacks = callbacks,
         isPortrait = isPortrait,
         state = settingsScreenState,
-        screenType = screenType
+        deviceType = deviceType
     )
 
 }

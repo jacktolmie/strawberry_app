@@ -20,28 +20,31 @@ import androidx.compose.ui.unit.dp
 import com.example.strawberry_app.R
 import com.example.strawberry_app.network.ConnectionState.Connected
 import com.example.strawberry_app.network.SettingsGuiData
-import com.example.strawberry_app.screens.TextBox
-import com.example.strawberry_app.screens.navigation.ScreenType
+import com.example.strawberry_app.screens.composables.TextBox
+import com.example.strawberry_app.screens.devices.DeviceTypesBreakdown
+import com.example.strawberry_app.screens.devices.isSmallDevice
+import com.example.strawberry_app.screens.functions.spacerSize
 import com.example.strawberry_app.screens.settingsScreen.SettingsCallbacks
 import com.example.strawberry_app.screens.settingsScreen.SettingsScreenState
-import com.example.strawberry_app.screens.settingsScreen.composables.ConnStateMedLrg
+import com.example.strawberry_app.screens.settingsScreen.composables.ConnectionState
 import com.example.strawberry_app.screens.settingsScreen.composables.MedLrgScreenBtns
 import com.example.strawberry_app.screens.settingsScreen.composables.SmallScreenBtns
-import com.example.strawberry_app.screens.settingsScreen.composables.TextboxIpHoriz
-import com.example.strawberry_app.screens.settingsScreen.composables.TextboxPasswordHoriz
+import com.example.strawberry_app.screens.settingsScreen.composables.TextboxIp
+import com.example.strawberry_app.screens.settingsScreen.composables.TextboxPassword
 import com.example.strawberry_app.screens.settingsScreen.composables.TextboxPortHoriz
 import com.example.strawberry_app.server.SettingsUiState
 
 @Composable
-fun SettingsMedLrgPortraitScreen(
+fun SettingsScreen(
     callbacks: SettingsCallbacks,
     isPortrait: Boolean,
     state: SettingsScreenState,
-    screenType: ScreenType,
+    deviceType: DeviceTypesBreakdown,
 
     modifier: Modifier = Modifier
 ) {
-    val spacing = if (!isPortrait) 0.dp else 16.dp
+    val spacing = spacerSize(deviceType)
+    val useSmallButtons = isSmallDevice(deviceType)
 
     Column(modifier = modifier
         .verticalScroll(rememberScrollState())
@@ -63,7 +66,7 @@ fun SettingsMedLrgPortraitScreen(
 
         Spacer(modifier = Modifier.height(spacing))
 
-        TextboxIpHoriz(state.serverUiState, callbacks)
+        TextboxIp(state.serverUiState, callbacks)
 
         Spacer(modifier = Modifier.height(spacing))
 
@@ -71,11 +74,11 @@ fun SettingsMedLrgPortraitScreen(
 
         Spacer(modifier = Modifier.height(spacing))
 
-        TextboxPasswordHoriz(state.serverUiState, callbacks)
+        TextboxPassword(state.serverUiState, callbacks)
 
         Spacer(modifier = Modifier.height(spacing))
 
-        if (isPortrait && screenType != ScreenType.SMALL_PHONE){
+        if (isPortrait && !useSmallButtons){
             MedLrgScreenBtns(
                 serverUiState = state.serverUiState,
                 callbacks = callbacks,
@@ -91,15 +94,15 @@ fun SettingsMedLrgPortraitScreen(
             )
         }
 
-        ConnStateMedLrg(state.settingsGuiData)
+        ConnectionState(state.settingsGuiData)
 
     }
 }
 
 @Preview
 @Composable
-fun SettingsMedLrgPortraitPreview(){
-    SettingsMedLrgPortraitScreen(
+fun SettingsPreview(){
+    SettingsScreen(
         state = SettingsScreenState(
             serverUiState = SettingsUiState(
                 ip = "192.168.1.201",
@@ -122,6 +125,6 @@ fun SettingsMedLrgPortraitPreview(){
             onConnectClicked = {}
         ),
         isPortrait = true,
-        screenType = ScreenType.SMALL_PHONE
+        deviceType = DeviceTypesBreakdown.SMALL_PHONE_PORTRAIT
     )
 }

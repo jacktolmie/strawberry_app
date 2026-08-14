@@ -1,4 +1,4 @@
-package com.example.strawberry_app.screens
+package com.example.strawberry_app.screens.classes
 
 sealed class ScreenList(val route: String) {
     data object Player: ScreenList("player")

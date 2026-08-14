@@ -12,9 +12,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import com.example.strawberry_app.screens.SongImageComposable
-import com.example.strawberry_app.screens.navigation.ScreenType
+import com.example.strawberry_app.screens.composables.SongImageComposable
+import com.example.strawberry_app.screens.devices.DeviceTypesBreakdown
+import com.example.strawberry_app.screens.functions.spacerSize
 import com.example.strawberry_app.screens.playerScreen.PlayerCallbacks
 import com.example.strawberry_app.screens.playerScreen.PlayerScreenState
 import com.example.strawberry_app.screens.playerScreen.composables.MediaBtnComposable
@@ -26,10 +26,10 @@ import com.example.strawberry_app.screens.playerScreen.composables.VolumeSliderH
 fun PlayerLandscapeScreen(
     callbacks: PlayerCallbacks,
     playerScreenValues: PlayerScreenState,
-    screenType: ScreenType,
+    deviceType: DeviceTypesBreakdown,
     modifier: Modifier = Modifier
 ){
-    val space = if (screenType == ScreenType.SMALL_PHONE) 0.dp else 10.dp
+    val space = spacerSize(deviceType)
 
     Row(
         modifier = modifier
@@ -78,7 +78,6 @@ fun PlayerLandscapeScreen(
             VolumeSliderHoriz(callbacks, playerScreenValues)
         }
     }
-
 }
 
 @Preview(name = "Phone Landscape", showBackground = true, widthDp = 800, heightDp = 360)
@@ -87,7 +86,7 @@ fun PlayerLandscapePreview(){
     PlayerLandscapeScreen(
         callbacks = PlayerCallbacks(),
         playerScreenValues = PlayerScreenState(),
-        screenType = ScreenType.MEDIUM_PHONE
+        deviceType = DeviceTypesBreakdown.PHONE_PORTRAIT
     )
 }
 

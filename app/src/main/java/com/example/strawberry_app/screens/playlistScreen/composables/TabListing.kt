@@ -2,7 +2,6 @@ package com.example.strawberry_app.screens.playlistScreen.composables
 
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material3.Tab
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -13,7 +12,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.strawberry_app.data.entity.PlaylistEntity
-import com.example.strawberry_app.screens.navigation.ScreenType
+import com.example.strawberry_app.screens.devices.DeviceTypesBreakdown
 import com.example.strawberry_app.screens.playlistScreen.PlaylistCallbacks
 import com.example.strawberry_app.screens.playlistScreen.PlaylistScreenState
 import com.example.strawberry_app.screens.playlistScreen.PlaylistsData
@@ -21,7 +20,7 @@ import com.example.strawberry_app.screens.playlistScreen.PlaylistsData
 data class TabScreenState(
     val onTabSelected: (Int, Long) -> Unit,
     val playlists: List<PlaylistEntity>,
-    val screenType: ScreenType,
+    val deviceType: DeviceTypesBreakdown,
     val scrollState: ScrollState,
     val selectedTabIndex: Int
 )
@@ -31,7 +30,7 @@ fun TabListing(
     callbacks: PlaylistCallbacks,
     isPortrait: Boolean,
     playlistScreenState: PlaylistScreenState,
-    screenType: ScreenType,
+    deviceType: DeviceTypesBreakdown,
     modifier: Modifier = Modifier
 ){
     var selectedTabIndex by remember { mutableIntStateOf(0) }
@@ -62,7 +61,7 @@ fun TabListing(
     val tabScreenState = TabScreenState(
         onTabSelected = { tabIndex: Int, id: Long -> onTabSelected(tabIndex, id) },
         playlists = playlistScreenState.playlistsData.playlists,
-        screenType = screenType,
+        deviceType = deviceType,
         scrollState = scrollState,
         selectedTabIndex = selectedTabIndex
     )
@@ -108,7 +107,7 @@ fun TabListingPreview(){
     TabListing(
         callbacks = PlaylistCallbacks(),
         isPortrait = true,
-        screenType = ScreenType.MEDIUM_PHONE,
+        deviceType = DeviceTypesBreakdown.PHONE_PORTRAIT,
         playlistScreenState = PlaylistScreenState()
     )
 }

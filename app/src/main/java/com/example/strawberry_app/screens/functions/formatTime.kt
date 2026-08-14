@@ -1,4 +1,4 @@
-package com.example.strawberry_app.screens
+package com.example.strawberry_app.screens.functions
 
 fun formatTime(time: Long): String {
     val hours = time / 3_600_000

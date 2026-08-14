@@ -1,4 +1,4 @@
-package com.example.strawberry_app.screens
+package com.example.strawberry_app.screens.classes
 
 import com.example.strawberry_app.music.SongInfo
 

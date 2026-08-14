@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfoV2
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.window.core.layout.WindowSizeClass
 import com.example.strawberry_app.ui.theme.Strawberry_appTheme
@@ -20,7 +20,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             Strawberry_appTheme {
-                val windowSizeClass: WindowSizeClass = currentWindowAdaptiveInfo(supportLargeAndXLargeWidth = true).windowSizeClass
+                val windowSizeClass: WindowSizeClass = currentWindowAdaptiveInfoV2().windowSizeClass
                 MyApp( windowSizeClass = windowSizeClass )
             }
         }

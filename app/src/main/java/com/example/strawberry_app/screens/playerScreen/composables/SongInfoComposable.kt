@@ -6,8 +6,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.strawberry_app.screens.ServerGuiValues
-import com.example.strawberry_app.screens.TextBox
+import com.example.strawberry_app.screens.classes.ServerGuiValues
+import com.example.strawberry_app.screens.composables.TextBox
 import com.example.strawberry_app.screens.playerScreen.PlayerScreenState
 
 @Composable

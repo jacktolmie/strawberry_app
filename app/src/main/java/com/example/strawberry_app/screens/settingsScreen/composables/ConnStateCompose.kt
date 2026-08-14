@@ -1,5 +1,6 @@
 package com.example.strawberry_app.screens.settingsScreen.composables
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -14,16 +15,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.strawberry_app.R
 import com.example.strawberry_app.network.ConnectionColour.GREEN
 import com.example.strawberry_app.network.ConnectionColour.RED
 import com.example.strawberry_app.network.ConnectionColour.YELLOW
 import com.example.strawberry_app.network.SettingsGuiData
-import com.example.strawberry_app.screens.TextBox
+import com.example.strawberry_app.screens.composables.TextBox
 
 @Composable
-fun ConnStateMedLrg(
+fun ConnectionState(
     settingsGuiData: SettingsGuiData,
     modifier: Modifier = Modifier
 ){
@@ -65,42 +67,10 @@ fun ConnStateMedLrg(
     }
 }
 
+@Preview
 @Composable
-fun ConnStateSmall(
-    settingsGuiData: SettingsGuiData,
-    modifier: Modifier = Modifier
-){
-    Row(modifier = modifier
-        .fillMaxWidth()
-        .padding(10.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center
-    )
-    {
-        TextBox(
-            color = MaterialTheme.colorScheme.onSurface,
-            textRes = R.string.settings_connection_status,
-            textStyle = MaterialTheme.typography.bodyMedium)
-
-        Spacer(modifier = Modifier.width(5.dp))
-
-        Icon(
-            modifier = Modifier.size(18.dp),
-            painter = painterResource(R.drawable.circle_24dp_e3e3e3_fill1_wght400_grad0_opsz24),
-            contentDescription = null,
-            tint = when(settingsGuiData.connectionColour){
-                RED -> Color.Red
-                GREEN -> Color.Green
-                YELLOW -> Color.Yellow
-            }
-        )
-
-        Spacer(modifier = Modifier.width(5.dp))
-
-        TextBox(
-            color = MaterialTheme.colorScheme.onSurface,
-            text = settingsGuiData.connectionState,
-            textStyle = MaterialTheme.typography.bodySmall
-        )
-    }
+fun ConnectionStatePreview(){
+    ConnectionState(
+        settingsGuiData = SettingsGuiData(),
+        modifier = Modifier.background(Color.White))
 }

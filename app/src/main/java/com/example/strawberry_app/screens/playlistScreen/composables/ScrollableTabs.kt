@@ -9,7 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.strawberry_app.screens.navigation.ScreenType
+import com.example.strawberry_app.screens.devices.DeviceTypesBreakdown
 import com.example.strawberry_app.screens.playlistScreen.PlaylistCallbacks
 
 @Composable
@@ -49,7 +49,7 @@ fun ScrollablePreview(){
         playlists = samplePlaylists(),
         scrollState = ScrollState(0),
         selectedTabIndex = 0,
-        screenType = ScreenType.MEDIUM_PHONE
+        deviceType = DeviceTypesBreakdown.PHONE_PORTRAIT
     )
     ScrollableTabs(
         callbacks = PlaylistCallbacks(),
