@@ -168,9 +168,7 @@ class MessageRepository @Inject constructor(
 
                     // Server Response messages.
                     is ResponseType.ClearedPlaylist -> { serverResponseMessage("Cleared playlist ${message.name}.") }
-                    is ResponseType.CurrentSong -> {
-                        println("messagerepo current song called with playlist: ${message.playlistId} and song: ${message.songIndex}")
-                        playlistRepository.updateCurrentSong(message.playlistId, message.songIndex)}
+                    is ResponseType.CurrentSong -> { playlistRepository.updateCurrentSong(message.playlistId, message.songIndex)}
                     is ResponseType.DeletedPlaylistWithId -> { serverResponseMessage("Deleted playlist with ID: ${message.id}.") }
                     is ResponseType.IsPlaylistAFavourite -> { serverResponseMessage("Is playlist ${message.id} a favourite? ${message.isFavourite}.") }
                     is ResponseType.PlaylistChanged -> { serverResponseMessage("Playlist changed") }
@@ -185,7 +183,8 @@ class MessageRepository @Inject constructor(
                     is ResponseType.SentAlbumCover -> {serverResponseMessage("Sent album cover")}
                     is ResponseType.SendRequestedPlaylist -> { serverResponseMessage("Send requested playlist with ID: ${message.playlist.id}.") }
                     is ResponseType.SetActivePlaylistTo -> { serverResponseMessage("Set active playlist to ${message.id}.") }
-                    is ResponseType.ShuffledPlaylist -> { serverResponseMessage("Shuffle playlist mode: ${message.mode}.") }
+                    is ResponseType.ShuffledPlaylist -> { serverResponseMessage("Shuffle playlist mode: ${message.id}.") }
+                    is ResponseType.ShuffledMode -> { serverResponseMessage("Shuffle mode changed to ${message.mode}")}
                     is ResponseType.Songs -> { serverResponseMessage("List of songs sent.") }
 
                     else -> Unit

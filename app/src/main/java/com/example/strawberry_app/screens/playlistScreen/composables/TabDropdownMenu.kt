@@ -68,7 +68,6 @@ fun TabDropdownMenu(
     }
 
     if (showShuffleDialog){
-        println("tabdrop repeat mode: ${ShuffleModeValues.fromString(playlistsData.playlistState.shuffleMode)}")
         ShuffleAlert(
             currentShuffleMode = ShuffleModeValues.fromString(playlistsData.playlistState.shuffleMode),
             onConfirm = {mode ->
@@ -104,22 +103,13 @@ fun TabDropdownMenu(
                 itemName = playlistName
             )
             DropdownMenuItemComposable(
-                text = R.string.playlist_repeat,
-                iconImage = repeat,
-                onConfirm = { onConfirm({ }, false, false, R.string.playlist_repeat)
-                    showRepeatDialog = true
-                },
-                itemName = playlistName
-            )
-            DropdownMenuItemComposable(
                 text = R.string.playlist_shuffle,
                 iconImage = shuffle,
-                onConfirm = { onConfirm({ }, false, false, R.string.playlist_shuffle)
-                    showShuffleDialog = true
+                onConfirm = { onConfirm({ callbacks.shuffleCurrentPlaylist(playlistId) },
+                    true, false, R.string.playlist_shuffle)
                 },
                 itemName = playlistName
             )
-
             DropdownMenuItemComposable(
                 text = R.string.playlist_clear,
                 iconImage = clear_all,
@@ -158,6 +148,22 @@ fun TabDropdownMenu(
                 onConfirm = { onConfirm({},
                     false, false, R.string.playlist_rename)
                     showRenameDialog = true
+                },
+                itemName = playlistName
+            )
+            DropdownMenuItemComposable(
+                text = R.string.playlist_repeat_mode,
+                iconImage = repeat,
+                onConfirm = { onConfirm({ }, false, false, R.string.playlist_repeat)
+                    showRepeatDialog = true
+                },
+                itemName = playlistName
+            )
+            DropdownMenuItemComposable(
+                text = R.string.playlist_shuffle_mode,
+                iconImage = shuffle,
+                onConfirm = { onConfirm({ }, false, false, R.string.playlist_shuffle)
+                    showShuffleDialog = true
                 },
                 itemName = playlistName
             )

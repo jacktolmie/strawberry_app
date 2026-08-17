@@ -49,7 +49,7 @@ fun RenameAlert(
 }
 
 @Composable
-@Preview
+@Preview(showBackground = true)
 fun RenamePreview(){
     RenameAlert(
         name = "Playlist Name",

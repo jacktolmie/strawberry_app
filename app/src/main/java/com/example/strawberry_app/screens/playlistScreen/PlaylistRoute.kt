@@ -2,6 +2,7 @@ package com.example.strawberry_app.screens.playlistScreen
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.strawberry_app.music.Playlist
@@ -33,6 +34,7 @@ data class PlaylistCallbacks(
     val sendShuffleMode: (mode: String) -> Unit = {},
     val setCurrentPlaylist: (id: Long) -> Unit = {},
     val setDragIcon: (songIndex: Long?) -> Unit = {},
+    val shuffleCurrentPlaylist: (id: Long) -> Unit = {},
     val toggleSelection: (id: Long) -> Unit = {},
     val updateCurrentSong: (id: Long, songIndex: Long) -> Unit = {_,_ ->}
     )
@@ -41,6 +43,7 @@ data class PlaylistCallbacks(
 fun PlaylistRoute(
     isPortrait: Boolean,
     deviceType: DeviceTypesBreakdown,
+    modifier: Modifier = Modifier,
     playlistViewModel: PlaylistViewModel = hiltViewModel()
 ){
     val selectedSongs by playlistViewModel.selectedSongs
@@ -71,6 +74,7 @@ fun PlaylistRoute(
         setCurrentPlaylist = playlistViewModel::setCurrentPlaylist,
         setDragIcon = playlistViewModel::setDragIcon,
         sendShuffleMode = playlistViewModel::sendShuffleMode,
+        shuffleCurrentPlaylist = playlistViewModel::shuffleCurrentPlaylist,
         toggleSelection = playlistViewModel::toggleSelection,
         updateCurrentSong = playlistViewModel::updateCurrentSong
     )
@@ -83,20 +87,28 @@ fun PlaylistRoute(
         selectedSongs = selectedSongs
     )
 
-    when (getDeviceType(deviceType)) {
-        DeviceTypes.PHONE -> {
-            PlaylistScreen(
-                callbacks = callbacks,
-                isPortrait = isPortrait,
-                playlistScreenState = playlistScreenState,
-                deviceType = deviceType
-            )
-        }
-        DeviceTypes.FOLDABLE -> {
-            println("myapp foldable called")
-        }
-        DeviceTypes.TABLET -> {
-            println("myapp tablet called")
-        }
-    }
+    PlaylistScreen(
+        callbacks = callbacks,
+        isPortrait = isPortrait,
+        playlistScreenState = playlistScreenState,
+        deviceType = deviceType,
+        modifier = modifier
+    )
+//    when (getDeviceType(deviceType)) {
+//        DeviceTypes.PHONE, DeviceTypes.FOLDABLE_CLOSED -> {
+//            PlaylistScreen(
+//                callbacks = callbacks,
+//                isPortrait = isPortrait,
+//                playlistScreenState = playlistScreenState,
+//                deviceType = deviceType,
+//                modifier = modifier
+//            )
+//        }
+//        DeviceTypes.FOLDABLE -> {
+//            println("myapp foldable called")
+//        }
+//        DeviceTypes.TABLET -> {
+//            println("myapp tablet called")
+//        }
+//    }
 }

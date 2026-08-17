@@ -58,7 +58,7 @@ fun SongDropdownMenu(
 }
 
 @Composable
-@Preview
+@Preview(showBackground = true)
 fun SongDropdownPreview(){
     SongDropdownMenu(
         expanded = true,

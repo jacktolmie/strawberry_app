@@ -41,7 +41,7 @@ fun ScrollableTabs(
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun ScrollablePreview(){
     val tabScreenState = TabScreenState(

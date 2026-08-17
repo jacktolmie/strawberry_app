@@ -168,28 +168,3 @@ fun SongItemPreview() {
         )
     )
 }
-
-//    var showDropdown by remember { mutableStateOf(false) }
-//    var expanded by remember { mutableStateOf(false) }
-//    var expandAllRows by remember { mutableStateOf(false) }
-//    var selectIcon by remember { mutableStateOf( reorder) }
-
-// Do I need this? Add song rating etc.???
-//    if (showDropdown){
-//        SongDropdownMenu(
-//            expanded = true,
-//            onConfirm = {},
-//            onChecked = { expandAllRows },
-//            songTitle = song.title
-//        )
-//    }
-
-
-//                Icon(modifier = Modifier
-//                    .clickable(
-//                        onClick = {
-//                            showDropdown = true
-//                        }
-//                    ),
-//                    imageVector = more_horiz, contentDescription = "Song item dropdown"
-//                )

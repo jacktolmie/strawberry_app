@@ -97,6 +97,9 @@ sealed class OutgoingMessage {
     data class SetCurrentPlaylist(val id: Long): OutgoingMessage()
 
     @Serializable
+    @SerialName("shuffle-current-playlist")
+    data class ShuffleCurrentPlaylist(val id: Long): OutgoingMessage()
+    @Serializable
     @SerialName("shuffle-mode")
     data class ShuffleMode(
         @SerialName("shuffle-mode")

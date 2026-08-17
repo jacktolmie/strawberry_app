@@ -40,7 +40,6 @@ fun SettingsScreen(
     isPortrait: Boolean,
     state: SettingsScreenState,
     deviceType: DeviceTypesBreakdown,
-
     modifier: Modifier = Modifier
 ) {
     val spacing = spacerSize(deviceType)

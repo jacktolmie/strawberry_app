@@ -22,9 +22,11 @@
     <string name="playlist_rename">Rename</string>
     <string name="playlist_reorder">Reorder Playlist</string>
     <string name="playlist_repeat">Repeat</string>
-    <string name="playlist_repeat_choose">Choose Repeat Option</string>
+    <string name="playlist_repeat_choose">Choose Repeat Mode</string>
+    <string name="playlist_repeat_mode">Repeat Mode</string>
     <string name="playlist_shuffle">Shuffle Playlist</string>
-    <string name="playlist_shuffle_choose">Choose Shuffle Option</string>
+    <string name="playlist_shuffle_choose">Choose Shuffle Mode</string>
+    <string name="playlist_shuffle_mode">Shuffle Mode</string>
     <string name="playlist_song_count">Songs</string>
 
 

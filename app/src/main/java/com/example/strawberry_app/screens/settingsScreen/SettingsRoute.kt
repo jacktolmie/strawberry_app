@@ -3,6 +3,7 @@ package com.example.strawberry_app.screens.settingsScreen
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.strawberry_app.network.ConnectionState
@@ -34,6 +35,7 @@ class SettingsCallbacks(
 fun SettingsRoute(
     isPortrait: Boolean,
     deviceType: DeviceTypesBreakdown,
+    modifier: Modifier = Modifier,
     serverViewModel: ServerViewModel = hiltViewModel(),
     connectionViewModel: ConnectionViewModel = hiltViewModel()
 ) {
@@ -68,7 +70,8 @@ fun SettingsRoute(
         callbacks = callbacks,
         isPortrait = isPortrait,
         state = settingsScreenState,
-        deviceType = deviceType
+        deviceType = deviceType,
+        modifier = modifier
     )
 
 }

@@ -3,6 +3,7 @@ package com.example.strawberry_app.screens.playerScreen
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.strawberry_app.screens.classes.ServerGuiValues
@@ -39,6 +40,7 @@ class PlayerCallbacks(
 fun PlayerRoute(
     isPortrait: Boolean,
     deviceType: DeviceTypesBreakdown,
+    modifier: Modifier = Modifier,
     playerViewModel: PlayerViewModel = hiltViewModel()
 ){
     val playerValues by playerViewModel.serverUpdates.collectAsStateWithLifecycle()
@@ -65,23 +67,39 @@ fun PlayerRoute(
 
     val playerScreenData = PlayerScreenState(playerValues, albumArtFile)
 
-    when (getDeviceType(deviceType)) {
-        DeviceTypes.PHONE -> {
-            if (isPortrait) {
-                PlayerPortraitScreen(
-                    callbacks = callbacks,
-                    playerScreenValues = playerScreenData,
-                    deviceType = deviceType
-                )
-            } else {
-                PlayerLandscapeScreen(
-                    callbacks = callbacks,
-                    playerScreenValues = playerScreenData,
-                    deviceType = deviceType
-                )
-            }
-
-        }
-        else -> {}
+    if (isPortrait) {
+        PlayerPortraitScreen(
+            callbacks = callbacks,
+            playerScreenValues = playerScreenData,
+            deviceType = deviceType,
+            modifier = modifier
+        )
+    } else {
+        PlayerLandscapeScreen(
+            callbacks = callbacks,
+            playerScreenValues = playerScreenData,
+            deviceType = deviceType,
+            modifier = modifier
+        )
     }
+//    when (getDeviceType(deviceType)) {
+//        DeviceTypes.PHONE -> {
+//            if (isPortrait) {
+//                PlayerPortraitScreen(
+//                    callbacks = callbacks,
+//                    playerScreenValues = playerScreenData,
+//                    deviceType = deviceType,
+//                    modifier = modifier
+//                )
+//            } else {
+//                PlayerLandscapeScreen(
+//                    callbacks = callbacks,
+//                    playerScreenValues = playerScreenData,
+//                    deviceType = deviceType,
+//                    modifier = modifier
+//                )
+//            }
+//        }
+//        else -> {}
+//    }
 }

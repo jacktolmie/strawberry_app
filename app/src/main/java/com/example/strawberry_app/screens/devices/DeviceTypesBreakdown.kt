@@ -3,7 +3,8 @@ package com.example.strawberry_app.screens.devices
 enum class DeviceTypes {
     PHONE,
     TABLET,
-    FOLDABLE
+    FOLDABLE,
+    FOLDABLE_CLOSED
 }
 
 enum class DeviceTypesBreakdown {

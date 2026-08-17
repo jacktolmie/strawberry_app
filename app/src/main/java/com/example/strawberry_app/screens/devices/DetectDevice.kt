@@ -1,76 +1,75 @@
 package com.example.strawberry_app.screens.devices
 
-import android.app.Activity
 import android.content.res.Configuration
+import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
-import androidx.window.core.layout.WindowSizeClass
 import androidx.window.layout.FoldingFeature
 import androidx.window.layout.WindowInfoTracker
-
 @Composable
 fun detectDevice(windowSizeClass: WindowSizeClass): DeviceTypesBreakdown {
     val configuration = LocalConfiguration.current
     val isPortrait = configuration.orientation == Configuration.ORIENTATION_PORTRAIT
 
-    // Check for foldable state
     val context = LocalContext.current
+
+    // Foldable checks first — physical bounds are fine here since
+    // foldable hinge detection is always about the real display
     val windowLayoutInfo = WindowInfoTracker
         .getOrCreate(context)
-        .windowLayoutInfo(context as Activity)
+        .windowLayoutInfo(context)
         .collectAsState(initial = null)
 
     val foldingFeature = windowLayoutInfo.value?.displayFeatures
         ?.filterIsInstance<FoldingFeature>()
         ?.firstOrNull()
 
-    // Foldable checks first since they are most specific
     if (foldingFeature != null) {
         return when {
-            foldingFeature.state == FoldingFeature.State.HALF_OPENED -> {
+            foldingFeature.state == FoldingFeature.State.HALF_OPENED ->
                 DeviceTypesBreakdown.FOLDABLE_HALF_OPEN
-            }
-            foldingFeature.state == FoldingFeature.State.FLAT && isPortrait -> {
+            foldingFeature.state == FoldingFeature.State.FLAT && isPortrait ->
                 DeviceTypesBreakdown.FOLDABLE_OPEN_PORTRAIT
-            }
-            foldingFeature.state == FoldingFeature.State.FLAT && !isPortrait -> {
+            foldingFeature.state == FoldingFeature.State.FLAT && !isPortrait ->
                 DeviceTypesBreakdown.FOLDABLE_OPEN_LANDSCAPE
-            }
-            else -> {
-                // Folded closed, acts like a phone
+            else ->
                 DeviceTypesBreakdown.FOLDABLE_CLOSED
-            }
         }
     }
 
-    // Tablet checks — using safe thresholds between your phone and tablet dp values
-    if (isPortrait) {
-        if (windowSizeClass.isWidthAtLeastBreakpoint(750) &&
-            windowSizeClass.isHeightAtLeastBreakpoint(1000)) {
-            return DeviceTypesBreakdown.TABLET_PORTRAIT
-        }
-    } else {
-        if (windowSizeClass.isWidthAtLeastBreakpoint(1000) &&
-            windowSizeClass.isHeightAtLeastBreakpoint(750)) {
-            return DeviceTypesBreakdown.TABLET_LANDSCAPE
-        }
-    }
+    // Everything else uses windowSizeClass, which already reflects
+    // the actual space your app has in split-screen
+    val widthClass = windowSizeClass. widthSizeClass
+    val heightClass = windowSizeClass.heightSizeClass
 
-// Phone checks
     return when {
-        isPortrait && !windowSizeClass.isHeightAtLeastBreakpoint(800) -> {
-            DeviceTypesBreakdown.SMALL_PHONE_PORTRAIT
-        }
-        !isPortrait && !windowSizeClass.isHeightAtLeastBreakpoint(400) -> {
+        // Tablet: expanded width, or medium width with non-compact height
+        // (covers 7" tablets that sit below the EXPANDED threshold)
+        widthClass == WindowWidthSizeClass.Expanded ->
+            if (isPortrait) DeviceTypesBreakdown.TABLET_PORTRAIT
+            else DeviceTypesBreakdown.TABLET_LANDSCAPE
+
+        widthClass == WindowWidthSizeClass.Medium &&
+                heightClass != WindowHeightSizeClass.Compact  ->
+            if (isPortrait) DeviceTypesBreakdown.TABLET_PORTRAIT
+            else DeviceTypesBreakdown.TABLET_LANDSCAPE
+
+        // Phone landscape (compact width + compact height)
+        !isPortrait && heightClass == WindowHeightSizeClass.Compact ->
             DeviceTypesBreakdown.SMALL_PHONE_LANDSCAPE
-        }
-        isPortrait -> {
-            DeviceTypesBreakdown.PHONE_PORTRAIT
-        }
-        else -> {
+
+        !isPortrait ->
             DeviceTypesBreakdown.PHONE_LANDSCAPE
-        }
+
+        // Phone portrait
+        heightClass == WindowHeightSizeClass.Compact ->
+            DeviceTypesBreakdown.SMALL_PHONE_PORTRAIT
+
+        else ->
+            DeviceTypesBreakdown.PHONE_PORTRAIT
     }
 }

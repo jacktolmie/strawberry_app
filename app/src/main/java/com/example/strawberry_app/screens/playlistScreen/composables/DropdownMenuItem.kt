@@ -37,13 +37,12 @@ fun DropdownMenuItemComposable(
 }
 
 @Composable
-@Preview
+@Preview(showBackground = true)
 fun DropdownPreview(){
     DropdownMenuItemComposable(
         iconImage =playlist_remove,
         onConfirm = {},
         itemName = "Playlist 1",
-        text = R.string.playlist_delete,
-        Modifier.background(Color.White)
+        text = R.string.playlist_delete
     )
 }

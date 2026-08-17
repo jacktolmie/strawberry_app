@@ -88,7 +88,7 @@ fun ShuffleRadioBtn(
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun ShuffleRadioBtnPreview(){
     ShuffleRadioBtn(

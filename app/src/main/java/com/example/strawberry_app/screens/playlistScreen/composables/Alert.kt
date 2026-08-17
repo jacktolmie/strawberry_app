@@ -37,7 +37,7 @@ fun Alert(
 }
 
 @Composable
-@Preview
+@Preview(showBackground = true)
 fun AlertPreview(){
     Alert(
         action = R.string.playlist_shuffle,

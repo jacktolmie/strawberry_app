@@ -1,6 +1,7 @@
 package com.example.strawberry_app.screens.devices
 
 fun getDeviceType(deviceType: DeviceTypesBreakdown) = when (deviceType) {
+        DeviceTypesBreakdown.FOLDABLE_CLOSED,
         DeviceTypesBreakdown.PHONE_LANDSCAPE,
         DeviceTypesBreakdown.PHONE_PORTRAIT,
         DeviceTypesBreakdown.SMALL_PHONE_LANDSCAPE,
@@ -9,7 +10,6 @@ fun getDeviceType(deviceType: DeviceTypesBreakdown) = when (deviceType) {
         DeviceTypesBreakdown.TABLET_LANDSCAPE,
         DeviceTypesBreakdown.TABLET_PORTRAIT -> DeviceTypes.TABLET
 
-        DeviceTypesBreakdown.FOLDABLE_CLOSED,
         DeviceTypesBreakdown.FOLDABLE_HALF_OPEN,
         DeviceTypesBreakdown.FOLDABLE_OPEN_LANDSCAPE,
         DeviceTypesBreakdown.FOLDABLE_OPEN_PORTRAIT -> DeviceTypes.FOLDABLE
