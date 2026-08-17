@@ -9,7 +9,6 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScope
-import androidx.compose.material3.adaptive.navigationsuite.rememberNavigationSuiteScaffoldState
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -40,10 +39,7 @@ fun MyApp(windowSizeClass: WindowSizeClass) {
     val isPortrait = configuration.orientation == Configuration.ORIENTATION_PORTRAIT
     val coroutineScope = rememberCoroutineScope()
     val deviceType = detectDevice(windowSizeClass = windowSizeClass)
-
-    // Use a simple index for tablets instead of pagerState
     var selectedIndex by remember { mutableIntStateOf(0) }
-    // Keep pagerState for phone only
     val pagerState = rememberPagerState(pageCount = { 3 })
 
     val navItems: NavigationSuiteScope.() -> Unit = {
