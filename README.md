@@ -95,10 +95,12 @@ Currently it has the following functionality:
 | |
 |:---:|
 | <img src="images/tablet_portrait_light.png" width="350"/> |
-| <img src="images/tablet_landscape_light.png" width="350"/> |
+| <img src="images/tablet_landscape_light.png" width="700"/> |
 </div>
 
 <div align="center">
+
+---
 
 ## Remote Screen on Strawberry
 
