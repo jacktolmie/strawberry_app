@@ -2,8 +2,11 @@ package com.example.strawberry_app.screens.playerScreen.composables
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
@@ -12,7 +15,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
@@ -31,21 +33,12 @@ fun TimerSlider(
 ) {
     var sliderPosition by remember { mutableFloatStateOf(playerScreenValues.playerValues.currentTime.toFloat()) }
 
-    Text(
-        text = if (playerScreenValues.playerValues.currentTime > 0) formatTime(
-            playerScreenValues.playerValues.currentTime
-        ) else ""
-    )
-
-    Row(
+    Column(
         modifier = modifier
             .fillMaxWidth()
             .padding(start = 10.dp, end = 10.dp),
-        horizontalArrangement = Arrangement.SpaceEvenly,
-        verticalAlignment = Alignment.CenterVertically
     )
     {
-        Text(text = if(playerScreenValues.playerValues.currentTime > 0) "0" else "")
         Slider(
             value = playerScreenValues.playerValues.currentTime.toFloat(),
             onValueChange = {
@@ -57,14 +50,25 @@ fun TimerSlider(
             },
             valueRange = if (playerScreenValues.playerValues.currentSong.length > 0) 0f..playerScreenValues.playerValues.currentSong.length.toFloat() else 0f..1f,
             modifier = Modifier
-                .weight(1F)
                 .padding(start = 10.dp, end = 10.dp)
         )
-        Text(
-            text = if (playerScreenValues.playerValues.currentSong.length > 0) formatTime(
-                playerScreenValues.playerValues.currentSong.length
-            ) else ""
-        )
+        Spacer(modifier = Modifier.height(5.dp))
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ){
+            Text(
+                text = if (playerScreenValues.playerValues.currentTime > 0) formatTime(
+                    playerScreenValues.playerValues.currentTime
+                ) else ""
+            )
+
+            Text(
+                text = if (playerScreenValues.playerValues.currentSong.length > 0) formatTime(
+                    playerScreenValues.playerValues.currentSong.length
+                ) else ""
+            )
+        }
     }
 }
 

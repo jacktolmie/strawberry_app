@@ -23,7 +23,7 @@ fun TextBox(
     textRes: Int,
     textStyle: TextStyle,
     modifier: Modifier = Modifier,
-    textAlign: TextAlign = TextAlign.Start,
+    textAlign: TextAlign = TextAlign.Center,
     maxLines: Int = 1,
 ){
     Text(
@@ -43,12 +43,14 @@ fun TextBox(
     textStyle: TextStyle,
     modifier: Modifier = Modifier,
     maxLines: Int = 1,
+    textAlign: TextAlign = TextAlign.Center
 ){
     Text(
         color = color,
         maxLines = maxLines,
         text = text,
         style = textStyle,
+        textAlign = textAlign,
         modifier = modifier
     )
 }

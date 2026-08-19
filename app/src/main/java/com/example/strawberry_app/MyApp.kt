@@ -3,15 +3,16 @@ package com.example.strawberry_app
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScope
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
@@ -20,10 +21,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.example.strawberry_app.screens.devices.DeviceTypes
 import com.example.strawberry_app.screens.devices.detectDevice
 import com.example.strawberry_app.screens.devices.getDeviceType
 import com.example.strawberry_app.screens.devices.isSmallDevice
+import com.example.strawberry_app.screens.navigation.NavBar
 import com.example.strawberry_app.screens.navigation.NavIcon
 import com.example.strawberry_app.screens.playerScreen.PlayerRoute
 import com.example.strawberry_app.screens.playlistScreen.PlaylistRoute
@@ -35,6 +38,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun MyApp(windowSizeClass: WindowSizeClass) {
+
     val configuration = LocalConfiguration.current
     val isPortrait = configuration.orientation == Configuration.ORIENTATION_PORTRAIT
     val coroutineScope = rememberCoroutineScope()
@@ -74,55 +78,60 @@ fun MyApp(windowSizeClass: WindowSizeClass) {
 
     when (getDeviceType(deviceType)) {
         DeviceTypes.PHONE, DeviceTypes.FOLDABLE_CLOSED -> {
-            // Keep pagerState in sync with selectedIndex on phone
-            LaunchedEffect(pagerState.currentPage) {
-                selectedIndex = pagerState.currentPage
+            NavBar(
+                isPortrait = isPortrait,
+                pagerState = pagerState,
+                deviceType = deviceType,
+                showLabel = !isSmallDevice(deviceType)// deviceType != DeviceTypesBreakdown.SMALL_PHONE_LANDSCAPE
+            )
+
             }
-            NavigationSuiteScaffold(navigationSuiteItems = navItems) {
-                HorizontalPager(
-                    state = pagerState,
-                    userScrollEnabled = false
-                ) { page ->
-                    when (page) {
-                        0 -> PlayerRoute(isPortrait = isPortrait, deviceType = deviceType)
-                        1 -> PlaylistRoute(isPortrait = isPortrait, deviceType = deviceType)
-                        2 -> SettingsRoute(isPortrait = isPortrait, deviceType = deviceType)
-                    }
-                }
-            }
-        }
 
         DeviceTypes.TABLET -> {
+            println("myapp devicetype tablet called")
             NavigationSuiteScaffold(navigationSuiteItems = navItems) {
-                when (selectedIndex) {
-                    0, 1 -> if (isPortrait) {
-                        Column(modifier = Modifier.fillMaxSize()) {
-                            PlayerRoute(
-                                modifier = Modifier.weight(1f),
+                if(isPortrait){
+                    Column(modifier = Modifier.fillMaxWidth()) {
+                        PlayerRoute(
+                            modifier = Modifier.weight(1F),
+                            isPortrait = isPortrait,
+                            deviceType = deviceType
+                        )
+                        HorizontalDivider(thickness = 5.dp, color = MaterialTheme.colorScheme.onSurface)
+                        when (selectedIndex) {
+                            2 -> SettingsRoute(
+                                modifier = Modifier.weight(1F),
                                 isPortrait = isPortrait,
                                 deviceType = deviceType
                             )
-                            PlaylistRoute(
-                                modifier = Modifier.weight(1f),
-                                isPortrait = isPortrait,
-                                deviceType = deviceType
-                            )
-                        }
-                    } else {
-                        Row(modifier = Modifier.fillMaxSize()) {
-                            PlayerRoute(
-                                modifier = Modifier.weight(1f),
-                                isPortrait = isPortrait,
-                                deviceType = deviceType
-                            )
-                            PlaylistRoute(
-                                modifier = Modifier.weight(1f),
+                            else -> PlaylistRoute(
+                                modifier = Modifier.weight(1F),
                                 isPortrait = isPortrait,
                                 deviceType = deviceType
                             )
                         }
                     }
-                    2 -> SettingsRoute(isPortrait = isPortrait, deviceType = deviceType)
+                } else {
+                    Row(modifier = Modifier.fillMaxWidth()) {
+                        PlayerRoute(
+                            modifier = Modifier.weight(1F),
+                            isPortrait = isPortrait,
+                            deviceType = deviceType
+                        )
+                        VerticalDivider(thickness = 5.dp, color = MaterialTheme.colorScheme.onSurface)
+                        when (selectedIndex) {
+                            2 -> SettingsRoute(
+                                modifier = Modifier.weight(1F),
+                                isPortrait = isPortrait,
+                                deviceType = deviceType
+                            )
+                            else -> PlaylistRoute(
+                                modifier = Modifier.weight(1F),
+                                isPortrait = isPortrait,
+                                deviceType = deviceType
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -132,39 +141,3 @@ fun MyApp(windowSizeClass: WindowSizeClass) {
         }
     }
 }
-
-/*
-@Composable
-fun MyApp(windowSizeClass: WindowSizeClass) {
-    val configuration = LocalConfiguration.current
-    val isPortrait = configuration.orientation == Configuration.ORIENTATION_PORTRAIT
-    val pagerState = rememberPagerState(pageCount = { 3 })
-    println("MyApp Width: ${configuration.screenWidthDp}dp, Height: ${configuration.screenHeightDp}dp, isPortrait: $isPortrait")
-
-    val deviceType = detectDevice(windowSizeClass = windowSizeClass)
-    println("myapp device $deviceType is small? ${isSmallDevice(deviceType)}")
-    when (getDeviceType(deviceType)) {
-        DeviceTypes.PHONE -> {
-            NavBar(
-                isPortrait = isPortrait,
-                pagerState = pagerState,
-                deviceType = deviceType,
-                showLabel = !isSmallDevice(deviceType)
-            )
-        }
-
-        DeviceTypes.TABLET-> {
-            NavRail(
-                windowSizeClass = windowSizeClass,
-                pagerState = pagerState
-            )
-            println("myapp tablet called")
-        }
-
-        DeviceTypes.FOLDABLE -> {
-            println("myapp foldable called")
-        }
-    }
-}
-
- */

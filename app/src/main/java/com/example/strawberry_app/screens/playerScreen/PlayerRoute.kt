@@ -12,6 +12,7 @@ import com.example.strawberry_app.screens.devices.DeviceTypesBreakdown
 import com.example.strawberry_app.screens.devices.getDeviceType
 import com.example.strawberry_app.screens.playerScreen.screens.PlayerLandscapeScreen
 import com.example.strawberry_app.screens.playerScreen.screens.PlayerPortraitScreen
+import com.example.strawberry_app.screens.playerScreen.screens.PlayerTabletPortraitScreen
 import java.io.File
 
 data class PlayerScreenState(
@@ -42,7 +43,7 @@ fun PlayerRoute(
     deviceType: DeviceTypesBreakdown,
     modifier: Modifier = Modifier,
     playerViewModel: PlayerViewModel = hiltViewModel()
-){
+) {
     val playerValues by playerViewModel.serverUpdates.collectAsStateWithLifecycle()
     val albumArtFile by playerViewModel.albumArtFile.collectAsStateWithLifecycle()
 
@@ -67,39 +68,40 @@ fun PlayerRoute(
 
     val playerScreenData = PlayerScreenState(playerValues, albumArtFile)
 
-    if (isPortrait) {
-        PlayerPortraitScreen(
-            callbacks = callbacks,
-            playerScreenValues = playerScreenData,
-            deviceType = deviceType,
-            modifier = modifier
-        )
-    } else {
-        PlayerLandscapeScreen(
-            callbacks = callbacks,
-            playerScreenValues = playerScreenData,
-            deviceType = deviceType,
-            modifier = modifier
-        )
-    }
-//    when (getDeviceType(deviceType)) {
-//        DeviceTypes.PHONE -> {
-//            if (isPortrait) {
-//                PlayerPortraitScreen(
-//                    callbacks = callbacks,
-//                    playerScreenValues = playerScreenData,
-//                    deviceType = deviceType,
-//                    modifier = modifier
-//                )
+    val device = getDeviceType(deviceType)
+
+    when (device) {
+        DeviceTypes.TABLET -> {
+            PlayerTabletPortraitScreen(
+                callbacks = callbacks,
+                playerScreenValues = playerScreenData,
+                modifier = modifier
+            )
+        }
+        DeviceTypes.PHONE,
+        DeviceTypes.FOLDABLE_CLOSED -> {
+            if (isPortrait) {
+                PlayerPortraitScreen(
+                    callbacks = callbacks,
+                    playerScreenValues = playerScreenData,
+                    deviceType = deviceType,
+                    modifier = modifier
+                )
+            } else {
+                PlayerLandscapeScreen(
+                    callbacks = callbacks,
+                    playerScreenValues = playerScreenData,
+                    deviceType = deviceType,
+                    modifier = modifier
+                )
+            }
+        }
+        DeviceTypes.FOLDABLE -> {
+//            if (isPortrait){
+//
 //            } else {
-//                PlayerLandscapeScreen(
-//                    callbacks = callbacks,
-//                    playerScreenValues = playerScreenData,
-//                    deviceType = deviceType,
-//                    modifier = modifier
-//                )
+//
 //            }
-//        }
-//        else -> {}
-//    }
+        }
+    }
 }

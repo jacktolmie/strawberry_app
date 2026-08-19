@@ -1,11 +1,9 @@
 package com.example.strawberry_app.screens.composables
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -28,18 +26,18 @@ fun SongImageComposable(
     AsyncImage(
         model = ImageRequest.Builder(LocalContext.current)
             .data(imageArt?: R.drawable.strawberry)
-            .crossfade(crossfade) //(true)
+            .crossfade(crossfade)
             .build(),
         placeholder = painterResource(R.drawable.strawberry),
         fallback = painterResource(R.drawable.strawberry),
         error = painterResource(R.drawable.strawberry),
         contentDescription = stringResource(R.string.player_album_art),
         contentScale = ContentScale.Crop,
-        modifier = modifier.background(MaterialTheme.colorScheme.background)
+        modifier = modifier
     )
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun SongImagePreview(){
     SongImageComposable(

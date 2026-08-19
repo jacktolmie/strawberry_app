@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.MaterialTheme
@@ -21,6 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.strawberry_app.screens.composables.SongImageComposable
 import com.example.strawberry_app.screens.devices.DeviceTypesBreakdown
+import com.example.strawberry_app.screens.functions.bottomPadding
 import com.example.strawberry_app.screens.functions.spacerSize
 import com.example.strawberry_app.screens.playerScreen.PlayerCallbacks
 import com.example.strawberry_app.screens.playerScreen.PlayerScreenState
@@ -35,26 +35,20 @@ fun PlayerPortraitScreen(
     playerScreenValues: PlayerScreenState,
     deviceType: DeviceTypesBreakdown,
     modifier: Modifier = Modifier
-)
-{
+) {
     val space = spacerSize(deviceType)
 
     Column(modifier = modifier
         .fillMaxSize()
         .statusBarsPadding()
-        .navigationBarsPadding()
+        .padding(bottom = bottomPadding(deviceType))
         .background(MaterialTheme.colorScheme.background),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.SpaceBetween
     )
     {
-        Column(modifier = Modifier
-            .fillMaxWidth(.75f)
-        )
-        {
-            // Song text for the song playing
-            SongInfoComposable( playerScreenValues)
-        }
+        // Song text for the song playing
+        SongInfoComposable( playerScreenValues)
 
         Spacer(modifier = Modifier.height(space))
 
@@ -63,17 +57,19 @@ fun PlayerPortraitScreen(
             .fillMaxWidth()
             .fillMaxHeight(.70f)
             .padding(10.dp),
-            horizontalArrangement = Arrangement.Absolute.Center,
+            horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         )
         {
+            Spacer(modifier = Modifier.height(space))
+
             //Song Image
             SongImageComposable(
                 imageArt = playerScreenValues.albumArtFile,
                 crossfade = true,
                 Modifier
-                    .fillMaxHeight()
-                    .fillMaxWidth(.75f)
+//                    .fillMaxHeight(.75f)
+                    .fillMaxWidth(.7f)
                     .aspectRatio(1f)
                     .padding(space)
             )
@@ -81,7 +77,11 @@ fun PlayerPortraitScreen(
             Spacer(modifier = Modifier.height(space))
 
             // Vertical volume slider
-            VolumeSliderVert(callbacks, playerScreenValues)
+            VolumeSliderVert(
+                callbacks = callbacks,
+                playerScreenValues = playerScreenValues,
+                modifier = Modifier.padding(end = space)
+            )
         }
 
         Spacer(modifier = Modifier.height(space))

@@ -37,7 +37,7 @@ fun NavBar(
     Scaffold(
         bottomBar = {
             NavigationBar(
-                modifier = if (isSmallDevice(deviceType)) Modifier.height(70.dp) else Modifier
+                modifier = if (isSmallDevice(deviceType)) Modifier.height(60.dp) else Modifier
             ) {
                 NavigationBarItem(
                     selected = pagerState.currentPage == 0,
