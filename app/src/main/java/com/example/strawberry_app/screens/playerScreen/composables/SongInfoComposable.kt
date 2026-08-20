@@ -29,7 +29,7 @@ fun SongInfoComposable(
         // Song text for the song playing
         TextBox(
             color = MaterialTheme.colorScheme.onSurface,
-            text = playerScreenValues.playerValues.currentSong.title,
+            text = playerScreenValues.playerValues.currentSong.title.ifEmpty { "No Song Playing" },
             textStyle = MaterialTheme.typography.bodyMedium,
             textAlign = TextAlign.Center,
             modifier = Modifier
@@ -43,7 +43,14 @@ fun SongInfoComposable(
         val artistAlbum = listOfNotNull(
             playerScreenValues.playerValues.currentSong.artist,
             playerScreenValues.playerValues.currentSong.album
-        ).joinToString(if(playerScreenValues.playerValues.currentSong.artist.isNotBlank()) " • " else "")
+        ).joinToString(
+            if(playerScreenValues.playerValues.currentSong.artist.isNotBlank()) " • "
+            else {
+                "${playerScreenValues.playerValues.totalSongs} Songs • " +
+                "${playerScreenValues.playerValues.totalArtists} Artists  • " +
+                 "${playerScreenValues.playerValues.totalAlbums} Albums"
+            }
+        )
 
         // Album/Artist text.
         TextBox(

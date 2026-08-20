@@ -15,5 +15,8 @@ data class ServerGuiValues(
     val playState: PlayState = PlayState.STOPPED,
     val repeatMode: String = "",
     val shuffleMode: String = "",
+    val totalAlbums: Int = 0,
+    val totalArtists: Int = 0,
+    val totalSongs: Int = 0,
     val volume: Int = 0
 )

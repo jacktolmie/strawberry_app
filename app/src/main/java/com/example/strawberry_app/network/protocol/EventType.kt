@@ -22,6 +22,7 @@ object EventTypeSerializer : JsonContentPolymorphicSerializer<EventType>(EventTy
             "gui_updates" -> EventType.GuiUpdates.serializer()
             "make_all_playlists" -> EventType.MakeAllPlaylists.serializer()
             "make_playlist" -> EventType.MakePlaylist.serializer()
+            "music_totals" -> EventType.MusicTotals.serializer()
             "next" -> EventType.Next.serializer()
             "pause" -> EventType.Pause.serializer()
             "play" -> EventType.Play.serializer()
@@ -96,6 +97,12 @@ sealed class EventType: IncomingMessage() {
         @SerialName("shuffle_mode")
         val shuffleMode: String,
         val time: Long = 0L,
+        @SerialName("total_albums")
+        val totalAlbums: Int,
+        @SerialName("total_artists")
+        val totalArtist: Int,
+        @SerialName("total_songs")
+        val totalSongs: Int,
         val volume: Int = 0
     ) : EventType()
 
@@ -103,14 +110,29 @@ sealed class EventType: IncomingMessage() {
     @JsonIgnoreUnknownKeys
     @SerialName("make_playlist")
     data class MakePlaylist(
-        val playlist: Playlist) : EventType()
+        val playlist: Playlist,
+        @SerialName("active_playlist")
+        val activePlaylist: Long,
+        @SerialName("current_song")
+        val currentSong: Long
+    ) : EventType()
 
     @Serializable
     @JsonIgnoreUnknownKeys
     @SerialName("make_all_playlists")
     data class MakeAllPlaylists(val playlists: List<Playlist>) : EventType()
 
-
+    @Serializable
+    @JsonIgnoreUnknownKeys
+    @SerialName("music_totals")
+    data class MusicTotals(
+        @SerialName("total_albums")
+        val totalAlbums: Int,
+        @SerialName("total_artists")
+        val totalArtists: Int,
+        @SerialName("total_songs")
+        val totalSongs: Int
+    ): EventType()
 
     @Serializable
     @JsonIgnoreUnknownKeys

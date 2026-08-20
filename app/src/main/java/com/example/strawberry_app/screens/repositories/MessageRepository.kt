@@ -66,7 +66,7 @@ class MessageRepository @Inject constructor(
                             currentSongIndex = message.currentSong,
                             currentCoverImage = message.coverImage,
                             repeatMode = message.repeatMode,
-                            shuffleMode = message.shuffleMode
+                            shuffleMode = message.shuffleMode,
                         )
                         playlistRepository.getAlbumArtFile(coverArt = message.coverImage)
 
@@ -92,11 +92,26 @@ class MessageRepository @Inject constructor(
                                 },
                                 repeatMode = message.repeatMode,
                                 shuffleMode = message.shuffleMode,
+                                totalAlbums = message.totalAlbums,
+                                totalArtists = message.totalArtist,
+                                totalSongs = message.totalSongs,
                                 volume = message.volume
                             )
                         )
                     }
-                    is EventType.MakePlaylist -> playlistRepository.makePlaylist(message.playlist)
+                    is EventType.MakePlaylist -> {
+                        playlistRepository.makePlaylist(message.playlist)
+                        playlistRepository.updateCurrentSong(message.activePlaylist, message.currentSong)
+                    }
+                    is EventType.MusicTotals -> {
+                        playerRepository.getGuiUpdates(
+                            serverUpdates.value.copy(
+                                totalAlbums = message.totalAlbums,
+                                totalArtists = message.totalArtists,
+                                totalSongs = message.totalSongs
+                            )
+                        )
+                    }
                     // If playing, update current GUI settings to match server.
                     is EventType.Play -> {
                         playerRepository.getGuiUpdates(
