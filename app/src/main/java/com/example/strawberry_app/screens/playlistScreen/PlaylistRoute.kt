@@ -6,9 +6,7 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.strawberry_app.music.Playlist
-import com.example.strawberry_app.screens.devices.DeviceTypes
 import com.example.strawberry_app.screens.devices.DeviceTypesBreakdown
-import com.example.strawberry_app.screens.devices.getDeviceType
 import com.example.strawberry_app.screens.playlistScreen.screens.PlaylistScreen
 import java.io.File
 

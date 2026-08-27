@@ -36,4 +36,8 @@ object DatabaseModule {
     @Provides
     @Singleton
     fun providePlaylistSongDao(db: AppDatabase) = db.playlistSongDao()
+
+    @Provides
+    @Singleton
+    fun provideRadioStationDao(db: AppDatabase) = db.radioStationDao()
 }

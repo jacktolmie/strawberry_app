@@ -1,6 +1,7 @@
 package com.example.strawberry_app.network.protocol
 
 import com.example.strawberry_app.music.Playlist
+import com.example.strawberry_app.music.RadioStation
 import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
@@ -27,6 +28,7 @@ object EventTypeSerializer : JsonContentPolymorphicSerializer<EventType>(EventTy
             "pause" -> EventType.Pause.serializer()
             "play" -> EventType.Play.serializer()
             "previous" -> EventType.Previous.serializer()
+            "radio_stations" -> EventType.RadioStations.serializer()
             "rename_playlist" -> EventType.RenamePlaylist.serializer()
             "repeat_mode" -> EventType.RepeatMode.serializer()
             "seek_backward" -> EventType.SeekBackward.serializer()
@@ -47,6 +49,8 @@ object EventTypeSerializer : JsonContentPolymorphicSerializer<EventType>(EventTy
 @OptIn(ExperimentalSerializationApi::class)
 @Serializable(with = EventTypeSerializer::class)
 sealed class EventType: IncomingMessage() {
+
+    // Playlist events
     @Serializable
     @JsonIgnoreUnknownKeys
     @SerialName("active_playlist")
@@ -76,7 +80,6 @@ sealed class EventType: IncomingMessage() {
         val id: Long,
         val favourite: Boolean
     ) : EventType()
-
 
     @Serializable
     @JsonIgnoreUnknownKeys
@@ -135,6 +138,52 @@ sealed class EventType: IncomingMessage() {
     ): EventType()
 
     @Serializable
+    @SerialName("radio_stations")
+    data class RadioStations(
+        @SerialName("station_source")
+        val stationSource: String,
+        @SerialName("station_list")
+        val stationList: List<RadioStation>
+    ): EventType()
+
+    @Serializable
+    @JsonIgnoreUnknownKeys
+    @SerialName("rename_playlist")
+    data class RenamePlaylist(val id: Long, val name: String) : EventType()
+
+    @Serializable
+    @JsonIgnoreUnknownKeys
+    @SerialName("repeat_mode")
+    data class RepeatMode(val id: Long, @SerialName("repeat_mode") val repeatMode: String): EventType()
+
+    @Serializable
+    @SerialName("shuffle_mode")
+    data class ShuffleMode(
+        @SerialName("shuffle_mode")
+        val shuffleMode: String
+    ): EventType()
+
+    @Serializable
+    @JsonIgnoreUnknownKeys
+    @SerialName("song_info")
+    data class SongInfo(
+        val artist: String = "",
+        val album: String = "",
+        @SerialName("cover_image")
+        val coverImage: String = "",
+        val id: Long = 0L,
+        val length: Long = 0L,
+        @SerialName("playlist_id")
+        val playlistId: Long = -1L,
+        val position: Long = -1L,
+        val title: String = "",
+        @SerialName("song_url")
+        val url: String = "",
+
+    ): EventType()
+
+    // Player events
+    @Serializable
     @JsonIgnoreUnknownKeys
     @SerialName("next")
     data object Next: EventType()
@@ -162,15 +211,6 @@ sealed class EventType: IncomingMessage() {
 
     @Serializable
     @JsonIgnoreUnknownKeys
-    @SerialName("rename_playlist")
-    data class RenamePlaylist(val id: Long, val name: String) : EventType()
-
-    @Serializable
-    @JsonIgnoreUnknownKeys
-    @SerialName("repeat_mode")
-    data class RepeatMode(val id: Long, @SerialName("repeat_mode") val repeatMode: String): EventType()
-    @Serializable
-    @JsonIgnoreUnknownKeys
     @SerialName("seek_backward")
     data class SeekBackward(val time: Long) : EventType()
 
@@ -185,37 +225,12 @@ sealed class EventType: IncomingMessage() {
     data class SeekTo(val time: Long) : EventType()
 
     @Serializable
-    @SerialName("shuffle_mode")
-    data class ShuffleMode(
-        @SerialName("shuffle_mode")
-        val shuffleMode: String
-    ): EventType()
-
-    @Serializable
     @JsonIgnoreUnknownKeys
     @SerialName("song_changed")
     data class SongChanged(
         val row: Long
     ) : EventType()
 
-    @Serializable
-    @JsonIgnoreUnknownKeys
-    @SerialName("song_info")
-    data class SongInfo(
-        val artist: String = "",
-        val album: String = "",
-        @SerialName("cover_image")
-        val coverImage: String = "",
-        val id: Long = 0L,
-        val length: Long = 0L,
-        @SerialName("playlist_id")
-        val playlistId: Long = -1L,
-        val position: Long = -1L,
-        val title: String = "",
-        @SerialName("song_url")
-        val url: String = "",
-
-    ): EventType()
     @Serializable
     @JsonIgnoreUnknownKeys
     @SerialName("stop")

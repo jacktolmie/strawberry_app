@@ -75,6 +75,7 @@ class AlbumArtRepository @Inject constructor(
     }
 
     fun receiveCover(name: String, coverImage: String) {
+        if ( name.isEmpty() || coverImage.isEmpty()) return
         val bytes = Base64.decode(coverImage, Base64.DEFAULT)
         val file = getImageFile(File(name).name)
 

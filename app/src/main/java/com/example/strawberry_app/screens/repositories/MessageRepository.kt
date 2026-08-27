@@ -12,6 +12,7 @@ import com.example.strawberry_app.screens.classes.PlayState
 import com.example.strawberry_app.screens.classes.ServerGuiValues
 import com.example.strawberry_app.screens.playerScreen.PlayerRepository
 import com.example.strawberry_app.screens.playlistScreen.PlaylistRepository
+import com.example.strawberry_app.screens.radioScreen.RadioRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -22,6 +23,7 @@ class MessageRepository @Inject constructor(
     private val networkManager: NetworkManager,
     private val playlistRepository: PlaylistRepository,
     private val albumArtRepository: AlbumArtRepository,
+    private val radioRepository: RadioRepository,
     @param:ApplicationScope private val scope: CoroutineScope
 ){
     val serverUpdates = playerRepository.serverUpdates
@@ -134,6 +136,7 @@ class MessageRepository @Inject constructor(
                             playState = PlayState.PAUSED
                         )
                     )
+                    is EventType.RadioStations -> radioRepository.makeAllStations(message.stationList, message.stationSource)
                     is EventType.RenamePlaylist -> playlistRepository.serverRenamedPlaylist(id = message.id, name = message.name)
                     is EventType.RepeatMode -> playlistRepository.updateRepeatMode(message.repeatMode)
                     is EventType.SeekTo -> playerRepository.getGuiUpdates(serverUpdates.value.copy(currentTime = message.time) )
