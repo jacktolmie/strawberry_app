@@ -14,8 +14,10 @@ data class StationWithStreams(
     val image: String,
     val genre: String,
     val description: String,
+    val donate: String,
     val stationSource: String,
-    val url: String,
+    val stationUrl: String,
+    val streamUrl: String,
     val format: String,
     val quality: String
 
@@ -38,7 +40,8 @@ interface RadioDao {
     @Query("""
         SELECT radioStation.name, radioStation.id, radioStation.image,
                radioStation.genre, radioStation.description, radioStation.stationSource,
-               radio_stream.url, radio_stream.format, radio_stream.quality
+               radioStation.donate, radioStation.stationUrl, 
+               radio_stream.streamUrl, radio_stream.format, radio_stream.quality
         FROM radioStation
         JOIN radio_stream ON radio_stream.stationId = radioStation.id
         WHERE radioStation.stationSource = :source

@@ -6,7 +6,7 @@ import androidx.room.Index
 
 @Entity(
     tableName = "radio_stream",
-    primaryKeys = ["stationId", "url"],
+    primaryKeys = ["stationId", "streamUrl"],
     foreignKeys = [
         ForeignKey(
             entity = RadioStationEntity::class,
@@ -21,5 +21,5 @@ data class RadioStreamEntity(
     val stationId: String,
     val format: String,
     val quality: String,
-    val url: String
+    val streamUrl: String
 )

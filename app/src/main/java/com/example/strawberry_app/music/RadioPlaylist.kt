@@ -1,6 +1,7 @@
 package com.example.strawberry_app.music
 
 import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonIgnoreUnknownKeys
 
@@ -10,5 +11,6 @@ import kotlinx.serialization.json.JsonIgnoreUnknownKeys
 data class RadioPlaylist(
     val format: String,
     val quality: String,
-    val url: String
+    @SerialName("stream_url")
+    val streamUrl: String
 )

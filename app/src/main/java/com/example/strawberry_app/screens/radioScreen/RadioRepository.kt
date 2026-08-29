@@ -44,26 +44,32 @@ class RadioRepository @Inject constructor(
         db.withTransaction {
             radioDao.deleteAll()
 
+            // Insert radio streams, then stations.
             radioStations.forEach { station ->
                 radioDao.insertStation(
                     RadioStationEntity(
                         id =  station.id,
                         description = station.description,
+                        donate = station.donate,
                         genre = station.genre,
                         image = station.image,
                         name = station.name,
-                        stationSource = stationSource
+                        stationSource = stationSource,
+                        stationUrl = station.stationUrl
                     )
                 )
 
+                // Insert stations from each stream.
                 val streams = station.playlists.map { stream ->
                     RadioStreamEntity(
                         format = stream.format,
                         quality = stream.quality,
-                        url =  stream.url,
+                        streamUrl =  stream.streamUrl,
                         stationId = station.id
                     )
                 }
+
+                radioDao.insertStreams(streams)
             }
         }
     }
