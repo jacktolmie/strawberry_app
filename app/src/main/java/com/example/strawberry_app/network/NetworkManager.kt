@@ -255,6 +255,7 @@ class NetworkManager @Inject constructor(
                             _serverMessages.tryEmit(parsedMessage)
                         } catch (e: SerializationException) {
                             Log.e("NetworkManager", "Failed to parse message: $jsonString — ${e.message}")
+                            logLong("Incoming error", jsonString)
                         }
                     } else {
                         Log.e(

@@ -9,13 +9,21 @@ import kotlinx.serialization.json.JsonIgnoreUnknownKeys
 @Serializable
 @JsonIgnoreUnknownKeys
 data class RadioStation(
+    val bitrate: Int,
+    @SerialName("click_counts")
+    val clickCount: Int,
+    val country: String,
     val description: String,
     val donate: String,
+    val format: String,
     val genre: String,
+    val homepage: String,
     val id: String,
     val image: String,
     val name: String,
     val playlists: List<RadioPlaylist>,
     @SerialName("station_url")
-    val stationUrl: String
+    val stationUrl: String,
+    val tags: List<String>,
+    val votes: Int
 )

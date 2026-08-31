@@ -49,13 +49,21 @@ class RadioRepository @Inject constructor(
                 radioDao.insertStation(
                     RadioStationEntity(
                         id =  station.id,
+                        bitrate = station.bitrate,
+                        clickCount = station.clickCount,
+                        country = station.country,
                         description = station.description,
                         donate = station.donate,
+                        format = station.format,
                         genre = station.genre,
+                        homepage = station.homepage,
                         image = station.image,
                         name = station.name,
+                        playlists = station.playlists,
                         stationSource = stationSource,
-                        stationUrl = station.stationUrl
+                        stationUrl = station.stationUrl,
+                        tags = station.tags,
+                        votes = station.votes
                     )
                 )
 

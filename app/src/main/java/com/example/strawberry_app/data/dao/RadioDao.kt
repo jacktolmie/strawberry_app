@@ -20,7 +20,7 @@ data class StationWithStreams(
     val streamUrl: String,
     val format: String,
     val quality: String
-
+// Add RadioStationEntity variables to this???
 )
 
 @Dao
@@ -38,9 +38,11 @@ interface RadioDao {
     suspend fun insertStreams(entities: List<RadioStreamEntity>)
 
     @Query("""
-        SELECT radioStation.name, radioStation.id, radioStation.image,
-               radioStation.genre, radioStation.description, radioStation.stationSource,
-               radioStation.donate, radioStation.stationUrl, 
+        SELECT  radioStation.id, radioStation.bitrate, radioStation.clickCount, 
+                radioStation.country, radioStation.description, radioStation.donate, 
+                radioStation.format, radioStation.genre, radioStation.homepage, radioStation.image, 
+                radioStation.name, radioStation.stationSource, radioStation.stationUrl,
+                radioStation.tags, radioStation.votes,
                radio_stream.streamUrl, radio_stream.format, radio_stream.quality
         FROM radioStation
         JOIN radio_stream ON radio_stream.stationId = radioStation.id
