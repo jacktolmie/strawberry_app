@@ -2,7 +2,6 @@ package com.example.strawberry_app.data.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.strawberry_app.music.RadioPlaylist
 
 @Entity(tableName = "radioStation")
 data class RadioStationEntity(
@@ -18,7 +17,6 @@ data class RadioStationEntity(
     val homepage: String,
     val image: String,
     val name: String,
-    val playlists: List<RadioPlaylist>,
     val stationSource: String,
     val stationUrl: String,
     val tags: List<String>,

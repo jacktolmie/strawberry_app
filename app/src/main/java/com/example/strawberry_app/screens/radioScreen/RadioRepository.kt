@@ -42,7 +42,9 @@ class RadioRepository @Inject constructor(
 
     suspend fun makeAllStations(radioStations: List<RadioStation>, stationSource: String){
         db.withTransaction {
-            radioDao.deleteAll()
+            if (stationSource != "radioBrowser") {
+                radioDao.deleteBySource(stationSource)
+            }
 
             // Insert radio streams, then stations.
             radioStations.forEach { station ->
@@ -59,7 +61,6 @@ class RadioRepository @Inject constructor(
                         homepage = station.homepage,
                         image = station.image,
                         name = station.name,
-                        playlists = station.playlists,
                         stationSource = stationSource,
                         stationUrl = station.stationUrl,
                         tags = station.tags,
@@ -67,18 +68,27 @@ class RadioRepository @Inject constructor(
                     )
                 )
 
-                // Insert stations from each stream.
-                val streams = station.playlists.map { stream ->
-                    RadioStreamEntity(
-                        format = stream.format,
-                        quality = stream.quality,
-                        streamUrl =  stream.streamUrl,
-                        stationId = station.id
-                    )
+                if (station.playlists.isEmpty() && station.stationUrl.isNotEmpty()) {
+                    val streams = listOf(RadioStreamEntity(
+                        stationId = station.id,
+                        format = station.format,
+                        quality = "",
+                        streamUrl = station.stationUrl
+                    ))
+                    radioDao.insertStreams(streams)
+                } else {
+                    val streams = station.playlists.map { playlist ->
+                        RadioStreamEntity(
+                            stationId = station.id,
+                            format = playlist.format,
+                            quality = playlist.quality,
+                            streamUrl = playlist.streamUrl
+                        )
+                    }
+                    radioDao.insertStreams(streams)
                 }
-
-                radioDao.insertStreams(streams)
             }
         }
+        println("RadioStations: ${radioDao.getStationCount()} and streams ${radioDao.getStreamCount()}")
     }
 }
