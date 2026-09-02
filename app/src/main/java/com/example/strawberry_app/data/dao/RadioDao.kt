@@ -15,16 +15,16 @@ data class StationWithStreams(
     val description: String,
     val donate: String,
     val format: String,
-    val genre: String,
+    val genre: List<String>,
     val homepage: String,
     val id: String,
     val image: String,
+    val language: String,
     val name: String,
     val quality: String,
     val stationSource: String,
     val stationUrl: String,
     val streamUrl: String,
-    val tags: List<String>,
     val votes: Int
 )
 
@@ -53,8 +53,8 @@ interface RadioDao {
         SELECT  radioStation.id, radioStation.bitrate, radioStation.clickCount, 
                 radioStation.country, radioStation.description, radioStation.donate, 
                 radioStation.format, radioStation.genre, radioStation.homepage, radioStation.image, 
-                radioStation.name, radioStation.stationSource, radioStation.stationUrl,
-                radioStation.tags, radioStation.votes, 
+                radioStation.language, radioStation.name, radioStation.stationSource, 
+                radioStation.stationUrl, radioStation.votes, 
                 radio_stream.streamUrl, radio_stream.format, radio_stream.quality
         FROM radioStation
         JOIN radio_stream ON radio_stream.stationId = radioStation.id

@@ -13,12 +13,12 @@ data class RadioStationEntity(
     val description: String,
     val donate: String,
     val format: String,
-    val genre: String,
+    val genre: List<String>,
     val homepage: String,
     val image: String,
+    val language: String,
     val name: String,
     val stationSource: String,
     val stationUrl: String,
-    val tags: List<String>,
     val votes: Int
 )

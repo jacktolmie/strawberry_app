@@ -37,12 +37,15 @@ class RadioRepository @Inject constructor(
         scope.launch { networkManager.sendCommand(command) }
     }
 
-    // Radio database changes.
+    // Radio database queries.
     suspend fun deleteRadioStations() { radioDao.deleteAll() }
+
+    // Get a list of stations.
+    fun getStations(source: String) = radioDao.observeStationsForSource(source)
 
     suspend fun makeAllStations(radioStations: List<RadioStation>, stationSource: String){
         db.withTransaction {
-            if (stationSource != "radioBrowser") {
+            if (stationSource != RadioSource.RADIOBROWSER.source) {
                 radioDao.deleteBySource(stationSource)
             }
 
@@ -60,10 +63,10 @@ class RadioRepository @Inject constructor(
                         genre = station.genre,
                         homepage = station.homepage,
                         image = station.image,
+                        language = station.language,
                         name = station.name,
                         stationSource = stationSource,
                         stationUrl = station.stationUrl,
-                        tags = station.tags,
                         votes = station.votes
                     )
                 )
