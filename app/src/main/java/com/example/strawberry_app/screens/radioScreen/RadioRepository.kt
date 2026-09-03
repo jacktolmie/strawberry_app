@@ -9,12 +9,14 @@ import com.example.strawberry_app.music.RadioStation
 import com.example.strawberry_app.network.ApplicationScope
 import com.example.strawberry_app.network.NetworkManager
 import com.example.strawberry_app.network.protocol.OutgoingMessage
+import com.example.strawberry_app.screens.repositories.AlbumArtRepository
 import jakarta.inject.Inject
 import jakarta.inject.Singleton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.io.File
 
 data class RadioState(
     val activeStation: String = "",
@@ -23,15 +25,18 @@ data class RadioState(
 
 @Singleton
 class RadioRepository @Inject constructor(
+    private val albumArtRepository: AlbumArtRepository,
     private val db: AppDatabase,
     private val networkManager: NetworkManager,
     private val radioDao: RadioDao,
 
     @param:ApplicationScope
     private val scope: CoroutineScope
-){
+) {
     private val _radioState = MutableStateFlow(RadioState())
     val radioState = _radioState.asStateFlow()
+
+    val artAlbumCollection = albumArtRepository.artAlbumCollection
 
     fun sendCommand(command: OutgoingMessage){
         scope.launch { networkManager.sendCommand(command) }
@@ -93,5 +98,9 @@ class RadioRepository @Inject constructor(
             }
         }
         println("RadioStations: ${radioDao.getStationCount()} and streams ${radioDao.getStreamCount()}")
+    }
+
+    fun getAlbumArtFile(coverArt: String): File? {
+        return albumArtRepository.getAlbumArtFile(coverArt)
     }
 }

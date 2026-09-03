@@ -3,11 +3,11 @@ package com.example.strawberry_app.screens.radioScreen
 enum class RadioStation(val values: String) {
     BITRATE("bitrate"),
     CLICKCOUNT("clickCount"),
-    CODEC("codec"),
+    FORMAT("codec"),
     COUNTRY("country"),
     LANGUAGE("language"),
     NAME("name"),
-    TAGS("tags"),
+    GENRE("tags"),
     VOTES("votes")
 }
 

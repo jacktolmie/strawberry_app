@@ -181,7 +181,7 @@ class PlaylistRepository @Inject constructor(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private fun getCurrentSong(): Flow<SongWithPosition?> {
-        return playlistState.flatMapLatest { state ->
+        return _playlistState.flatMapLatest { state ->
             if (state.currentPlaylist == -1L || state.currentSongIndex == -1L) {
                 flowOf(null)
             } else {
