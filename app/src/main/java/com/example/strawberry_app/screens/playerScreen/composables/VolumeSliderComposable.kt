@@ -30,7 +30,7 @@ fun VolumeSliderHoriz(
     modifier: Modifier = Modifier
 ){
     val volumeSliderState = rememberSliderState(valueRange = 0f..100f)
-    LaunchedEffect(playerScreenValues.playerValues.volume) { volumeSliderState.value = playerScreenValues.playerValues.volume.toFloat() }
+    LaunchedEffect(playerScreenValues.serverGuiValues.volume) { volumeSliderState.value = playerScreenValues.serverGuiValues.volume.toFloat() }
 
     volumeSliderState.onValueChangeFinished = { callbacks.setVolume(volumeSliderState.value.toInt())}
 
@@ -60,7 +60,7 @@ fun VolumeSliderVert(
     modifier: Modifier = Modifier
 ){
     val volumeSliderState = rememberSliderState(valueRange = 0f..100f)
-    LaunchedEffect(playerScreenValues.playerValues.volume) { volumeSliderState.value = playerScreenValues.playerValues.volume.toFloat() }
+    LaunchedEffect(playerScreenValues.serverGuiValues.volume) { volumeSliderState.value = playerScreenValues.serverGuiValues.volume.toFloat() }
 
     volumeSliderState.onValueChangeFinished = { callbacks.setVolume(volumeSliderState.value.toInt())}
 

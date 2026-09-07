@@ -29,7 +29,7 @@ data class PlaylistsData(
 )
 
 data class PlaylistScreenState(
-    val albumArtFile: Map<String, File?> = emptyMap(),
+    val albumArtCollection: Map<String, File?> = emptyMap(),
     val dragIconSongId: Long? = null,
     val isInSelectedMode: Boolean = false,
     val playlistsData: PlaylistsData = PlaylistsData(),

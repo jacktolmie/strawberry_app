@@ -70,7 +70,7 @@ class MessageRepository @Inject constructor(
                             repeatMode = message.repeatMode,
                             shuffleMode = message.shuffleMode,
                         )
-                        playlistRepository.getAlbumArtFile(coverArt = message.coverImage)
+                        albumArtRepository.getAlbumArtFile(coverArt = message.coverImage)
 
                         // Only rebuild playlists when that payload is present
                         when (message.playlists) {

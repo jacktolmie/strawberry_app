@@ -31,7 +31,7 @@ fun TimerSlider(
     playerScreenValues: PlayerScreenState,
     modifier: Modifier = Modifier
 ) {
-    var sliderPosition by remember { mutableFloatStateOf(playerScreenValues.playerValues.currentTime.toFloat()) }
+    var sliderPosition by remember { mutableFloatStateOf(playerScreenValues.serverGuiValues.currentTime.toFloat()) }
 
     Column(
         modifier = modifier
@@ -40,7 +40,7 @@ fun TimerSlider(
     )
     {
         Slider(
-            value = playerScreenValues.playerValues.currentTime.toFloat(),
+            value = playerScreenValues.serverGuiValues.currentTime.toFloat(),
             onValueChange = {
                 sliderPosition = it
                 callbacks.timeChanged(it.toLong())
@@ -48,7 +48,7 @@ fun TimerSlider(
             onValueChangeFinished = {
                 callbacks.sendSeekTo(sliderPosition.toLong())
             },
-            valueRange = if (playerScreenValues.playerValues.currentSong.length > 0) 0f..playerScreenValues.playerValues.currentSong.length.toFloat() else 0f..1f,
+            valueRange = if (playerScreenValues.serverGuiValues.currentSong.length > 0) 0f..playerScreenValues.serverGuiValues.currentSong.length.toFloat() else 0f..1f,
             modifier = Modifier
                 .padding(start = 10.dp, end = 10.dp)
         )
@@ -58,14 +58,14 @@ fun TimerSlider(
             horizontalArrangement = Arrangement.SpaceBetween
         ){
             Text(
-                text = if (playerScreenValues.playerValues.currentTime > 0) formatTime(
-                    playerScreenValues.playerValues.currentTime
+                text = if (playerScreenValues.serverGuiValues.currentTime > 0) formatTime(
+                    playerScreenValues.serverGuiValues.currentTime
                 ) else ""
             )
 
             Text(
-                text = if (playerScreenValues.playerValues.currentSong.length > 0) formatTime(
-                    playerScreenValues.playerValues.currentSong.length
+                text = if (playerScreenValues.serverGuiValues.currentSong.length > 0) formatTime(
+                    playerScreenValues.serverGuiValues.currentSong.length
                 ) else ""
             )
         }

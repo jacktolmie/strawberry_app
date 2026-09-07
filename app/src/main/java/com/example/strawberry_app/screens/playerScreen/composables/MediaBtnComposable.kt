@@ -41,7 +41,7 @@ fun MediaBtnComposable(
 
             // Show proper play or pause button, and the proper callback
             CreateButton(
-                image = when(playerScreenValues.playerValues.playState){
+                image = when(playerScreenValues.serverGuiValues.playState){
                     PlayState.PAUSED -> play_arrow
                     PlayState.PLAYING -> pause
                     else -> play_pause
@@ -62,7 +62,7 @@ fun MediaBtnPreview(){
     MediaBtnComposable(
         PlayerCallbacks(),
         playerScreenValues = PlayerScreenState(
-            playerValues = ServerGuiValues()
+            serverGuiValues = ServerGuiValues()
         ),
         Modifier.background(Color.White)
     )

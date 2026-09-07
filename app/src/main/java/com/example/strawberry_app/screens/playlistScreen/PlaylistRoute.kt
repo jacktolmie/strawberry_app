@@ -78,7 +78,7 @@ fun PlaylistRoute(
     )
 
     val playlistScreenState = PlaylistScreenState(
-        albumArtFile = albumArtCollection,
+        albumArtCollection = albumArtCollection,
         dragIconSongId = dragIconSongId,
         isInSelectedMode = isInSelectedMode,
         playlistsData = playlistsData,

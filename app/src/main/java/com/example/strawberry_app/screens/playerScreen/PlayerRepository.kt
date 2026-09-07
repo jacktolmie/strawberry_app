@@ -3,6 +3,7 @@ package com.example.strawberry_app.screens.playerScreen
 import com.example.strawberry_app.music.SongInfo
 import com.example.strawberry_app.network.ApplicationScope
 import com.example.strawberry_app.network.protocol.OutgoingMessage
+import com.example.strawberry_app.screens.classes.PlayState
 import com.example.strawberry_app.screens.repositories.AlbumArtRepository
 import com.example.strawberry_app.screens.classes.ServerGuiValues
 import com.example.strawberry_app.screens.playlistScreen.PlaylistRepository
@@ -60,8 +61,7 @@ class PlayerRepository @Inject constructor(
     fun sendCommand(command: OutgoingMessage) {
         playlistRepository.sendCommand(command)
     }
-
-    fun getAlbumArtFile(name: String): File? {
-        return albumArtRepository.getAlbumArtFile(name)
-    }
+    fun getAlbumArtFile(name: String): File? = albumArtRepository.getAlbumArtFile(
+        if (serverUpdates.value.playState == PlayState.STOPPED) "" else name
+    )
 }

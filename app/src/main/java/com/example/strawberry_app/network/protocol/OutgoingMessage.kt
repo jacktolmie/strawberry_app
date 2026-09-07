@@ -1,6 +1,7 @@
 package com.example.strawberry_app.network.protocol
 
 import com.example.strawberry_app.music.Playlist
+import com.example.strawberry_app.screens.radioScreen.StreamInfo
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -92,6 +93,9 @@ sealed class OutgoingMessage {
     @SerialName("send-playlist")
     data class SendCurrentPlaylist(val id: Long): OutgoingMessage()
 
+    @Serializable
+    @SerialName("send-stations")
+    data class SendStations(val source: String, val streams: List<StreamInfo>): OutgoingMessage()
     @Serializable
     @SerialName("set-current-playlist")
     data class SetCurrentPlaylist(val id: Long): OutgoingMessage()

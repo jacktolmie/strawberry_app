@@ -39,7 +39,7 @@ fun PlaylistScreen(
         // Create the playlists for each tab.
         if (playlistScreenState.playlistsData.playlistSongs.isNotEmpty()) {
             CurrentPlaylist(
-                albumArtCollection = playlistScreenState.albumArtFile,
+                albumArtCollection = playlistScreenState.albumArtCollection,
                 callbacks = callbacks,
                 playlist = playlistScreenState.playlistsData.playlistSongs,
                 playlistScreenState = playlistScreenState

@@ -6,19 +6,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.strawberry_app.screens.classes.ServerGuiValues
 import com.example.strawberry_app.screens.devices.DeviceTypes
 import com.example.strawberry_app.screens.devices.DeviceTypesBreakdown
 import com.example.strawberry_app.screens.devices.getDeviceType
 import com.example.strawberry_app.screens.playerScreen.screens.PlayerLandscapeScreen
 import com.example.strawberry_app.screens.playerScreen.screens.PlayerPortraitScreen
 import com.example.strawberry_app.screens.playerScreen.screens.PlayerTabletPortraitScreen
-import java.io.File
-
-data class PlayerScreenState(
-    val playerValues: ServerGuiValues = ServerGuiValues(),
-    val albumArtFile: File? = null
-)
 
 class PlayerCallbacks(
     val sendMute: () -> Unit = {},

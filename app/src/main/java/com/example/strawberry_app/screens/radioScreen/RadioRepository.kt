@@ -18,6 +18,16 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.io.File
 
+data class RadioFilters(
+    val bitrates: List<Int> = emptyList(),
+    val countries: List<String> = emptyList(),
+    val formats: List<String> = emptyList(),
+    val genres: List<String> = emptyList(),
+    val languages: List<String> = emptyList(),
+    val names: List<String> = emptyList(),
+    val votes: List<Int> = emptyList()
+)
+
 data class RadioState(
     val activeStation: String = "",
     val activeStream: String = "",
@@ -45,8 +55,12 @@ class RadioRepository @Inject constructor(
     // Radio database queries.
     suspend fun deleteRadioStations() { radioDao.deleteAll() }
 
-    // Get a list of stations.
-    fun getStations(source: String) = radioDao.observeStationsForSource(source)
+    // Get a list of information by type.
+    fun getAllFilterValues() = radioDao.getAllFilterValues()
+     fun getStationSources() = radioDao.getStationSources()
+
+    // Get a list of station streams.
+    fun getStationsWithStreams(source: String) = radioDao.observeStationsForSource(source)
 
     suspend fun makeAllStations(radioStations: List<RadioStation>, stationSource: String){
         db.withTransaction {
@@ -100,7 +114,6 @@ class RadioRepository @Inject constructor(
         println("RadioStations: ${radioDao.getStationCount()} and streams ${radioDao.getStreamCount()}")
     }
 
-    fun getAlbumArtFile(coverArt: String): File? {
-        return albumArtRepository.getAlbumArtFile(coverArt)
-    }
+    fun getAlbumArtFile(name: String): File? = albumArtRepository.getAlbumArtFile(name )
+
 }

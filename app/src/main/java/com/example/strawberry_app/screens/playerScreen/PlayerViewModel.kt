@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.strawberry_app.network.protocol.OutgoingMessage
 import com.example.strawberry_app.screens.classes.PlayState
+import com.example.strawberry_app.screens.classes.ServerGuiValues
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.SharingStarted
@@ -14,6 +15,11 @@ import kotlinx.coroutines.launch
 import java.io.File
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.milliseconds
+
+data class PlayerScreenState(
+    val serverGuiValues: ServerGuiValues = ServerGuiValues(),
+    val albumArtFile: File? = null
+)
 
 @HiltViewModel
 class PlayerViewModel @Inject constructor(
