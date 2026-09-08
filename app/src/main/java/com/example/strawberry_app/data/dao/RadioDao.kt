@@ -61,27 +61,6 @@ interface RadioDao {
     @Query("SELECT bitrate, country, format, language, name, votes FROM radioStation")
     fun getAllFilterValues(): Flow<List<RadioFilter>>
 
-//    @Query("SELECT DISTINCT bitrate FROM radioStation")
-//    fun getBitrates(): Flow<List<Int>>
-//
-//    @Query("SELECT DISTINCT clickCount FROM radioStation")
-//    fun getClickCount(): Flow<List<Int>>
-//
-//    @Query("SELECT DISTINCT country FROM radioStation")
-//    fun getCountries(): Flow<List<String>>
-//
-//    @Query("SELECT DISTINCT format FROM radioStation")
-//    fun getFormats(): Flow<List<String>>
-//
-//    @Query("SELECT DISTINCT language FROM radioStation")
-//    fun getLanguages(): Flow<List<String>>
-//
-//    @Query("SELECT DISTINCT name FROM radioStation")
-//    fun getNames(): Flow<List<String>>
-//
-//    @Query("SELECT DISTINCT votes FROM radioStation")
-//    fun getVotes(): Flow<List<Int>>
-//
     @Query("SELECT DISTINCT stationSource FROM radioStation")
     fun getStationSources(): Flow<List<String>>
 

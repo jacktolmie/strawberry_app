@@ -32,7 +32,7 @@ import com.example.strawberry_app.screens.playerScreen.composables.VolumeSliderV
 @Composable
 fun PlayerPortraitScreen(
     callbacks: PlayerCallbacks,
-    playerScreenValues: PlayerScreenState,
+    playerScreenState: PlayerScreenState,
     deviceType: DeviceTypesBreakdown,
     modifier: Modifier = Modifier
 ) {
@@ -48,7 +48,7 @@ fun PlayerPortraitScreen(
     )
     {
         // Song text for the song playing
-        SongInfoComposable( playerScreenValues)
+        SongInfoComposable( playerScreenState)
 
         Spacer(modifier = Modifier.height(space))
 
@@ -65,10 +65,9 @@ fun PlayerPortraitScreen(
 
             //Song Image
             SongImageComposable(
-                imageArt = playerScreenValues.albumArtFile,
+                imageArt = playerScreenState.albumArtFile,
                 crossfade = true,
                 Modifier
-//                    .fillMaxHeight(.75f)
                     .fillMaxWidth(.7f)
                     .aspectRatio(1f)
                     .padding(space)
@@ -79,7 +78,7 @@ fun PlayerPortraitScreen(
             // Vertical volume slider
             VolumeSliderVert(
                 callbacks = callbacks,
-                playerScreenValues = playerScreenValues,
+                playerScreenValues = playerScreenState,
                 modifier = Modifier.padding(end = space)
             )
         }
@@ -87,10 +86,10 @@ fun PlayerPortraitScreen(
         Spacer(modifier = Modifier.height(space))
 
         // Time slider
-        TimerSlider(callbacks, playerScreenValues)
+        TimerSlider(callbacks, playerScreenState)
 
         // Player control buttons
-        MediaBtnComposable(callbacks, playerScreenValues)
+        MediaBtnComposable(callbacks, playerScreenState)
     }
 }
 
@@ -99,7 +98,7 @@ fun PlayerPortraitScreen(
 fun PlayerPortraitScreenPreview(){
     PlayerPortraitScreen(
         callbacks = PlayerCallbacks(),
-        playerScreenValues = PlayerScreenState(),
+        playerScreenState = PlayerScreenState(),
         deviceType = DeviceTypesBreakdown.PHONE_PORTRAIT
     )
 }

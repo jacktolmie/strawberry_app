@@ -18,16 +18,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.io.File
 
-data class RadioFilters(
-    val bitrates: List<Int> = emptyList(),
-    val countries: List<String> = emptyList(),
-    val formats: List<String> = emptyList(),
-    val genres: List<String> = emptyList(),
-    val languages: List<String> = emptyList(),
-    val names: List<String> = emptyList(),
-    val votes: List<Int> = emptyList()
-)
-
 data class RadioState(
     val activeStation: String = "",
     val activeStream: String = "",
@@ -84,7 +74,7 @@ class RadioRepository @Inject constructor(
                         image = station.image,
                         language = station.language,
                         name = station.name,
-                        stationSource = stationSource,
+                        stationSource = station.stationSource,
                         stationUrl = station.stationUrl,
                         votes = station.votes
                     )

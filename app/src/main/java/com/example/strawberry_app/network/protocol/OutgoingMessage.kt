@@ -14,99 +14,99 @@ sealed class OutgoingMessage {
 
     // Playlist commands
     @Serializable
-    @SerialName("clear-playlist")
+    @SerialName("clear_playlist")
     data class ClearPlaylist(val id: Long): OutgoingMessage()
 
     @Serializable
-    @SerialName("close-playlist")
+    @SerialName("close_playlist")
     data class CloseCurrent(val id: Long) : OutgoingMessage()
 
     @Serializable
-    @SerialName("delete-playlist")
+    @SerialName("delete_playlist")
     data class DeleteCurrentPlaylist(val id: Long): OutgoingMessage()
 
     @Serializable
-    @SerialName("favourite-playlist")
+    @SerialName("favourite_playlist")
     data class FavouritePlaylist(val id: Long, val favourite: Boolean): OutgoingMessage()
 
     // Send currently selected playlist id and song index to server
     @Serializable
-    @SerialName("remote-sent-active")
+    @SerialName("remote_sent_active")
     data class RemoteSentActive(
         val id: Long,
         @SerialName("song_index")
         val songIndex: Long): OutgoingMessage()
 
     @Serializable
-    @SerialName("remote-changed-playlist")
+    @SerialName("remote_changed_playlist")
     data class RemoteChangedPlaylist(
         val id: Long,
-        @SerialName("from-index")
+        @SerialName("from_index")
         val fromIndex: Long,
-        @SerialName("to-index")
+        @SerialName("to_index")
         val toIndex: Long
     ): OutgoingMessage()
 
     @Serializable
-    @SerialName("remove-duplicates-playlist")
+    @SerialName("remove_duplicates_playlist")
     data class RemoveDuplicatesFromPlaylist(val id: Long): OutgoingMessage()
 
     @Serializable
-    @SerialName("remove-songs-playlist")
+    @SerialName("remove_songs_playlist")
     data class RemoveCurrentSongsFromPlaylist(
         val id: Long,
         @SerialName("songs_list")
         val songsList: List<Long>): OutgoingMessage()
 
     @Serializable
-    @SerialName("remove-unavailable-songs")
+    @SerialName("remove_unavailable_songs")
     data class RemoveUnavailableSongs(val id: Long): OutgoingMessage()
 
     @Serializable
-    @SerialName("rename-playlist")
+    @SerialName("rename_playlist")
     data class RenamePlaylist(val id: Long, val name: String): OutgoingMessage()
 
     @Serializable
-    @SerialName("repeat-mode")
+    @SerialName("repeat_mode")
     data class RepeatMode(
-        @SerialName("repeat-mode")
+        @SerialName("repeat_mode")
         val repeatMode: String
     ): OutgoingMessage()
 
     @Serializable
-    @SerialName("request-cover")
+    @SerialName("request_cover")
     data class RequestCover(
         @SerialName("cover_art")
         val coverArt: String
     ): OutgoingMessage()
 
     @Serializable
-    @SerialName("send-active-playlist-song")
+    @SerialName("send_active_playlist_song")
     // Cannot find a way to not use data classes to send commands. Sends "" if not a data class
     data class SendActivePlaylistSong(val test: Boolean = true) : OutgoingMessage()
 
     @Serializable
-    @SerialName("send-all-playlists")
+    @SerialName("send_all_playlists")
     data class SendAllPlaylists(val playlists: List<Playlist>): OutgoingMessage()
 
     @Serializable
-    @SerialName("send-playlist")
+    @SerialName("send_playlist")
     data class SendCurrentPlaylist(val id: Long): OutgoingMessage()
 
     @Serializable
-    @SerialName("send-stations")
+    @SerialName("send_stations")
     data class SendStations(val source: String, val streams: List<StreamInfo>): OutgoingMessage()
     @Serializable
-    @SerialName("set-current-playlist")
+    @SerialName("set_current_playlist")
     data class SetCurrentPlaylist(val id: Long): OutgoingMessage()
 
     @Serializable
-    @SerialName("shuffle-current-playlist")
+    @SerialName("shuffle_current_playlist")
     data class ShuffleCurrentPlaylist(val id: Long): OutgoingMessage()
     @Serializable
-    @SerialName("shuffle-mode")
+    @SerialName("shuffle_mode")
     data class ShuffleMode(
-        @SerialName("shuffle-mode")
+        @SerialName("shuffle_mode")
         val shuffleMode: String
     ): OutgoingMessage()
 
@@ -120,7 +120,7 @@ sealed class OutgoingMessage {
     data object Next: OutgoingMessage()
 
     @Serializable
-    @SerialName("play-pause")
+    @SerialName("play_pause")
     data object PlayPause: OutgoingMessage()
 
     @Serializable
@@ -128,21 +128,21 @@ sealed class OutgoingMessage {
     data object Previous: OutgoingMessage()
 
     @Serializable
-    @SerialName("restart-or-previous")
+    @SerialName("restart_or_previous")
     data object RestartOrPrevious: OutgoingMessage()
 
     @Serializable
-    @SerialName("seek-backward")
+    @SerialName("seek_backward")
     data object SeekBackward: OutgoingMessage()
 
     @Serializable
-    @SerialName("seek-forward")
+    @SerialName("seek_forward")
     data object SeekForward: OutgoingMessage()
 
     @Serializable
-    @SerialName("seek-to")
+    @SerialName("seek_to")
     data class SeekTo(
-        @SerialName("seek-to")
+        @SerialName("seek_to")
         val seekTo: Long
     ): OutgoingMessage()
 
@@ -151,7 +151,7 @@ sealed class OutgoingMessage {
     data object Stop: OutgoingMessage()
 
     @Serializable
-    @SerialName("stop-after-current")
+    @SerialName("stop_after_current")
     data object StopAfterCurrent: OutgoingMessage()
 
     @Serializable
@@ -159,10 +159,10 @@ sealed class OutgoingMessage {
     data class Volume(val volume: Int): OutgoingMessage()
 
     @Serializable
-    @SerialName("volume-down")
+    @SerialName("volume_down")
     data object VolumeDown: OutgoingMessage()
 
     @Serializable
-    @SerialName("volume-up")
+    @SerialName("volume_up")
     data object VolumeUp: OutgoingMessage()
 }

@@ -23,6 +23,8 @@ data class RadioStation(
     val language: String,
     val name: String,
     val playlists: List<RadioPlaylist>,
+    @SerialName("station_source")
+    val stationSource: String,
     @SerialName("station_url")
     val stationUrl: String,
     val votes: Int

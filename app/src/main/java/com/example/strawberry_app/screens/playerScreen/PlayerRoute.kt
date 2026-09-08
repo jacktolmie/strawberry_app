@@ -76,7 +76,7 @@ fun PlayerRoute(
             if (isPortrait) {
                 PlayerPortraitScreen(
                     callbacks = callbacks,
-                    playerScreenValues = playerScreenData,
+                    playerScreenState = playerScreenData,
                     deviceType = deviceType,
                     modifier = modifier
                 )

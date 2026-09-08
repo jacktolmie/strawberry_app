@@ -9,9 +9,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.strawberry_app.R
 import com.example.strawberry_app.screens.classes.ServerGuiValues
 import com.example.strawberry_app.screens.composables.TextBox
 import com.example.strawberry_app.screens.playerScreen.PlayerScreenState
@@ -29,7 +31,7 @@ fun SongInfoComposable(
         // Song text for the song playing
         TextBox(
             color = MaterialTheme.colorScheme.onSurface,
-            text = playerScreenValues.serverGuiValues.currentSong.title.ifEmpty { "No Song Playing" },
+            text = playerScreenValues.serverGuiValues.currentSong.title.ifEmpty { stringResource(R.string.songInfo_no_song_playing) },
             textStyle = MaterialTheme.typography.bodyMedium,
             textAlign = TextAlign.Center,
             modifier = Modifier
