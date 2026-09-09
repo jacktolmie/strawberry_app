@@ -138,8 +138,11 @@ sealed class EventType: IncomingMessage() {
     ): EventType()
 
     @Serializable
+    @JsonIgnoreUnknownKeys
     @SerialName("radio_stations")
     data class RadioStations(
+        @SerialName("station_name")
+        val stationName: String,
         @SerialName("station_source")
         val stationSource: String,
         @SerialName("station_list")

@@ -21,7 +21,8 @@ data class RadioFilterState(
     val formats: List<String> = emptyList(),
     val genres: List<String> = emptyList(),
     val languages: List<String> = emptyList(),
-    val names: List<String> = emptyList(),
+    val streamNames: List<String> = emptyList(),
+    val stationNames: List<String> = emptyList(),
     val votes: List<Int> = emptyList()
 )
 
@@ -61,26 +62,26 @@ class RadioViewModel @Inject constructor(
     )
 
     // Types of station data (bitrate, country etc).
-    private val _bitrates = MutableStateFlow<List<Int>>(emptyList())
-    val bitrates = _bitrates.asStateFlow()
-
-    private val _countries = MutableStateFlow<List<String>>(emptyList())
-    val countries = _countries.asStateFlow()
-
-    private val _formats = MutableStateFlow<List<String>>(emptyList())
-    val format = _formats.asStateFlow()
-
+//    private val _bitrates = MutableStateFlow<List<Int>>(emptyList())
+//    val bitrates = _bitrates.asStateFlow()
+//
+//    private val _countries = MutableStateFlow<List<String>>(emptyList())
+//    val countries = _countries.asStateFlow()
+//
+//    private val _formats = MutableStateFlow<List<String>>(emptyList())
+//    val format = _formats.asStateFlow()
+//
     private val _genres = MutableStateFlow<List<String>>(emptyList())
     val genres = _genres.asStateFlow()
-
-    private val _languages = MutableStateFlow<List<String>>(emptyList())
-    val language = _languages.asStateFlow()
-
-    private val _names = MutableStateFlow<List<String>>(emptyList())
-    val names = _names.asStateFlow()
-
-    private val _votes = MutableStateFlow<List<Int>>(emptyList())
-    val votes = _votes.asStateFlow()
+//
+//    private val _languages = MutableStateFlow<List<String>>(emptyList())
+//    val language = _languages.asStateFlow()
+//
+//    private val _names = MutableStateFlow<List<String>>(emptyList())
+//    val names = _names.asStateFlow()
+//
+//    private val _votes = MutableStateFlow<List<Int>>(emptyList())
+//    val votes = _votes.asStateFlow()
 
     private val _filterState = MutableStateFlow(RadioFilterState())
     val filterState = _filterState.asStateFlow()
@@ -116,7 +117,8 @@ class RadioViewModel @Inject constructor(
             RadioStation.FORMAT -> { sortStations(stations, ascending) { it.format} }
             RadioStation.GENRE -> { sortStations(stations, ascending) { it.genre.firstOrNull()} }
             RadioStation.LANGUAGE -> { sortStations(stations, ascending) { it.language} }
-            RadioStation.NAME -> { sortStations(stations, ascending) { it.name} }
+            RadioStation.STATIONNAME -> { sortStations(stations, ascending) { it.stationName} }
+            RadioStation.STREAMNAME -> { sortStations(stations, ascending) { it.streamName} }
             RadioStation.VOTES -> { sortStations(stations, ascending) { it.votes} }
         }
     }
@@ -130,7 +132,8 @@ class RadioViewModel @Inject constructor(
                     formats = stations.map { it.format }.distinct().sorted(),
                     genres = genres.value,
                     languages = stations.map { it.language }.distinct().sorted(),
-                    names = stations.map { it.name }.distinct().sorted(),
+                    streamNames = stations.map { it.streamName}.distinct().sorted(),
+                    stationNames = stations.map { it.stationName }.distinct().sorted(),
                     votes = stations.map { it.votes }.distinct().sorted()
                 )
             }
@@ -158,7 +161,7 @@ class RadioViewModel @Inject constructor(
                 source = streams.first().stationSource,
                 streams = streams.map{
                     StreamInfo(
-                        name = it.name,
+                        name = it.streamName,
                         url = it.stationUrl
                     )
                 }

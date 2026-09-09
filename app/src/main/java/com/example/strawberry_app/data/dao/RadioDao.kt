@@ -20,8 +20,9 @@ data class StationWithStreams(
     val id: String,
     val image: String,
     val language: String,
-    val name: String,
     val quality: String,
+    val stationName: String,
+    val streamName: String,
     val stationSource: String,
     val stationUrl: String,
     val streamUrl: String,
@@ -33,7 +34,8 @@ data class RadioFilter(
     val country: String,
     val format: String,
     val language: String,
-    val name: String,
+    val stationName: String,
+    val streamName: String,
     val votes: Int
 )
 
@@ -58,7 +60,7 @@ interface RadioDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertStreams(entities: List<RadioStreamEntity>)
 
-    @Query("SELECT bitrate, country, format, language, name, votes FROM radioStation")
+    @Query("SELECT bitrate, country, format, language, streamName, stationName, votes FROM radioStation")
     fun getAllFilterValues(): Flow<List<RadioFilter>>
 
     @Query("SELECT DISTINCT stationSource FROM radioStation")
@@ -68,8 +70,8 @@ interface RadioDao {
         SELECT  radioStation.id, radioStation.bitrate, radioStation.clickCount, 
                 radioStation.country, radioStation.description, radioStation.donate, 
                 radioStation.format, radioStation.genre, radioStation.homepage, radioStation.image, 
-                radioStation.language, radioStation.name, radioStation.stationSource, 
-                radioStation.stationUrl, radioStation.votes, 
+                radioStation.language, radioStation.streamName, radioStation.stationName, 
+                radioStation.stationSource, radioStation.stationUrl, radioStation.votes, 
                 radio_stream.streamUrl, radio_stream.format, radio_stream.quality
         FROM radioStation
         JOIN radio_stream ON radio_stream.stationId = radioStation.id

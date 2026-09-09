@@ -73,10 +73,12 @@ class RadioRepository @Inject constructor(
                         homepage = station.homepage,
                         image = station.image,
                         language = station.language,
-                        name = station.name,
+                        streamName = station.streamName,
+                        stationName = station.stationName,
                         stationSource = station.stationSource,
                         stationUrl = station.stationUrl,
-                        votes = station.votes
+                        votes = station.votes,
+
                     )
                 )
 

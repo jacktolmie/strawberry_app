@@ -17,7 +17,8 @@ data class RadioStationEntity(
     val homepage: String,
     val image: String,
     val language: String,
-    val name: String,
+    val streamName: String,
+    val stationName: String,
     val stationSource: String,
     val stationUrl: String,
     val votes: Int

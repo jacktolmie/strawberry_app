@@ -16,6 +16,7 @@
     <string name="playlist_delete_song">Delete Song</string>
     <string name="playlist_length">Length</string>
     <string name="playlist_multi_select">Multi Select</string>
+    <string name="playlist_no_playlists">No Playlists Found</string>
     <string name="playlist_question">Would you like to</string>
     <string name="playlist_remove_duplicates">Remove Duplicates</string>
     <string name="playlist_remove_duplicates_from">Remove Duplicates From</string>
@@ -30,6 +31,9 @@
     <string name="playlist_shuffle_choose">Choose Shuffle Mode</string>
     <string name="playlist_shuffle_mode">Shuffle Mode</string>
     <string name="playlist_song_count">Songs</string>
+
+    <string name="radio_main_title">Radio Sources</string>
+    <string name="radio_radio_description">Radio Icon</string>
 
     <string name="settings_title">Settings</string>
     <string name="settings_ip">Server IP Address</string>
