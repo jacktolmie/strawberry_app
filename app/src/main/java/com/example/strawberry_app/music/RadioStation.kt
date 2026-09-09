@@ -10,7 +10,7 @@ import kotlinx.serialization.json.JsonIgnoreUnknownKeys
 @JsonIgnoreUnknownKeys
 data class RadioStation(
     val bitrate: Int,
-    @SerialName("click_count")
+    @SerialName("clickcount")
     val clickCount: Int,
     val country: String,
     val description: String,
@@ -21,8 +21,11 @@ data class RadioStation(
     val id: String,
     val image: String,
     val language: String,
-    val name: String,
     val playlists: List<RadioPlaylist>,
+    @SerialName("stream_name")
+    val streamName: String,
+    @SerialName("station_name")
+    val stationName: String,
     @SerialName("station_source")
     val stationSource: String,
     @SerialName("station_url")

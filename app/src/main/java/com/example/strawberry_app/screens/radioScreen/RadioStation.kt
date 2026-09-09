@@ -6,7 +6,8 @@ enum class RadioStation(val values: String) {
     FORMAT("codec"),
     COUNTRY("country"),
     LANGUAGE("language"),
-    NAME("name"),
+    STATIONNAME("stationName"),
+    STREAMNAME("streamName"),
     GENRE("tags"),
     VOTES("votes")
 }
