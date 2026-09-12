@@ -141,10 +141,12 @@ sealed class EventType: IncomingMessage() {
     @JsonIgnoreUnknownKeys
     @SerialName("radio_stations")
     data class RadioStations(
+        @SerialName("source_logo")
+        val sourceLogo: String,
         @SerialName("station_name")
-        val stationName: String,
+        val sourceName: String,
         @SerialName("station_source")
-        val stationSource: String,
+        val source: String,
         @SerialName("station_list")
         val stationList: List<RadioStation>
     ): EventType()

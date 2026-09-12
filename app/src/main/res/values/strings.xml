@@ -1,10 +1,13 @@
 <resources>
     <string name="app_name">strawberry_app</string>
+    <string name="blank"> </string>
+    <string name="more_options">More Options</string>
 
     <string name="cancel">Cancel</string>
 
     <string name="navbar_player">Player</string>
     <string name="navbar_playlist">Playlist</string>
+    <string name="navbar_radio">Radio</string>
     <string name="navbar_settings">Settings</string>
 
     <string name="player_album_art">Album Art</string>
@@ -34,6 +37,7 @@
 
     <string name="radio_main_title">Radio Sources</string>
     <string name="radio_radio_description">Radio Icon</string>
+    <string name="radio_go_to_station">Go To Station</string>
 
     <string name="settings_title">Settings</string>
     <string name="settings_ip">Server IP Address</string>

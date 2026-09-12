@@ -1,9 +1,22 @@
 package com.example.strawberry_app.data.entity
 
 import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "radioStation")
+@Entity(
+    tableName = "radioStation",
+    foreignKeys = [
+        ForeignKey(
+            entity = RadioSourceEntity::class,
+            parentColumns = ["sourceName"],
+            childColumns = ["sourceName"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ],
+    indices = [Index("sourceName")]
+)
 data class RadioStationEntity(
     @PrimaryKey
     val id: String,
@@ -15,11 +28,11 @@ data class RadioStationEntity(
     val format: String,
     val genre: List<String>,
     val homepage: String,
-    val image: String,
     val language: String,
+    val sourceName: String,
     val streamName: String,
+    val stationIcon: String,
     val stationName: String,
-    val stationSource: String,
     val stationUrl: String,
     val votes: Int
 )

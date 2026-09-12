@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.example.strawberry_app.data.entity.RadioSourceEntity
 import com.example.strawberry_app.data.entity.RadioStationEntity
 import com.example.strawberry_app.data.entity.RadioStreamEntity
 import kotlinx.coroutines.flow.Flow
@@ -18,12 +19,13 @@ data class StationWithStreams(
     val genre: List<String>,
     val homepage: String,
     val id: String,
-    val image: String,
+    val stationIcon: String,
     val language: String,
     val quality: String,
+    val sourceLogo: String,
+    val sourceName: String,
     val stationName: String,
     val streamName: String,
-    val stationSource: String,
     val stationUrl: String,
     val streamUrl: String,
     val votes: Int
@@ -39,6 +41,11 @@ data class RadioFilter(
     val votes: Int
 )
 
+data class RadioSourceIcon(
+    val sourceName: String,
+    val sourceLogo: String
+)
+
 @Dao
 interface RadioDao {
 
@@ -51,7 +58,7 @@ interface RadioDao {
     @Query("DELETE FROM radioStation")
     suspend fun deleteAll()
 
-    @Query("DELETE FROM radioStation WHERE stationSource = :source")
+    @Query("DELETE FROM radioStation WHERE sourceName = :source")
     suspend fun deleteBySource(source: String)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -63,19 +70,27 @@ interface RadioDao {
     @Query("SELECT bitrate, country, format, language, streamName, stationName, votes FROM radioStation")
     fun getAllFilterValues(): Flow<List<RadioFilter>>
 
-    @Query("SELECT DISTINCT stationSource FROM radioStation")
-    fun getStationSources(): Flow<List<String>>
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertSource(entity: RadioSourceEntity)
+
+    @Query("SELECT * FROM radio_source")
+    fun getAllSources(): Flow<List<RadioSourceEntity>>
+
+    @Query("SELECT sourceName, sourceLogo FROM radio_source")
+    fun getStationSources(): Flow<List<RadioSourceIcon>>
 
     @Query("""
-        SELECT  radioStation.id, radioStation.bitrate, radioStation.clickCount, 
-                radioStation.country, radioStation.description, radioStation.donate, 
-                radioStation.format, radioStation.genre, radioStation.homepage, radioStation.image, 
-                radioStation.language, radioStation.streamName, radioStation.stationName, 
-                radioStation.stationSource, radioStation.stationUrl, radioStation.votes, 
-                radio_stream.streamUrl, radio_stream.format, radio_stream.quality
-        FROM radioStation
-        JOIN radio_stream ON radio_stream.stationId = radioStation.id
-        WHERE radioStation.stationSource = :source
-    """)
+    SELECT  radioStation.id, radioStation.bitrate, radioStation.clickCount, 
+            radioStation.country, radioStation.description, radioStation.donate, 
+            radioStation.format, radioStation.genre, radioStation.homepage, radioStation.stationIcon, 
+            radioStation.language, radioStation.streamName, radioStation.stationName, 
+            radioStation.sourceName, radioStation.stationUrl, radioStation.votes,
+            radio_source.sourceLogo,
+            radio_stream.streamUrl, radio_stream.format, radio_stream.quality
+    FROM radioStation
+    JOIN radio_source ON radio_source.sourceName = radioStation.sourceName
+    JOIN radio_stream ON radio_stream.stationId = radioStation.id
+    WHERE radioStation.sourceName = :source
+""")
     fun observeStationsForSource(source: String): Flow<List<StationWithStreams>>
 }

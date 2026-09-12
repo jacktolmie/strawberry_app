@@ -30,9 +30,15 @@ data class RadioScreenState(
     val albumArtCollection: Map<String, File?> = emptyMap(),
     val radioState: RadioState = RadioState(),
     val stations: List<StationWithStreams> = emptyList(),
-    val stationSource: List<String> = emptyList(),
+    val stationNamesIcons: List<SourceAndIcon> = emptyList(),
     val sortedStations: List<StationWithStreams> = emptyList()
 )
+
+data class SourceAndIcon(
+    val station: String = "",
+    val icon: File? = null
+)
+
 @HiltViewModel
 class RadioViewModel @Inject constructor(
     private val radioRepository: RadioRepository
@@ -44,44 +50,32 @@ class RadioViewModel @Inject constructor(
     private val _stations = MutableStateFlow<List<StationWithStreams>>(emptyList())
     val stations = _stations.asStateFlow()
 
-    private val _stationSources = MutableStateFlow<List<String>>(emptyList())
+    private val _stationSources = MutableStateFlow<List<SourceAndIcon>>(emptyList())
     val stationSources = _stationSources.asStateFlow()
 
     private val _sortedStations = MutableStateFlow<List<StationWithStreams>>(emptyList())
     val sortedStations = _sortedStations.asStateFlow()
 
     val radioScreenState = combine(
-        albumArtCollection, radioState, stations, stationSources, sortedStations
+        albumArtCollection, radioState, stations,
+        stationSources, sortedStations
     ){
         art, radioState, stations, sources, sorted ->
-        RadioScreenState(art, radioState, stations, sources, sorted)
+        RadioScreenState(
+            albumArtCollection = art,
+            radioState = radioState,
+            stations = stations,
+            stationNamesIcons = sources,
+            sortedStations = sorted
+        )
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
         initialValue = RadioScreenState()
     )
 
-    // Types of station data (bitrate, country etc).
-//    private val _bitrates = MutableStateFlow<List<Int>>(emptyList())
-//    val bitrates = _bitrates.asStateFlow()
-//
-//    private val _countries = MutableStateFlow<List<String>>(emptyList())
-//    val countries = _countries.asStateFlow()
-//
-//    private val _formats = MutableStateFlow<List<String>>(emptyList())
-//    val format = _formats.asStateFlow()
-//
     private val _genres = MutableStateFlow<List<String>>(emptyList())
     val genres = _genres.asStateFlow()
-//
-//    private val _languages = MutableStateFlow<List<String>>(emptyList())
-//    val language = _languages.asStateFlow()
-//
-//    private val _names = MutableStateFlow<List<String>>(emptyList())
-//    val names = _names.asStateFlow()
-//
-//    private val _votes = MutableStateFlow<List<Int>>(emptyList())
-//    val votes = _votes.asStateFlow()
 
     private val _filterState = MutableStateFlow(RadioFilterState())
     val filterState = _filterState.asStateFlow()
@@ -90,38 +84,30 @@ class RadioViewModel @Inject constructor(
         loadStations()
     }
 
-    fun loadStations() {
-        viewModelScope.launch {
-            radioRepository.getStationSources().collect { sources ->
-                _stationSources.value = sources
-                val allStations = mutableListOf<StationWithStreams>()
-                sources.forEach { source ->
-                    val stations = radioRepository.getStationsWithStreams(source).first()
-                    allStations.addAll(stations)
+    fun createPlaylist(streams: List<StationWithStreams>) {
+        if (streams.isEmpty()) return
+        radioRepository.sendCommand(
+            OutgoingMessage.SendStations(
+                source = streams.first().sourceName,
+                streams = streams.map{
+                    StreamInfo(
+                        name = it.streamName,
+                        url = it.stationUrl
+                    )
                 }
-                _stations.value = allStations
-            }
-        }
+            )
+        )
     }
 
     fun getAlbumArtFile(coverArt: String): File? = radioRepository.getAlbumArtFile(coverArt)
 
-    fun getStationsBySource(source: String) = _stations.value.filter { it.stationSource == source }
-
-    fun sortStationsByType(source: String, sortBy: RadioStation, ascending: Boolean){
+    fun getStationGenre(source: String, ascending: Boolean) {
         val stations = getStationsBySource(source)
-        _sortedStations.value =  when (sortBy) {
-            RadioStation.BITRATE ->  { sortStations(stations, ascending) { it.bitrate} }
-            RadioStation.CLICKCOUNT -> { sortStations(stations, ascending) { it.clickCount} }
-            RadioStation.COUNTRY -> { sortStations(stations, ascending) { it.country} }
-            RadioStation.FORMAT -> { sortStations(stations, ascending) { it.format} }
-            RadioStation.GENRE -> { sortStations(stations, ascending) { it.genre.firstOrNull()} }
-            RadioStation.LANGUAGE -> { sortStations(stations, ascending) { it.language} }
-            RadioStation.STATIONNAME -> { sortStations(stations, ascending) { it.stationName} }
-            RadioStation.STREAMNAME -> { sortStations(stations, ascending) { it.streamName} }
-            RadioStation.VOTES -> { sortStations(stations, ascending) { it.votes} }
-        }
+        val genres = stations.flatMap { it.genre }.distinct()
+        _genres.value = if (ascending) genres.sorted() else genres.sortedDescending()
     }
+
+    fun getStationsBySource(source: String) = _stations.value.filter { it.sourceName == source }
 
     fun loadFilterValues() {
         viewModelScope.launch {
@@ -140,6 +126,40 @@ class RadioViewModel @Inject constructor(
         }
     }
 
+//    fun loadStations() {
+//        viewModelScope.launch {
+//            radioRepository.getStationSources().collect { sources ->
+//                _stationSources.value = sources
+//                val allStations = mutableListOf<StationWithStreams>()
+//                sources.forEach { source ->
+//                    val stations = radioRepository.getStationsWithStreams(source.stationName).first()
+//                    allStations.addAll(stations)
+//                }
+//                _stations.value = allStations
+//            }
+//        }
+//    }
+    fun loadStations() {
+        viewModelScope.launch {
+            radioRepository.getStationSources().collect { sources ->
+                val allStations = mutableListOf<StationWithStreams>()
+                val stationIcons = mutableListOf<SourceAndIcon>()
+                sources.forEach { source ->
+                    val stations = radioRepository.getStationsWithStreams(source.sourceName).first()
+                    allStations.addAll(stations)
+
+                    val station = SourceAndIcon(
+                        station = source.sourceName,
+                        icon = radioRepository.getAlbumArtFile(source.sourceLogo)
+                    )
+                    stationIcons.add(station)
+                }
+                _stations.value = allStations
+                _stationSources.value = stationIcons
+            }
+        }
+    }
+
     fun <T : Comparable<T>> sortStations(
         stations: List<StationWithStreams>,
         ascending: Boolean,
@@ -148,24 +168,37 @@ class RadioViewModel @Inject constructor(
         return if (ascending) stations.sortedBy(selector) else stations.sortedByDescending(selector)
     }
 
-    fun getStationGenre(source: String, ascending: Boolean) {
+    fun sortStationsByType(source: String, sortBy: RadioStation, ascending: Boolean){
         val stations = getStationsBySource(source)
-        val genres = stations.flatMap { it.genre }.distinct()
-        _genres.value = if (ascending) genres.sorted() else genres.sortedDescending()
-    }
-
-    fun createPlaylist(streams: List<StationWithStreams>) {
-        if (streams.isEmpty()) return
-        radioRepository.sendCommand(
-            OutgoingMessage.SendStations(
-                source = streams.first().stationSource,
-                streams = streams.map{
-                    StreamInfo(
-                        name = it.streamName,
-                        url = it.stationUrl
-                    )
-                }
-            )
-        )
+        _sortedStations.value =  when (sortBy) {
+            RadioStation.BITRATE ->  { sortStations(stations, ascending) { it.bitrate} }
+            RadioStation.CLICKCOUNT -> { sortStations(stations, ascending) { it.clickCount} }
+            RadioStation.COUNTRY -> { sortStations(stations, ascending) { it.country} }
+            RadioStation.FORMAT -> { sortStations(stations, ascending) { it.format} }
+            RadioStation.GENRE -> { sortStations(stations, ascending) { it.genre.firstOrNull()} }
+            RadioStation.LANGUAGE -> { sortStations(stations, ascending) { it.language} }
+            RadioStation.STATIONNAME -> { sortStations(stations, ascending) { it.stationName} }
+            RadioStation.STREAMNAME -> { sortStations(stations, ascending) { it.streamName} }
+            RadioStation.VOTES -> { sortStations(stations, ascending) { it.votes} }
+        }
     }
 }
+// Types of station data (bitrate, country etc).
+//    private val _bitrates = MutableStateFlow<List<Int>>(emptyList())
+//    val bitrates = _bitrates.asStateFlow()
+//
+//    private val _countries = MutableStateFlow<List<String>>(emptyList())
+//    val countries = _countries.asStateFlow()
+//
+//    private val _formats = MutableStateFlow<List<String>>(emptyList())
+//    val format = _formats.asStateFlow()
+//
+//
+//    private val _languages = MutableStateFlow<List<String>>(emptyList())
+//    val language = _languages.asStateFlow()
+//
+//    private val _names = MutableStateFlow<List<String>>(emptyList())
+//    val names = _names.asStateFlow()
+//
+//    private val _votes = MutableStateFlow<List<Int>>(emptyList())
+//    val votes = _votes.asStateFlow()

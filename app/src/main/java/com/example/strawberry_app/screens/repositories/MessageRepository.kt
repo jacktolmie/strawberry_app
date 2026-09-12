@@ -136,7 +136,11 @@ class MessageRepository @Inject constructor(
                             playState = PlayState.PAUSED
                         )
                     )
-                    is EventType.RadioStations -> radioRepository.makeAllStations(message.stationList, message.stationSource)
+                    is EventType.RadioStations -> radioRepository.makeAllStations(
+                        radioStations = message.stationList,
+                        stationSource = message.sourceName,
+                        stationLogo = message.sourceLogo
+                    )
                     is EventType.RenamePlaylist -> playlistRepository.serverRenamedPlaylist(id = message.id, name = message.name)
                     is EventType.RepeatMode -> playlistRepository.updateRepeatMode(message.repeatMode)
                     is EventType.SeekTo -> playerRepository.getGuiUpdates(serverUpdates.value.copy(currentTime = message.time) )

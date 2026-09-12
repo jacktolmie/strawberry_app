@@ -9,6 +9,7 @@ import com.example.strawberry_app.data.dao.RadioDao
 import com.example.strawberry_app.data.dao.SongDao
 import com.example.strawberry_app.data.entity.PlaylistEntity
 import com.example.strawberry_app.data.entity.PlaylistSongEntity
+import com.example.strawberry_app.data.entity.RadioSourceEntity
 import com.example.strawberry_app.data.entity.RadioStationEntity
 import com.example.strawberry_app.data.entity.RadioStreamEntity
 import com.example.strawberry_app.data.entity.SongEntity
@@ -20,6 +21,7 @@ import com.example.strawberry_app.data.entity.StringListConverters
             PlaylistEntity::class,
             SongEntity::class,
             PlaylistSongEntity::class,
+            RadioSourceEntity::class,
             RadioStationEntity::class,
             RadioStreamEntity::class
         ],

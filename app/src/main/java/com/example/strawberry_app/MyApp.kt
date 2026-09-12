@@ -1,14 +1,15 @@
 package com.example.strawberry_app
 
 import android.content.res.Configuration
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.VerticalDivider
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScope
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
@@ -21,18 +22,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import com.example.strawberry_app.screens.devices.DeviceTypes
 import com.example.strawberry_app.screens.devices.detectDevice
 import com.example.strawberry_app.screens.devices.getDeviceType
 import com.example.strawberry_app.screens.devices.isSmallDevice
 import com.example.strawberry_app.screens.navigation.NavBar
 import com.example.strawberry_app.screens.navigation.NavIcon
-import com.example.strawberry_app.screens.playerScreen.PlayerRoute
-import com.example.strawberry_app.screens.playlistScreen.PlaylistRoute
-import com.example.strawberry_app.screens.settingsScreen.SettingsRoute
+import com.example.strawberry_app.screens.navigation.NavItemData
+import com.example.strawberry_app.screens.navigation.TabletScaffold
 import com.example.strawberry_app.ui.theme.icons.music_note
 import com.example.strawberry_app.ui.theme.icons.queue_music
+import com.example.strawberry_app.ui.theme.icons.radio
 import com.example.strawberry_app.ui.theme.icons.settings
 import kotlinx.coroutines.launch
 
@@ -44,100 +44,80 @@ fun MyApp(windowSizeClass: WindowSizeClass) {
     val coroutineScope = rememberCoroutineScope()
     val deviceType = detectDevice(windowSizeClass = windowSizeClass)
     var selectedIndex by remember { mutableIntStateOf(0) }
-    val pagerState = rememberPagerState(pageCount = { 3 })
+    val pagerState = rememberPagerState(pageCount = { 4 })
+    val isSmallDeviceCheck  = isSmallDevice(deviceType)
 
-    val navItems: NavigationSuiteScope.() -> Unit = {
-        item(
-            selected = selectedIndex == 0,
-            onClick = {
-                selectedIndex = 0
-                coroutineScope.launch { pagerState.animateScrollToPage(0) }
-            },
-            icon = { NavIcon(music_note, R.string.navbar_player) },
-            label = { if (!isSmallDevice(deviceType)) Text(stringResource(R.string.navbar_player)) }
-        )
-        item(
-            selected = selectedIndex == 1,
-            onClick = {
-                selectedIndex = 1
-                coroutineScope.launch { pagerState.animateScrollToPage(1) }
-            },
-            icon = { NavIcon(queue_music, R.string.navbar_playlist) },
-            label = { if (!isSmallDevice(deviceType)) Text(stringResource(R.string.navbar_playlist)) }
-        )
-        item(
-            selected = selectedIndex == 2,
-            onClick = {
-                selectedIndex = 2
-                coroutineScope.launch { pagerState.animateScrollToPage(2) }
-            },
-            icon = { NavIcon(settings, R.string.navbar_settings) },
-            label = { if (!isSmallDevice(deviceType)) Text(stringResource(R.string.navbar_settings)) }
-        )
-    }
+    val navItems = listOf(
+        NavItemData(music_note, R.string.navbar_player),
+        NavItemData(queue_music, R.string.navbar_playlist),
+        NavItemData(radio, R.string.navbar_radio),
+//        NavItemData(settings, R.string.navbar_settings)
+    )
 
-    when (getDeviceType(deviceType)) {
-        DeviceTypes.PHONE, DeviceTypes.FOLDABLE_CLOSED -> {
-            NavBar(
-                isPortrait = isPortrait,
-                pagerState = pagerState,
-                deviceType = deviceType,
-                showLabel = !isSmallDevice(deviceType)// deviceType != DeviceTypesBreakdown.SMALL_PHONE_LANDSCAPE
+    val navSuiteItems: NavigationSuiteScope.() -> Unit = {
+        navItems.forEachIndexed { index, navItem ->
+            item(
+                selected = selectedIndex == index,
+                onClick = {
+                    selectedIndex = index
+                    coroutineScope.launch { pagerState.animateScrollToPage(index) }
+                },
+                icon = { NavIcon(navItem.iconVector, navItem.labelRes) },
+                label = { if (!isSmallDeviceCheck) Text(stringResource(navItem.labelRes)) }
             )
-
-            }
-
-        DeviceTypes.TABLET -> {
-            println("myapp devicetype tablet called")
-            NavigationSuiteScaffold(navigationSuiteItems = navItems) {
-                if(isPortrait){
-                    Column(modifier = Modifier.fillMaxWidth()) {
-                        PlayerRoute(
-                            modifier = Modifier.weight(1F),
-                            isPortrait = isPortrait,
-                            deviceType = deviceType
-                        )
-                        HorizontalDivider(thickness = 5.dp, color = MaterialTheme.colorScheme.onSurface)
-                        when (selectedIndex) {
-                            2 -> SettingsRoute(
-                                modifier = Modifier.weight(1F),
-                                isPortrait = isPortrait,
-                                deviceType = deviceType
-                            )
-                            else -> PlaylistRoute(
-                                modifier = Modifier.weight(1F),
-                                isPortrait = isPortrait,
-                                deviceType = deviceType
-                            )
-                        }
-                    }
-                } else {
-                    Row(modifier = Modifier.fillMaxWidth()) {
-                        PlayerRoute(
-                            modifier = Modifier.weight(1F),
-                            isPortrait = isPortrait,
-                            deviceType = deviceType
-                        )
-                        VerticalDivider(thickness = 5.dp, color = MaterialTheme.colorScheme.onSurface)
-                        when (selectedIndex) {
-                            2 -> SettingsRoute(
-                                modifier = Modifier.weight(1F),
-                                isPortrait = isPortrait,
-                                deviceType = deviceType
-                            )
-                            else -> PlaylistRoute(
-                                modifier = Modifier.weight(1F),
-                                isPortrait = isPortrait,
-                                deviceType = deviceType
-                            )
-                        }
-                    }
-                }
-            }
-        }
-
-        DeviceTypes.FOLDABLE -> {
-            // Placeholder
         }
     }
+
+    NavigationSuiteScaffold(
+        modifier = Modifier
+            .navigationBarsPadding()
+            .statusBarsPadding().,
+        navigationSuiteItems = navSuiteItems){
+
+        when (getDeviceType(deviceType)) {
+            DeviceTypes.PHONE, DeviceTypes.FOLDABLE_CLOSED -> {
+                NavBar(
+                    isPortrait = isPortrait,
+                    pagerState = pagerState,
+                    deviceType = deviceType,
+//                    navItems = navItems,
+//                    showLabel = isSmallDeviceCheck
+                )
+
+            }
+
+            DeviceTypes.TABLET -> {
+                println("myapp devicetype tablet called")
+//                NavigationSuiteScaffold( navigationSuiteItems = navSuiteItems ) {
+                    if(isPortrait){
+                        Column(modifier = Modifier.fillMaxWidth()) {
+                            TabletScaffold(
+                                deviceType = deviceType,
+                                isPortrait = isPortrait,
+                                isRow = false,
+                                selectedIndex = selectedIndex,
+                                modifier = Modifier.weight(1F)
+                            )
+                        }
+                    } else {
+                        Row(modifier = Modifier.fillMaxWidth()) {
+                            TabletScaffold(
+                                deviceType = deviceType,
+                                isPortrait = isPortrait,
+                                isRow = true,
+                                selectedIndex = selectedIndex,
+                                modifier = Modifier.weight(1F)
+                            )
+                        }
+                    }
+//                }
+            }
+
+            DeviceTypes.FOLDABLE -> {
+                // Placeholder
+            }
+        }
+    }
+
+
 }

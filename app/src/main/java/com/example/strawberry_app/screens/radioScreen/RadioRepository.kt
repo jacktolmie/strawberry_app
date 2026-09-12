@@ -3,6 +3,7 @@ package com.example.strawberry_app.screens.radioScreen
 import androidx.room.withTransaction
 import com.example.strawberry_app.data.dao.RadioDao
 import com.example.strawberry_app.data.db.AppDatabase
+import com.example.strawberry_app.data.entity.RadioSourceEntity
 import com.example.strawberry_app.data.entity.RadioStationEntity
 import com.example.strawberry_app.data.entity.RadioStreamEntity
 import com.example.strawberry_app.music.RadioStation
@@ -38,31 +39,47 @@ class RadioRepository @Inject constructor(
 
     val artAlbumCollection = albumArtRepository.artAlbumCollection
 
-    fun sendCommand(command: OutgoingMessage){
+    fun sendCommand(command: OutgoingMessage) {
         scope.launch { networkManager.sendCommand(command) }
     }
 
     // Radio database queries.
-    suspend fun deleteRadioStations() { radioDao.deleteAll() }
+    suspend fun deleteRadioStations() {
+        radioDao.deleteAll()
+    }
 
     // Get a list of information by type.
     fun getAllFilterValues() = radioDao.getAllFilterValues()
-     fun getStationSources() = radioDao.getStationSources()
 
     // Get a list of station streams.
     fun getStationsWithStreams(source: String) = radioDao.observeStationsForSource(source)
 
-    suspend fun makeAllStations(radioStations: List<RadioStation>, stationSource: String){
+    fun getStationSources() = radioDao.getStationSources()
+
+    suspend fun makeAllStations(
+        radioStations: List<RadioStation>,
+        stationSource: String,
+        stationLogo: String
+    ) {
         db.withTransaction {
             if (stationSource != RadioSource.RADIOBROWSER.source) {
                 radioDao.deleteBySource(stationSource)
             }
 
-            // Insert radio streams, then stations.
+            // Insert source once, before the stations
+            radioStations.firstOrNull()?.let { first ->
+                radioDao.insertSource(
+                    RadioSourceEntity(
+                        sourceName = stationSource,
+                        sourceLogo = stationLogo
+                    )
+                )
+            }
+
             radioStations.forEach { station ->
                 radioDao.insertStation(
                     RadioStationEntity(
-                        id =  station.id,
+                        id = station.id,
                         bitrate = station.bitrate,
                         clickCount = station.clickCount,
                         country = station.country,
@@ -71,25 +88,27 @@ class RadioRepository @Inject constructor(
                         format = station.format,
                         genre = station.genre,
                         homepage = station.homepage,
-                        image = station.image,
+                        stationIcon = station.image,
                         language = station.language,
                         streamName = station.streamName,
                         stationName = station.stationName,
-                        stationSource = station.stationSource,
+                        sourceName = stationSource,
                         stationUrl = station.stationUrl,
-                        votes = station.votes,
-
+                        votes = station.votes
                     )
                 )
 
                 if (station.playlists.isEmpty() && station.stationUrl.isNotEmpty()) {
-                    val streams = listOf(RadioStreamEntity(
-                        stationId = station.id,
-                        format = station.format,
-                        quality = "",
-                        streamUrl = station.stationUrl
-                    ))
-                    radioDao.insertStreams(streams)
+                    radioDao.insertStreams(
+                        listOf(
+                            RadioStreamEntity(
+                                stationId = station.id,
+                                format = station.format,
+                                quality = "",
+                                streamUrl = station.stationUrl
+                            )
+                        )
+                    )
                 } else {
                     val streams = station.playlists.map { playlist ->
                         RadioStreamEntity(
@@ -107,5 +126,4 @@ class RadioRepository @Inject constructor(
     }
 
     fun getAlbumArtFile(name: String): File? = albumArtRepository.getAlbumArtFile(name )
-
 }
