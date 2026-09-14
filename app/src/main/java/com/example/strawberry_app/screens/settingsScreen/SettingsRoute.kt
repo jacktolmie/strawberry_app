@@ -73,5 +73,4 @@ fun SettingsRoute(
         deviceType = deviceType,
         modifier = modifier
     )
-
 }

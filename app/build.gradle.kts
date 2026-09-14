@@ -95,9 +95,6 @@ dependencies {
     // For Foldable devices
     implementation(libs.androidx.window)
 
-    // For navigation
-    implementation(libs.androidx.material3.adaptive.navigation.suite)
-
     // For testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

@@ -1,52 +1,61 @@
 package com.example.strawberry_app.screens.navigation
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.example.strawberry_app.screens.devices.DeviceTypesBreakdown
 import com.example.strawberry_app.screens.playerScreen.PlayerRoute
-import com.example.strawberry_app.screens.playlistScreen.PlaylistRoute
-import com.example.strawberry_app.screens.radioScreen.RadioRoute
-import com.example.strawberry_app.screens.settingsScreen.SettingsRoute
 
 @Composable
 fun TabletScaffold(
+    navController: NavHostController,
     deviceType: DeviceTypesBreakdown,
+    onNavigateToSettings: () -> Unit,
     isPortrait: Boolean,
-    isRow: Boolean,
-    selectedIndex: Int,
-    modifier: Modifier
-){
-    PlayerRoute(
-        modifier = modifier,
-        isPortrait = isPortrait,
-        deviceType = deviceType
-    )
-
-    if ( isRow){
-        VerticalDivider(thickness = 5.dp, color = MaterialTheme.colorScheme.onSurface)
+    isTablet: Boolean
+) {
+    if (isPortrait) {
+        Column(modifier = Modifier.fillMaxSize()) {
+            PlayerRoute(
+                modifier = Modifier.weight(1f),
+                isPortrait = isPortrait,
+                deviceType = deviceType,
+                onNavigateToSettings = onNavigateToSettings
+            )
+            HorizontalDivider(thickness = 5.dp, color = MaterialTheme.colorScheme.onSurface)
+            AppNavHost(
+                navController = navController,
+                deviceType = deviceType,
+                isPortrait = isPortrait,
+                isTablet = isTablet,
+                modifier = Modifier.weight(1f),
+                onNavigateToSettings = onNavigateToSettings,
+            )
+        }
     } else {
-        HorizontalDivider(thickness = 5.dp, color = MaterialTheme.colorScheme.onSurface)
-    }
-
-    when (selectedIndex) {
-        2 -> RadioRoute(
-            modifier = modifier,
-            isPortrait = isPortrait,
-            deviceType = deviceType
-        )
-        3 -> SettingsRoute(
-            modifier = modifier,
-            isPortrait = isPortrait,
-            deviceType = deviceType
-        )
-        else -> PlaylistRoute(
-            modifier = modifier,
-            isPortrait = isPortrait,
-            deviceType = deviceType
-        )
+        Row(modifier = Modifier.fillMaxSize()) {
+            PlayerRoute(
+                modifier = Modifier.weight(1f),
+                isPortrait = isPortrait,
+                deviceType = deviceType,
+                onNavigateToSettings = onNavigateToSettings
+            )
+            VerticalDivider(thickness = 5.dp, color = MaterialTheme.colorScheme.onSurface)
+            AppNavHost(
+                navController = navController,
+                deviceType = deviceType,
+                isPortrait = isPortrait,
+                isTablet = isTablet,
+                modifier = Modifier.weight(1f),
+                onNavigateToSettings = onNavigateToSettings
+            )
+        }
     }
 }

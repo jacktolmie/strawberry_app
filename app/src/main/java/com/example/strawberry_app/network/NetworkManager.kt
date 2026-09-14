@@ -112,10 +112,6 @@ class NetworkManager @Inject constructor(
         connectivityManager.registerDefaultNetworkCallback(networkCallback)
     }
 
-//    fun stopNetworkingMonitoring() {
-//        connectivityManager.unregisterNetworkCallback(networkCallback)
-//    }
-
     suspend fun connect(serverInfo: ServerInfo?) {
         connectionMutex.withLock {
             if (serverInfo == null) {

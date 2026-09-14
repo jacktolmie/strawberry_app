@@ -9,8 +9,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.strawberry_app.screens.devices.DeviceTypes
 import com.example.strawberry_app.screens.devices.DeviceTypesBreakdown
 import com.example.strawberry_app.screens.devices.getDeviceType
-import com.example.strawberry_app.screens.playerScreen.screens.PlayerLandscapeScreen
-import com.example.strawberry_app.screens.playerScreen.screens.PlayerPortraitScreen
+import com.example.strawberry_app.screens.devices.phone.PhoneLayout
 import com.example.strawberry_app.screens.playerScreen.screens.PlayerTabletPortraitScreen
 
 class PlayerCallbacks(
@@ -35,6 +34,7 @@ fun PlayerRoute(
     isPortrait: Boolean,
     deviceType: DeviceTypesBreakdown,
     modifier: Modifier = Modifier,
+    onNavigateToSettings: () -> Unit,
     playerViewModel: PlayerViewModel = hiltViewModel()
 ) {
     val playerValues by playerViewModel.serverUpdates.collectAsStateWithLifecycle()
@@ -73,21 +73,14 @@ fun PlayerRoute(
         }
         DeviceTypes.PHONE,
         DeviceTypes.FOLDABLE_CLOSED -> {
-            if (isPortrait) {
-                PlayerPortraitScreen(
-                    callbacks = callbacks,
-                    playerScreenState = playerScreenData,
-                    deviceType = deviceType,
-                    modifier = modifier
-                )
-            } else {
-                PlayerLandscapeScreen(
-                    callbacks = callbacks,
-                    playerScreenValues = playerScreenData,
-                    deviceType = deviceType,
-                    modifier = modifier
-                )
-            }
+            PhoneLayout(
+                callbacks = callbacks,
+                isPortrait = isPortrait,
+                playerScreenData = playerScreenData,
+                modifier = modifier,
+                onNavigateToSettings = onNavigateToSettings,
+                deviceType = deviceType
+            )
         }
         DeviceTypes.FOLDABLE -> {
 //            if (isPortrait){

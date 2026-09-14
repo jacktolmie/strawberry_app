@@ -7,6 +7,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.strawberry_app.data.dao.StationWithStreams
 import com.example.strawberry_app.screens.devices.DeviceTypesBreakdown
+import com.example.strawberry_app.screens.radioScreen.composables.RadioSourceScreen
 import java.io.File
 
 data class RadioCallbacks(
@@ -42,5 +43,11 @@ fun RadioRoute(
         loadFilterValues = radioViewModel::loadFilterValues,
         createPlaylist = radioViewModel::createPlaylist,
 
+    )
+
+    RadioSourceScreen(
+        callbacks = callbacks,
+        radioScreenState = radioScreenState,
+        filteredRadioData = filteredRadioData
     )
 }

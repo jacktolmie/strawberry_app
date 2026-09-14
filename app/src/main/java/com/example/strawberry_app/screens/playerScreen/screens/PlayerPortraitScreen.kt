@@ -32,8 +32,8 @@ import com.example.strawberry_app.screens.playerScreen.composables.VolumeSliderV
 @Composable
 fun PlayerPortraitScreen(
     callbacks: PlayerCallbacks,
-    playerScreenState: PlayerScreenState,
     deviceType: DeviceTypesBreakdown,
+    playerScreenState: PlayerScreenState,
     modifier: Modifier = Modifier
 ) {
     val space = spacerSize(deviceType)
@@ -99,6 +99,7 @@ fun PlayerPortraitScreenPreview(){
     PlayerPortraitScreen(
         callbacks = PlayerCallbacks(),
         playerScreenState = PlayerScreenState(),
-        deviceType = DeviceTypesBreakdown.PHONE_PORTRAIT
+        deviceType = DeviceTypesBreakdown.PHONE_PORTRAIT,
+//        onNavigateToSettings = {}
     )
 }

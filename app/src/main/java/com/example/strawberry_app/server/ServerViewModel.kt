@@ -4,6 +4,8 @@ import android.net.InetAddresses
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.strawberry_app.R
+import com.example.strawberry_app.network.ConnectionState
+import com.example.strawberry_app.network.NetworkManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,7 +21,8 @@ import kotlin.time.Duration.Companion.milliseconds
 @OptIn(FlowPreview::class)
 @HiltViewModel
 class ServerViewModel @Inject constructor(
-    private val serverRepository: ServerRepository
+    private val serverRepository: ServerRepository,
+    private val networkManager: NetworkManager
 ): ViewModel()
 {
     private val _uiState = MutableStateFlow(SettingsUiState())
@@ -55,6 +58,11 @@ class ServerViewModel @Inject constructor(
     }
 
     fun cancel(){
+        if (networkManager.connectionStateFlow != ConnectionState.Connected
+        ){
+            viewModelScope.launch { networkManager.disconnect(true) }
+        }
+
         if (_uiState.value.hasChanged) {
             _uiState.update {
                 it.copy(

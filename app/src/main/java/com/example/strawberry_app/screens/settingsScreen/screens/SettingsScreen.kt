@@ -6,21 +6,22 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.strawberry_app.R
 import com.example.strawberry_app.network.ConnectionState.Connected
 import com.example.strawberry_app.network.SettingsGuiData
-import com.example.strawberry_app.screens.composables.TextBox
 import com.example.strawberry_app.screens.devices.DeviceTypesBreakdown
 import com.example.strawberry_app.screens.devices.isSmallDevice
 import com.example.strawberry_app.screens.functions.spacerSize
@@ -34,6 +35,69 @@ import com.example.strawberry_app.screens.settingsScreen.composables.TextboxPass
 import com.example.strawberry_app.screens.settingsScreen.composables.TextboxPortHoriz
 import com.example.strawberry_app.server.SettingsUiState
 
+@Composable
+fun SettingsScreen(
+    callbacks: SettingsCallbacks,
+    isPortrait: Boolean,
+    state: SettingsScreenState,
+    deviceType: DeviceTypesBreakdown,
+    modifier: Modifier = Modifier
+) {
+    val spacing = spacerSize(deviceType)
+    val useSmallButtons = isSmallDevice(deviceType)
+
+    Scaffold(
+        topBar = {
+            TopAppBar(title = { Text(stringResource(R.string.settings_title)) })
+        }
+    ) { paddingValues ->
+        Column(
+            modifier = modifier
+                .padding(paddingValues)
+                .verticalScroll(rememberScrollState())
+                .fillMaxWidth()
+                .padding(10.dp)
+                .background(MaterialTheme.colorScheme.background),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Top
+        ) {
+            // your existing content, minus the TextBox title
+            Spacer(modifier = Modifier.height(spacing))
+
+            TextboxIp(state.serverUiState, callbacks)
+
+            Spacer(modifier = Modifier.height(spacing))
+
+            TextboxPortHoriz(state.serverUiState, callbacks)
+
+            Spacer(modifier = Modifier.height(spacing))
+
+            TextboxPassword(state.serverUiState, callbacks)
+
+            Spacer(modifier = Modifier.height(spacing))
+
+            if (isPortrait && !useSmallButtons){
+                MedLrgScreenBtns(
+                    serverUiState = state.serverUiState,
+                    callbacks = callbacks,
+                    connectionState = state.connectionState,
+                    hasNetwork = state.hasNetwork
+                )
+            } else {
+                SmallScreenBtns(
+                    serverUiState = state.serverUiState,
+                    callbacks = callbacks,
+                    connectionState = state.connectionState,
+                    hasNetwork = state.hasNetwork
+                )
+            }
+
+            ConnectionState(state.settingsGuiData)
+
+        }
+    }
+}
+/*
 @Composable
 fun SettingsScreen(
     callbacks: SettingsCallbacks,
@@ -97,6 +161,8 @@ fun SettingsScreen(
 
     }
 }
+
+ */
 
 @Preview
 @Composable

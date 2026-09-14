@@ -31,7 +31,6 @@ fun PlayerLandscapeScreen(
     deviceType: DeviceTypesBreakdown,
     modifier: Modifier = Modifier
 ){
-    println("myapp playlerlandscapescreen called")
     val space = spacerSize(deviceType)
 
     Row(

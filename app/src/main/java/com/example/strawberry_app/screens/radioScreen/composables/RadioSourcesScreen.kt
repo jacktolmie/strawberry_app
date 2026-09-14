@@ -26,6 +26,7 @@ import com.example.strawberry_app.R
 import com.example.strawberry_app.screens.composables.SongImageComposable
 import com.example.strawberry_app.screens.composables.TextBox
 import com.example.strawberry_app.screens.radioScreen.RadioCallbacks
+import com.example.strawberry_app.screens.radioScreen.RadioFilterState
 import com.example.strawberry_app.screens.radioScreen.RadioScreenState
 import com.example.strawberry_app.screens.radioScreen.previewRadioScreenState
 import com.example.strawberry_app.ui.theme.icons.radio
@@ -33,9 +34,10 @@ import com.example.strawberry_app.ui.theme.icons.read_more
 
 
 @Composable
-fun StationSourceScreen(
+fun RadioSourceScreen(
     callbacks: RadioCallbacks,
     radioScreenState: RadioScreenState,
+    filteredRadioData: RadioFilterState,
     modifier: Modifier = Modifier
 ){
     Column(modifier = modifier
@@ -46,18 +48,18 @@ fun StationSourceScreen(
     ) {
         Row(modifier = Modifier
             .fillMaxWidth()
-            .padding(2.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly,
+            .padding(2.dp, top = 10.dp),
+            horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
 
         ){
             TextBox(modifier = Modifier.padding(5.dp),
                 color = MaterialTheme.colorScheme.onSurface,
                 textRes = R.string.radio_main_title,
-                textStyle = MaterialTheme.typography.headlineLarge,
+                textStyle = MaterialTheme.typography.headlineMedium,
                 textAlign = TextAlign.Center
             )
-            Icon(
+            Icon(modifier = Modifier.padding(10.dp),
                 imageVector = radio,
                 contentDescription = stringResource(R.string.radio_radio_description)
             )
@@ -65,7 +67,7 @@ fun StationSourceScreen(
 
         HorizontalDivider(
             Modifier.padding(bottom = 5.dp),
-            thickness = 5.dp,
+            thickness = 2.dp,
             color = MaterialTheme.colorScheme.onSurface
         )
 
@@ -77,6 +79,7 @@ fun StationSourceScreen(
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically
             ){
+                callbacks.getAlbumArtFile(it.)
                 Spacer(Modifier.weight(.3F))
                 SongImageComposable(
                     imageArt = it.icon,
@@ -104,9 +107,10 @@ fun StationSourceScreen(
 
 @Preview
 @Composable
-fun StationSourceScreenPreview(){
-    StationSourceScreen(
+fun RadioSourceScreenPreview(){
+    RadioSourceScreen(
         callbacks = RadioCallbacks(),
-        radioScreenState = previewRadioScreenState
+        radioScreenState = previewRadioScreenState,
+        filteredRadioData = RadioFilterState()
     )
 }
