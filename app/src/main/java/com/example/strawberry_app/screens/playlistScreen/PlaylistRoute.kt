@@ -44,14 +44,14 @@ fun PlaylistRoute(
     deviceType: DeviceTypesBreakdown,
     modifier: Modifier = Modifier,
     onNavigateToSettings: () -> Unit,
-    playlistViewModel: PlaylistViewModel = hiltViewModel()
+    playlistViewModel: PlaylistViewModel = hiltViewModel(),
+    showTopBar: Boolean
 ){
     val selectedSongs by playlistViewModel.selectedSongs
     val dragIconSongId = playlistViewModel.dragIconSongId
     val isInSelectedMode by playlistViewModel.isInSelectedMode.collectAsStateWithLifecycle()
     val playlistsData by playlistViewModel.playlistsData.collectAsStateWithLifecycle()
     val albumArtCollection by playlistViewModel.albumArtCollection.collectAsStateWithLifecycle()
-    val showTopBar = !isDeviceTablet(deviceType)
 
     val callbacks = PlaylistCallbacks(
         clearCurrentPlaylist = playlistViewModel::clearCurrentPlaylist,

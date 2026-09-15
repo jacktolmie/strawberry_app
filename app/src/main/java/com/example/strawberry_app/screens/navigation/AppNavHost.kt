@@ -8,6 +8,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.example.strawberry_app.screens.classes.Screen
 import com.example.strawberry_app.screens.devices.DeviceTypesBreakdown
+import com.example.strawberry_app.screens.devices.isDeviceTablet
 import com.example.strawberry_app.screens.playerScreen.PlayerRoute
 import com.example.strawberry_app.screens.playlistScreen.PlaylistRoute
 import com.example.strawberry_app.screens.radioScreen.RadioRoute
@@ -25,9 +26,11 @@ fun AppNavHost(
     deviceType: DeviceTypesBreakdown,
     isPortrait: Boolean,
     isTablet: Boolean,
+    showTopBar: Boolean,
     onNavigateToSettings: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+
     NavHost(
         navController = navController,
         startDestination = if (isTablet) Screen.Playlist.route else Screen.Player.route,
@@ -38,7 +41,8 @@ fun AppNavHost(
                 PlayerRoute(
                     isPortrait = isPortrait,
                     deviceType = deviceType,
-                    onNavigateToSettings = onNavigateToSettings
+                    onNavigateToSettings = onNavigateToSettings,
+                    showTopBar = showTopBar
                 )
             }
         }
@@ -46,7 +50,8 @@ fun AppNavHost(
             PlaylistRoute(
                 isPortrait = isPortrait,
                 deviceType = deviceType,
-                onNavigateToSettings = onNavigateToSettings
+                onNavigateToSettings = onNavigateToSettings,
+                showTopBar = showTopBar
             )
         }
         navigation(startDestination = Screen.Radio.route, route = Screen.RadioGraph.route){
@@ -59,7 +64,8 @@ fun AppNavHost(
                         onNavigateToRadioParadise = { navController.navigate(Screen.RadioParadise.route) },
                         onNavigateToRadioBrowser = { navController.navigate(Screen.RadioBrowser.route) },
                     ),
-                    onNavigateToSettings = onNavigateToSettings
+                    onNavigateToSettings = onNavigateToSettings,
+                    showTopBar = showTopBar
                 )
             }
         }

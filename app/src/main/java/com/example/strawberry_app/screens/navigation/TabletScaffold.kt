@@ -19,15 +19,17 @@ fun TabletScaffold(
     deviceType: DeviceTypesBreakdown,
     onNavigateToSettings: () -> Unit,
     isPortrait: Boolean,
-    isTablet: Boolean
+    isTablet: Boolean,
+    showTopBar: Boolean
 ) {
     if (isPortrait) {
         Column(modifier = Modifier.fillMaxSize()) {
             PlayerRoute(
-                modifier = Modifier.weight(1f),
                 isPortrait = isPortrait,
                 deviceType = deviceType,
-                onNavigateToSettings = onNavigateToSettings
+                modifier = Modifier.weight(1f),
+                onNavigateToSettings = onNavigateToSettings,
+                showTopBar = showTopBar
             )
             HorizontalDivider(thickness = 5.dp, color = MaterialTheme.colorScheme.onSurface)
             AppNavHost(
@@ -37,15 +39,17 @@ fun TabletScaffold(
                 isTablet = isTablet,
                 modifier = Modifier.weight(1f),
                 onNavigateToSettings = onNavigateToSettings,
+                showTopBar = showTopBar
             )
         }
     } else {
         Row(modifier = Modifier.fillMaxSize()) {
             PlayerRoute(
-                modifier = Modifier.weight(1f),
                 isPortrait = isPortrait,
                 deviceType = deviceType,
-                onNavigateToSettings = onNavigateToSettings
+                modifier = Modifier.weight(1f),
+                onNavigateToSettings = onNavigateToSettings,
+                showTopBar = showTopBar
             )
             VerticalDivider(thickness = 5.dp, color = MaterialTheme.colorScheme.onSurface)
             AppNavHost(
@@ -54,7 +58,8 @@ fun TabletScaffold(
                 isPortrait = isPortrait,
                 isTablet = isTablet,
                 modifier = Modifier.weight(1f),
-                onNavigateToSettings = onNavigateToSettings
+                onNavigateToSettings = onNavigateToSettings,
+                showTopBar = showTopBar
             )
         }
     }

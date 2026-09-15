@@ -34,12 +34,12 @@ fun RadioRoute(
     deviceType: DeviceTypesBreakdown,
     onNavigateToSettings: () -> Unit,
     radioSource: RadioSources,
+    showTopBar: Boolean,
     modifier: Modifier = Modifier,
     radioViewModel: RadioViewModel = hiltViewModel()
 ){
     val radioScreenState by radioViewModel.radioScreenState.collectAsStateWithLifecycle()
     val filteredRadioData by radioViewModel.filterState.collectAsStateWithLifecycle()
-    val showTopBar = !isDeviceTablet(deviceType)
 
     val callbacks = RadioCallbacks(
         sortStationsByType = radioViewModel::sortStationsByType,

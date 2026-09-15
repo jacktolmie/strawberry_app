@@ -35,7 +35,8 @@ fun PlayerRoute(
     deviceType: DeviceTypesBreakdown,
     modifier: Modifier = Modifier,
     onNavigateToSettings: () -> Unit,
-    playerViewModel: PlayerViewModel = hiltViewModel()
+    playerViewModel: PlayerViewModel = hiltViewModel(),
+    showTopBar: Boolean
 ) {
     val playerValues by playerViewModel.serverUpdates.collectAsStateWithLifecycle()
     val albumArtFile by playerViewModel.albumArtFile.collectAsStateWithLifecycle()
