@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">strawberry_app</string>
+    <string name="back_button">Back</string>
     <string name="blank"> </string>
     <string name="more_options">More Options</string>
 
@@ -35,9 +36,14 @@
     <string name="playlist_shuffle_mode">Shuffle Mode</string>
     <string name="playlist_song_count">Songs</string>
 
-    <string name="radio_main_title">Radio Sources</string>
-    <string name="radio_radio_description">Radio Icon</string>
     <string name="radio_go_to_station">Go To Station</string>
+    <string name="radio_main_title">Radio Sources</string>
+    <string name="radio_route">Radio Route</string>
+    <string name="radio_radio_browser">Radio Browser</string>
+    <string name="radio_radio_description">Radio Icon</string>
+    <string name="radio_radio_paradise">Radio Paradise</string>
+    <string name="radio_soma_fm">Soma FM</string>
+
 
     <string name="settings_title">Settings</string>
     <string name="settings_ip">Server IP Address</string>

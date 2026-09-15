@@ -7,7 +7,9 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.strawberry_app.data.dao.StationWithStreams
 import com.example.strawberry_app.screens.devices.DeviceTypesBreakdown
-import com.example.strawberry_app.screens.radioScreen.composables.RadioSourceScreen
+import com.example.strawberry_app.screens.devices.isDeviceTablet
+import com.example.strawberry_app.screens.navigation.RadioSources
+import com.example.strawberry_app.screens.radioScreen.screens.RadioSourceScreen
 import java.io.File
 
 data class RadioCallbacks(
@@ -30,11 +32,14 @@ data class RadioCallbacks(
 fun RadioRoute(
     isPortrait: Boolean,
     deviceType: DeviceTypesBreakdown,
+    onNavigateToSettings: () -> Unit,
+    radioSource: RadioSources,
     modifier: Modifier = Modifier,
     radioViewModel: RadioViewModel = hiltViewModel()
 ){
     val radioScreenState by radioViewModel.radioScreenState.collectAsStateWithLifecycle()
     val filteredRadioData by radioViewModel.filterState.collectAsStateWithLifecycle()
+    val showTopBar = !isDeviceTablet(deviceType)
 
     val callbacks = RadioCallbacks(
         sortStationsByType = radioViewModel::sortStationsByType,
@@ -47,7 +52,9 @@ fun RadioRoute(
 
     RadioSourceScreen(
         callbacks = callbacks,
+        showTopBar = showTopBar,
         radioScreenState = radioScreenState,
-        filteredRadioData = filteredRadioData
+        filteredRadioData = filteredRadioData,
+        onNavigateToSettings = onNavigateToSettings
     )
 }

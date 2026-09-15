@@ -6,6 +6,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
 import com.example.strawberry_app.network.ConnectionState
 import com.example.strawberry_app.network.ConnectionViewModel
 import com.example.strawberry_app.network.SettingsGuiData
@@ -36,6 +37,7 @@ fun SettingsRoute(
     isPortrait: Boolean,
     deviceType: DeviceTypesBreakdown,
     modifier: Modifier = Modifier,
+    onNavigateBack: () -> Unit,
     serverViewModel: ServerViewModel = hiltViewModel(),
     connectionViewModel: ConnectionViewModel = hiltViewModel()
 ) {
@@ -71,6 +73,7 @@ fun SettingsRoute(
         isPortrait = isPortrait,
         state = settingsScreenState,
         deviceType = deviceType,
-        modifier = modifier
+        modifier = modifier,
+        onNavigateBack = onNavigateBack
     )
 }

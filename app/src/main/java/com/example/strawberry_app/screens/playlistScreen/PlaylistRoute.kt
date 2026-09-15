@@ -7,6 +7,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.strawberry_app.music.Playlist
 import com.example.strawberry_app.screens.devices.DeviceTypesBreakdown
+import com.example.strawberry_app.screens.devices.isDeviceTablet
 import com.example.strawberry_app.screens.playlistScreen.screens.PlaylistScreen
 import java.io.File
 
@@ -42,6 +43,7 @@ fun PlaylistRoute(
     isPortrait: Boolean,
     deviceType: DeviceTypesBreakdown,
     modifier: Modifier = Modifier,
+    onNavigateToSettings: () -> Unit,
     playlistViewModel: PlaylistViewModel = hiltViewModel()
 ){
     val selectedSongs by playlistViewModel.selectedSongs
@@ -49,6 +51,7 @@ fun PlaylistRoute(
     val isInSelectedMode by playlistViewModel.isInSelectedMode.collectAsStateWithLifecycle()
     val playlistsData by playlistViewModel.playlistsData.collectAsStateWithLifecycle()
     val albumArtCollection by playlistViewModel.albumArtCollection.collectAsStateWithLifecycle()
+    val showTopBar = !isDeviceTablet(deviceType)
 
     val callbacks = PlaylistCallbacks(
         clearCurrentPlaylist = playlistViewModel::clearCurrentPlaylist,
@@ -90,7 +93,9 @@ fun PlaylistRoute(
         isPortrait = isPortrait,
         playlistScreenState = playlistScreenState,
         deviceType = deviceType,
-        modifier = modifier
+        modifier = modifier,
+        showTopBar = showTopBar,
+        onNavigateToSettings = onNavigateToSettings
     )
 //    when (getDeviceType(deviceType)) {
 //        DeviceTypes.PHONE, DeviceTypes.FOLDABLE_CLOSED -> {

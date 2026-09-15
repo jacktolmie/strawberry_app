@@ -11,18 +11,18 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.example.strawberry_app.R
 import com.example.strawberry_app.network.ConnectionState.Connected
 import com.example.strawberry_app.network.SettingsGuiData
+import com.example.strawberry_app.screens.composables.TopBar
 import com.example.strawberry_app.screens.devices.DeviceTypesBreakdown
+import com.example.strawberry_app.screens.devices.isDeviceTablet
 import com.example.strawberry_app.screens.devices.isSmallDevice
 import com.example.strawberry_app.screens.functions.spacerSize
 import com.example.strawberry_app.screens.settingsScreen.SettingsCallbacks
@@ -38,9 +38,10 @@ import com.example.strawberry_app.server.SettingsUiState
 @Composable
 fun SettingsScreen(
     callbacks: SettingsCallbacks,
-    isPortrait: Boolean,
-    state: SettingsScreenState,
     deviceType: DeviceTypesBreakdown,
+    isPortrait: Boolean,
+    onNavigateBack: () -> Unit,
+    state: SettingsScreenState,
     modifier: Modifier = Modifier
 ) {
     val spacing = spacerSize(deviceType)
@@ -48,7 +49,13 @@ fun SettingsScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text(stringResource(R.string.settings_title)) })
+            TopBar(
+                heading = R.string.settings_title,
+                onClick = {},
+                onNavigationBack = { onNavigateBack() },
+                showMoreOptions = false,
+                showBackButton = !isDeviceTablet(deviceType)
+            )
         }
     ) { paddingValues ->
         Column(
@@ -97,72 +104,6 @@ fun SettingsScreen(
         }
     }
 }
-/*
-@Composable
-fun SettingsScreen(
-    callbacks: SettingsCallbacks,
-    isPortrait: Boolean,
-    state: SettingsScreenState,
-    deviceType: DeviceTypesBreakdown,
-    modifier: Modifier = Modifier
-) {
-    val spacing = spacerSize(deviceType)
-    val useSmallButtons = isSmallDevice(deviceType)
-
-    Column(modifier = modifier
-        .verticalScroll(rememberScrollState())
-        .statusBarsPadding()
-        .fillMaxWidth()
-        .navigationBarsPadding()
-        .padding(10.dp)
-        .background(MaterialTheme.colorScheme.background),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top
-    )
-    {
-        TextBox(
-            color = MaterialTheme.colorScheme.onSurface,
-            textRes = R.string.settings_title,
-            textStyle = if (isPortrait) MaterialTheme.typography.headlineLarge
-                        else MaterialTheme.typography.headlineSmall
-        )
-
-        Spacer(modifier = Modifier.height(spacing))
-
-        TextboxIp(state.serverUiState, callbacks)
-
-        Spacer(modifier = Modifier.height(spacing))
-
-        TextboxPortHoriz(state.serverUiState, callbacks)
-
-        Spacer(modifier = Modifier.height(spacing))
-
-        TextboxPassword(state.serverUiState, callbacks)
-
-        Spacer(modifier = Modifier.height(spacing))
-
-        if (isPortrait && !useSmallButtons){
-            MedLrgScreenBtns(
-                serverUiState = state.serverUiState,
-                callbacks = callbacks,
-                connectionState = state.connectionState,
-                hasNetwork = state.hasNetwork
-            )
-        } else {
-            SmallScreenBtns(
-                serverUiState = state.serverUiState,
-                callbacks = callbacks,
-                connectionState = state.connectionState,
-                hasNetwork = state.hasNetwork
-            )
-        }
-
-        ConnectionState(state.settingsGuiData)
-
-    }
-}
-
- */
 
 @Preview
 @Composable
@@ -190,6 +131,7 @@ fun SettingsPreview(){
             onConnectClicked = {}
         ),
         isPortrait = true,
-        deviceType = DeviceTypesBreakdown.SMALL_PHONE_PORTRAIT
+        deviceType = DeviceTypesBreakdown.SMALL_PHONE_PORTRAIT,
+        onNavigateBack = {}
     )
 }

@@ -9,7 +9,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.strawberry_app.screens.devices.DeviceTypes
 import com.example.strawberry_app.screens.devices.DeviceTypesBreakdown
 import com.example.strawberry_app.screens.devices.getDeviceType
-import com.example.strawberry_app.screens.devices.phone.PhoneLayout
+import com.example.strawberry_app.screens.playerScreen.screens.PlayerLayout
 import com.example.strawberry_app.screens.playerScreen.screens.PlayerTabletPortraitScreen
 
 class PlayerCallbacks(
@@ -73,7 +73,7 @@ fun PlayerRoute(
         }
         DeviceTypes.PHONE,
         DeviceTypes.FOLDABLE_CLOSED -> {
-            PhoneLayout(
+            PlayerLayout(
                 callbacks = callbacks,
                 isPortrait = isPortrait,
                 playerScreenData = playerScreenData,

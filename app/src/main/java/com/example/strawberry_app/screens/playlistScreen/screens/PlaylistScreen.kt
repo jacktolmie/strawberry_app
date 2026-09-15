@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -15,6 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.strawberry_app.R
 import com.example.strawberry_app.screens.composables.TextBox
+import com.example.strawberry_app.screens.composables.TopBar
 import com.example.strawberry_app.screens.devices.DeviceTypesBreakdown
 import com.example.strawberry_app.screens.playlistScreen.PlaylistCallbacks
 import com.example.strawberry_app.screens.playlistScreen.PlaylistScreenState
@@ -25,43 +27,60 @@ import com.example.strawberry_app.screens.playlistScreen.composables.TabListing
 fun PlaylistScreen(
     callbacks: PlaylistCallbacks,
     isPortrait: Boolean,
+    showTopBar: Boolean,
     playlistScreenState: PlaylistScreenState,
     deviceType: DeviceTypesBreakdown,
+    onNavigateToSettings: () -> Unit,
     modifier: Modifier = Modifier
 ){
-    Column(modifier = modifier
-        .fillMaxSize()
-        .padding(5.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceBetween
-    ){
-        // Create the scrollable tab
-        if (playlistScreenState.playlistsData.playlists.isNotEmpty()) {
-            TabListing(
-                callbacks = callbacks,
-                isPortrait = isPortrait,
-                playlistScreenState = playlistScreenState,
-                deviceType = deviceType
-            )
+    Scaffold(
+        topBar = {
+            if (showTopBar) {
+                TopBar(
+                    onClick = { onNavigateToSettings()},
+                    heading = R.string.blank,
+                    showMoreOptions = true
+                )
+            }
         }
-        else { // If no playlist or disconnected, show this.
-            TextBox(
-                color = MaterialTheme.colorScheme.onSurface,
-                textRes = R.string.playlist_no_playlists,
-                textStyle = MaterialTheme.typography.bodyMedium,
-                textAlign = TextAlign.Center
-            )
-        }
-        // Create the playlists for each tab.
-        if (playlistScreenState.playlistsData.playlistSongs.isNotEmpty()) {
-            CurrentPlaylist(
-                albumArtCollection = playlistScreenState.albumArtCollection,
-                callbacks = callbacks,
-                playlist = playlistScreenState.playlistsData.playlistSongs,
-                playlistScreenState = playlistScreenState
-            )
+    ) {
+        paddingValues ->
+
+        Column(modifier = modifier.padding(paddingValues)
+            .fillMaxSize()
+            .padding(5.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceBetween
+        ){
+            // Create the scrollable tab
+            if (playlistScreenState.playlistsData.playlists.isNotEmpty()) {
+                TabListing(
+                    callbacks = callbacks,
+                    isPortrait = isPortrait,
+                    playlistScreenState = playlistScreenState,
+                    deviceType = deviceType
+                )
+            }
+            else { // If no playlist or disconnected, show this.
+                TextBox(
+                    color = MaterialTheme.colorScheme.onSurface,
+                    textRes = R.string.playlist_no_playlists,
+                    textStyle = MaterialTheme.typography.bodyMedium,
+                    textAlign = TextAlign.Center
+                )
+            }
+            // Create the playlists for each tab.
+            if (playlistScreenState.playlistsData.playlistSongs.isNotEmpty()) {
+                CurrentPlaylist(
+                    albumArtCollection = playlistScreenState.albumArtCollection,
+                    callbacks = callbacks,
+                    playlist = playlistScreenState.playlistsData.playlistSongs,
+                    playlistScreenState = playlistScreenState
+                )
+            }
         }
     }
+
 }
 
 @Composable
@@ -72,6 +91,8 @@ fun PlaylistPreview(){
         isPortrait = true,
         playlistScreenState = PlaylistScreenState(),
         deviceType = DeviceTypesBreakdown.PHONE_PORTRAIT,
-        modifier = Modifier.background(Color.White)
+        modifier = Modifier.background(Color.White),
+        showTopBar = true,
+        onNavigateToSettings = {}
     )
 }
