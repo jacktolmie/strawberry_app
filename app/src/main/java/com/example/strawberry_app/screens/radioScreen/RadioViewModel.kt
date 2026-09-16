@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.strawberry_app.data.dao.StationWithStreams
 import com.example.strawberry_app.network.protocol.OutgoingMessage
+import com.example.strawberry_app.screens.radioScreen.classes.RadioStation
+import com.example.strawberry_app.screens.radioScreen.classes.StreamInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -150,7 +152,7 @@ class RadioViewModel @Inject constructor(
 
                     val station = SourceAndIcon(
                         station = source.sourceName,
-                        icon = radioRepository.getAlbumArtFile(source.sourceLogo)
+                        icon = radioRepository.getSourceLogoFile(source.sourceName, source.sourceLogo)
                     )
                     stationIcons.add(station)
                 }

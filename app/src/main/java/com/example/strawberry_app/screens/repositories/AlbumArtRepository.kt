@@ -66,6 +66,21 @@ class AlbumArtRepository @Inject constructor(
         return File(albumArtDir, filename)
     }
 
+    fun getSourceLogoFile(sourceName: String, base64Logo: String): File? {
+        if (base64Logo.isEmpty()) return null
+
+        val fileName = "${sourceName}_logo.png"
+
+        return if (hasImage(fileName)) {
+            getImageFile(filename = fileName)
+        } else {
+            val imageBytes = Base64.decode(base64Logo, Base64.DEFAULT)
+            val file = getImageFile(filename = fileName)
+            file.writeBytes(imageBytes)
+            file
+        }
+    }
+
     fun hasImage(name: String): Boolean{
         return File(albumArtDir, File(name).name).exists()
     }

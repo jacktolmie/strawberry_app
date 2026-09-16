@@ -24,31 +24,34 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.strawberry_app.R
+import com.example.strawberry_app.screens.classes.DeviceState
 import com.example.strawberry_app.screens.composables.SongImageComposable
 import com.example.strawberry_app.screens.composables.TextBox
 import com.example.strawberry_app.screens.composables.TopBar
+import com.example.strawberry_app.screens.navigation.RadioSources
 import com.example.strawberry_app.screens.radioScreen.RadioCallbacks
 import com.example.strawberry_app.screens.radioScreen.RadioFilterState
 import com.example.strawberry_app.screens.radioScreen.RadioScreenState
+import com.example.strawberry_app.screens.radioScreen.classes.RadioName
 import com.example.strawberry_app.screens.radioScreen.previewRadioScreenState
 import com.example.strawberry_app.ui.theme.icons.radio
 import com.example.strawberry_app.ui.theme.icons.read_more
 
-
 @Composable
 fun RadioSourceScreen(
     callbacks: RadioCallbacks,
-    showTopBar: Boolean,
+    deviceState: DeviceState,
     onNavigateToSettings: () -> Unit,
     radioScreenState: RadioScreenState,
+    radioSources: RadioSources,
     filteredRadioData: RadioFilterState,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ){
     Scaffold(
         topBar = {
-            if (showTopBar){
+            if (deviceState.showTopBar){
                 TopBar(
-                    heading = R.string.radio_main_title,
+                    heading = R.string.blank,
                     onClick = { onNavigateToSettings()},
                     showMoreOptions = true
                 )
@@ -94,13 +97,18 @@ fun RadioSourceScreen(
             radioScreenState.stationNamesIcons.forEach {
                 Row(
                     modifier = Modifier
-                        .clickable(onClick = {}) // Fill in onClick
+                        .clickable(onClick = {
+                            when (it.station) {
+                                RadioName.RADIOBROWSER.source -> radioSources.onNavigateToRadioBrowser()
+                                RadioName.RADIOPARADISE.source -> radioSources.onNavigateToRadioParadise()
+                                RadioName.SOMAFM.source -> radioSources.onNavigateToSomaFm()
+                            }
+                        }) // Fill in onClick
                         .fillMaxWidth()
                         .padding(5.dp),
                     horizontalArrangement = Arrangement.SpaceEvenly,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    callbacks.getAlbumArtFile(it.station) // Fix this with proper icon name to search
                     Spacer(Modifier.weight(.3F))
                     SongImageComposable(
                         imageArt = it.icon,
@@ -121,9 +129,7 @@ fun RadioSourceScreen(
                         contentDescription = stringResource(R.string.radio_go_to_station)
                     )
                 }
-
             }
-
         }
     }
 }
@@ -133,9 +139,10 @@ fun RadioSourceScreen(
 fun RadioSourceScreenPreview(){
     RadioSourceScreen(
         callbacks = RadioCallbacks(),
-        showTopBar = false,
+        deviceState = DeviceState(),
+        onNavigateToSettings = {},
         radioScreenState = previewRadioScreenState,
+        radioSources = RadioSources(),
         filteredRadioData = RadioFilterState(),
-        onNavigateToSettings = {}
     )
 }

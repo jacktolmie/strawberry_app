@@ -10,6 +10,7 @@ import com.example.strawberry_app.music.RadioStation
 import com.example.strawberry_app.network.ApplicationScope
 import com.example.strawberry_app.network.NetworkManager
 import com.example.strawberry_app.network.protocol.OutgoingMessage
+import com.example.strawberry_app.screens.radioScreen.classes.RadioSource
 import com.example.strawberry_app.screens.repositories.AlbumArtRepository
 import jakarta.inject.Inject
 import jakarta.inject.Singleton
@@ -126,4 +127,5 @@ class RadioRepository @Inject constructor(
     }
 
     fun getAlbumArtFile(name: String): File? = albumArtRepository.getAlbumArtFile(name )
+    fun getSourceLogoFile(sourceName: String, base64Logo: String): File? = albumArtRepository.getSourceLogoFile(sourceName, base64Logo)
 }

@@ -6,8 +6,7 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.strawberry_app.music.Playlist
-import com.example.strawberry_app.screens.devices.DeviceTypesBreakdown
-import com.example.strawberry_app.screens.devices.isDeviceTablet
+import com.example.strawberry_app.screens.classes.DeviceState
 import com.example.strawberry_app.screens.playlistScreen.screens.PlaylistScreen
 import java.io.File
 
@@ -40,12 +39,10 @@ data class PlaylistCallbacks(
 
 @Composable
 fun PlaylistRoute(
-    isPortrait: Boolean,
-    deviceType: DeviceTypesBreakdown,
+    deviceState: DeviceState,
     modifier: Modifier = Modifier,
     onNavigateToSettings: () -> Unit,
     playlistViewModel: PlaylistViewModel = hiltViewModel(),
-    showTopBar: Boolean
 ){
     val selectedSongs by playlistViewModel.selectedSongs
     val dragIconSongId = playlistViewModel.dragIconSongId
@@ -90,11 +87,9 @@ fun PlaylistRoute(
 
     PlaylistScreen(
         callbacks = callbacks,
-        isPortrait = isPortrait,
+        deviceState = deviceState,
         playlistScreenState = playlistScreenState,
-        deviceType = deviceType,
         modifier = modifier,
-        showTopBar = showTopBar,
         onNavigateToSettings = onNavigateToSettings
     )
 //    when (getDeviceType(deviceType)) {

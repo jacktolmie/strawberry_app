@@ -10,56 +10,43 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.example.strawberry_app.screens.devices.DeviceTypesBreakdown
+import com.example.strawberry_app.screens.classes.DeviceState
 import com.example.strawberry_app.screens.playerScreen.PlayerRoute
 
 @Composable
 fun TabletScaffold(
+    deviceState: DeviceState,
     navController: NavHostController,
-    deviceType: DeviceTypesBreakdown,
     onNavigateToSettings: () -> Unit,
-    isPortrait: Boolean,
-    isTablet: Boolean,
-    showTopBar: Boolean
 ) {
-    if (isPortrait) {
+    if (deviceState.isPortrait) {
         Column(modifier = Modifier.fillMaxSize()) {
             PlayerRoute(
-                isPortrait = isPortrait,
-                deviceType = deviceType,
+                deviceState = deviceState,
                 modifier = Modifier.weight(1f),
                 onNavigateToSettings = onNavigateToSettings,
-                showTopBar = showTopBar
             )
             HorizontalDivider(thickness = 5.dp, color = MaterialTheme.colorScheme.onSurface)
             AppNavHost(
+                deviceState = deviceState,
                 navController = navController,
-                deviceType = deviceType,
-                isPortrait = isPortrait,
-                isTablet = isTablet,
                 modifier = Modifier.weight(1f),
-                onNavigateToSettings = onNavigateToSettings,
-                showTopBar = showTopBar
+                onNavigateToSettings = onNavigateToSettings
             )
         }
     } else {
         Row(modifier = Modifier.fillMaxSize()) {
             PlayerRoute(
-                isPortrait = isPortrait,
-                deviceType = deviceType,
+                deviceState = deviceState,
                 modifier = Modifier.weight(1f),
-                onNavigateToSettings = onNavigateToSettings,
-                showTopBar = showTopBar
+                onNavigateToSettings = onNavigateToSettings
             )
             VerticalDivider(thickness = 5.dp, color = MaterialTheme.colorScheme.onSurface)
             AppNavHost(
+                deviceState = deviceState,
                 navController = navController,
-                deviceType = deviceType,
-                isPortrait = isPortrait,
-                isTablet = isTablet,
                 modifier = Modifier.weight(1f),
                 onNavigateToSettings = onNavigateToSettings,
-                showTopBar = showTopBar
             )
         }
     }

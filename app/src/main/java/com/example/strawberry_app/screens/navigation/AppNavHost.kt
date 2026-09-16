@@ -7,11 +7,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.example.strawberry_app.screens.classes.Screen
-import com.example.strawberry_app.screens.devices.DeviceTypesBreakdown
-import com.example.strawberry_app.screens.devices.isDeviceTablet
+import com.example.strawberry_app.screens.classes.DeviceState
 import com.example.strawberry_app.screens.playerScreen.PlayerRoute
 import com.example.strawberry_app.screens.playlistScreen.PlaylistRoute
 import com.example.strawberry_app.screens.radioScreen.RadioRoute
+import com.example.strawberry_app.screens.radioScreen.sources.radiobrowser.RadioBrowserRoute
+import com.example.strawberry_app.screens.radioScreen.sources.radioparadise.RadioParadiseRoute
+import com.example.strawberry_app.screens.radioScreen.sources.somafm.SomaFmRoute
 import com.example.strawberry_app.screens.settingsScreen.SettingsRoute
 
 data class RadioSources(
@@ -23,56 +25,63 @@ data class RadioSources(
 @Composable
 fun AppNavHost(
     navController: NavHostController,
-    deviceType: DeviceTypesBreakdown,
-    isPortrait: Boolean,
-    isTablet: Boolean,
-    showTopBar: Boolean,
+    deviceState: DeviceState,
     onNavigateToSettings: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-
     NavHost(
         navController = navController,
-        startDestination = if (isTablet) Screen.Playlist.route else Screen.Player.route,
+        startDestination = if (deviceState.isTablet) Screen.Playlist.route else Screen.Player.route,
         modifier = modifier
     ) {
-        if(!isTablet){
+        if(!deviceState.isTablet){
             composable(Screen.Player.route) {
                 PlayerRoute(
-                    isPortrait = isPortrait,
-                    deviceType = deviceType,
+                    deviceState = deviceState,
                     onNavigateToSettings = onNavigateToSettings,
-                    showTopBar = showTopBar
                 )
             }
         }
         composable(Screen.Playlist.route) {
             PlaylistRoute(
-                isPortrait = isPortrait,
-                deviceType = deviceType,
-                onNavigateToSettings = onNavigateToSettings,
-                showTopBar = showTopBar
+                deviceState = deviceState,
+                onNavigateToSettings = onNavigateToSettings
             )
         }
         navigation(startDestination = Screen.Radio.route, route = Screen.RadioGraph.route){
             composable(Screen.Radio.route) {
                 RadioRoute(
-                    isPortrait = isPortrait,
-                    deviceType = deviceType,
-                    radioSource = RadioSources(
+                    deviceState = deviceState,
+                    radioSources = RadioSources(
                         onNavigateToSomaFm = { navController.navigate(Screen.SomaFm.route) },
                         onNavigateToRadioParadise = { navController.navigate(Screen.RadioParadise.route) },
                         onNavigateToRadioBrowser = { navController.navigate(Screen.RadioBrowser.route) },
                     ),
                     onNavigateToSettings = onNavigateToSettings,
-                    showTopBar = showTopBar
+                )
+            }
+            composable(Screen.SomaFm.route) {
+                SomaFmRoute(
+                    deviceState = deviceState,
+                    onNavigateBack = { navController.popBackStack() }
+                )
+            }
+            composable(Screen.RadioParadise.route) {
+                RadioParadiseRoute(
+                    deviceState = deviceState,
+                    onNavigateBack = { navController.popBackStack() }
+                )
+            }
+            composable(Screen.RadioBrowser.route) {
+                RadioBrowserRoute(
+                    deviceState = deviceState,
+                    onNavigateBack = { navController.popBackStack() }
                 )
             }
         }
         composable(Screen.Settings.route) {
             SettingsRoute(
-                isPortrait = isPortrait,
-                deviceType = deviceType,
+                deviceState = deviceState,
                 onNavigateBack = { navController.popBackStack() }
             )
         }

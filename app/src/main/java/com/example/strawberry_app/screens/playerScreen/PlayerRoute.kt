@@ -6,8 +6,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.strawberry_app.screens.classes.DeviceState
 import com.example.strawberry_app.screens.devices.DeviceTypes
-import com.example.strawberry_app.screens.devices.DeviceTypesBreakdown
 import com.example.strawberry_app.screens.devices.getDeviceType
 import com.example.strawberry_app.screens.playerScreen.screens.PlayerLayout
 import com.example.strawberry_app.screens.playerScreen.screens.PlayerTabletPortraitScreen
@@ -31,12 +31,10 @@ class PlayerCallbacks(
 
 @Composable
 fun PlayerRoute(
-    isPortrait: Boolean,
-    deviceType: DeviceTypesBreakdown,
+    deviceState: DeviceState,
     modifier: Modifier = Modifier,
     onNavigateToSettings: () -> Unit,
     playerViewModel: PlayerViewModel = hiltViewModel(),
-    showTopBar: Boolean
 ) {
     val playerValues by playerViewModel.serverUpdates.collectAsStateWithLifecycle()
     val albumArtFile by playerViewModel.albumArtFile.collectAsStateWithLifecycle()
@@ -62,7 +60,7 @@ fun PlayerRoute(
 
     val playerScreenData = PlayerScreenState(playerValues, albumArtFile)
 
-    val device = getDeviceType(deviceType)
+    val device = getDeviceType(deviceState.deviceType)
 
     when (device) {
         DeviceTypes.TABLET -> {
@@ -76,11 +74,10 @@ fun PlayerRoute(
         DeviceTypes.FOLDABLE_CLOSED -> {
             PlayerLayout(
                 callbacks = callbacks,
-                isPortrait = isPortrait,
+                deviceState = deviceState,
                 playerScreenData = playerScreenData,
                 modifier = modifier,
                 onNavigateToSettings = onNavigateToSettings,
-                deviceType = deviceType
             )
         }
         DeviceTypes.FOLDABLE -> {

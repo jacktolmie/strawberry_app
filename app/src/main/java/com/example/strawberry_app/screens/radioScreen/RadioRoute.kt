@@ -6,17 +6,17 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.strawberry_app.data.dao.StationWithStreams
-import com.example.strawberry_app.screens.devices.DeviceTypesBreakdown
-import com.example.strawberry_app.screens.devices.isDeviceTablet
+import com.example.strawberry_app.screens.classes.DeviceState
 import com.example.strawberry_app.screens.navigation.RadioSources
+import com.example.strawberry_app.screens.radioScreen.classes.RadioStation
 import com.example.strawberry_app.screens.radioScreen.screens.RadioSourceScreen
 import java.io.File
 
 data class RadioCallbacks(
     val sortStationsByType: (
-            source: String,
-            sortBy: RadioStation,
-            ascending: Boolean
+        source: String,
+        sortBy: RadioStation,
+        ascending: Boolean
             ) -> Unit = {_,_,_->},
     val sortStationsByGenre: (
             source: String,
@@ -30,11 +30,9 @@ data class RadioCallbacks(
 
 @Composable
 fun RadioRoute(
-    isPortrait: Boolean,
-    deviceType: DeviceTypesBreakdown,
+    deviceState: DeviceState,
     onNavigateToSettings: () -> Unit,
-    radioSource: RadioSources,
-    showTopBar: Boolean,
+    radioSources: RadioSources,
     modifier: Modifier = Modifier,
     radioViewModel: RadioViewModel = hiltViewModel()
 ){
@@ -52,9 +50,11 @@ fun RadioRoute(
 
     RadioSourceScreen(
         callbacks = callbacks,
-        showTopBar = showTopBar,
+        deviceState = deviceState,
         radioScreenState = radioScreenState,
+        radioSources = radioSources,
         filteredRadioData = filteredRadioData,
-        onNavigateToSettings = onNavigateToSettings
+        onNavigateToSettings = onNavigateToSettings,
+        modifier = modifier
     )
 }

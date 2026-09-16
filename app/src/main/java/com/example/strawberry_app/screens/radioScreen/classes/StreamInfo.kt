@@ -1,4 +1,4 @@
-package com.example.strawberry_app.screens.radioScreen
+package com.example.strawberry_app.screens.radioScreen.classes
 
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable

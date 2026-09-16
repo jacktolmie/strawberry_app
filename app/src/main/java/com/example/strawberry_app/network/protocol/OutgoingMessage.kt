@@ -1,7 +1,7 @@
 package com.example.strawberry_app.network.protocol
 
 import com.example.strawberry_app.music.Playlist
-import com.example.strawberry_app.screens.radioScreen.StreamInfo
+import com.example.strawberry_app.screens.radioScreen.classes.StreamInfo
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

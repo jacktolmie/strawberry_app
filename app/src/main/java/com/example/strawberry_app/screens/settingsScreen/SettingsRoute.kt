@@ -6,11 +6,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
 import com.example.strawberry_app.network.ConnectionState
 import com.example.strawberry_app.network.ConnectionViewModel
 import com.example.strawberry_app.network.SettingsGuiData
-import com.example.strawberry_app.screens.devices.DeviceTypesBreakdown
+import com.example.strawberry_app.screens.classes.DeviceState
 import com.example.strawberry_app.screens.settingsScreen.screens.SettingsScreen
 import com.example.strawberry_app.server.ServerViewModel
 import com.example.strawberry_app.server.SettingsUiState
@@ -34,8 +33,7 @@ class SettingsCallbacks(
 
 @Composable
 fun SettingsRoute(
-    isPortrait: Boolean,
-    deviceType: DeviceTypesBreakdown,
+    deviceState: DeviceState,
     modifier: Modifier = Modifier,
     onNavigateBack: () -> Unit,
     serverViewModel: ServerViewModel = hiltViewModel(),
@@ -70,9 +68,8 @@ fun SettingsRoute(
 
     SettingsScreen(
         callbacks = callbacks,
-        isPortrait = isPortrait,
+        deviceState = deviceState,
         state = settingsScreenState,
-        deviceType = deviceType,
         modifier = modifier,
         onNavigateBack = onNavigateBack
     )

@@ -15,9 +15,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.strawberry_app.R
+import com.example.strawberry_app.screens.classes.DeviceState
 import com.example.strawberry_app.screens.composables.TextBox
 import com.example.strawberry_app.screens.composables.TopBar
-import com.example.strawberry_app.screens.devices.DeviceTypesBreakdown
 import com.example.strawberry_app.screens.playlistScreen.PlaylistCallbacks
 import com.example.strawberry_app.screens.playlistScreen.PlaylistScreenState
 import com.example.strawberry_app.screens.playlistScreen.composables.CurrentPlaylist
@@ -26,16 +26,14 @@ import com.example.strawberry_app.screens.playlistScreen.composables.TabListing
 @Composable
 fun PlaylistScreen(
     callbacks: PlaylistCallbacks,
-    isPortrait: Boolean,
-    showTopBar: Boolean,
+    deviceState: DeviceState,
     playlistScreenState: PlaylistScreenState,
-    deviceType: DeviceTypesBreakdown,
     onNavigateToSettings: () -> Unit,
     modifier: Modifier = Modifier
 ){
     Scaffold(
         topBar = {
-            if (showTopBar) {
+            if (deviceState.showTopBar) {
                 TopBar(
                     onClick = { onNavigateToSettings()},
                     heading = R.string.blank,
@@ -56,9 +54,9 @@ fun PlaylistScreen(
             if (playlistScreenState.playlistsData.playlists.isNotEmpty()) {
                 TabListing(
                     callbacks = callbacks,
-                    isPortrait = isPortrait,
+                    isPortrait = deviceState.isPortrait,
                     playlistScreenState = playlistScreenState,
-                    deviceType = deviceType
+                    deviceType = deviceState.deviceType
                 )
             }
             else { // If no playlist or disconnected, show this.
@@ -88,11 +86,9 @@ fun PlaylistScreen(
 fun PlaylistPreview(){
     PlaylistScreen(
         callbacks = PlaylistCallbacks(),
-        isPortrait = true,
+        deviceState = DeviceState(),
         playlistScreenState = PlaylistScreenState(),
-        deviceType = DeviceTypesBreakdown.PHONE_PORTRAIT,
         modifier = Modifier.background(Color.White),
-        showTopBar = true,
         onNavigateToSettings = {}
     )
 }

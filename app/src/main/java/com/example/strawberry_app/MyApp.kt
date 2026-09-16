@@ -10,6 +10,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.strawberry_app.screens.classes.DeviceState
 import com.example.strawberry_app.screens.classes.NavItemData
 import com.example.strawberry_app.screens.classes.Screen
 import com.example.strawberry_app.screens.devices.DeviceTypes
@@ -41,13 +42,12 @@ fun MyApp(windowSizeClass: WindowSizeClass) {
     val settingsScreen = { navController.navigate(Screen.Settings.route) }
     val showTopBar = !isDeviceTablet(deviceType) && isPortrait
 
-    val topLevelRoutes = listOf(
-        Screen.Player.route,
-        Screen.Playlist.route,
-        Screen.Radio.route
+    val deviceState = DeviceState(
+        isPortrait = isPortrait,
+        isTablet = isTablet,
+        showTopBar = showTopBar,
+        deviceType = deviceType
     )
-
-    val hideNavBar = currentDestination !in topLevelRoutes
 
     val navItems = listOf(
         NavItemData(music_note, R.string.navbar_player, Screen.Player),
@@ -61,7 +61,7 @@ fun MyApp(windowSizeClass: WindowSizeClass) {
              navItems.forEach { navItem ->
                  // If device is a tablet, skip adding Player screen option.
                  if (navItem.screen == Screen.Player && isTablet) return@forEach
-                 // If device is a phone, skip Settings screen option.
+                 // If device is a phone and in Portrait mode, skip Settings screen option.
                  if (navItem.screen == Screen.Settings && isPhone && isPortrait) return@forEach
 
                  item(
@@ -83,21 +83,15 @@ fun MyApp(windowSizeClass: WindowSizeClass) {
      ) {
          when (getDeviceType(deviceType)) {
              DeviceTypes.TABLET -> TabletScaffold(
+                 deviceState = deviceState,
                  navController = navController,
-                 deviceType = deviceType,
-                 isTablet = isTablet,
-                 isPortrait = isPortrait,
-                 onNavigateToSettings = settingsScreen,
-                 showTopBar = showTopBar
+                 onNavigateToSettings = settingsScreen
              )
 
              else -> AppNavHost(
                  navController = navController,
-                 deviceType = deviceType,
-                 isPortrait = isPortrait,
-                 isTablet = isTablet,
-                 onNavigateToSettings = settingsScreen,
-                 showTopBar = showTopBar
+                 deviceState = deviceState,
+                 onNavigateToSettings = settingsScreen
              )
          }
      }
