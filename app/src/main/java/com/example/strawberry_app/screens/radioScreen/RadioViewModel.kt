@@ -128,19 +128,6 @@ class RadioViewModel @Inject constructor(
         }
     }
 
-//    fun loadStations() {
-//        viewModelScope.launch {
-//            radioRepository.getStationSources().collect { sources ->
-//                _stationSources.value = sources
-//                val allStations = mutableListOf<StationWithStreams>()
-//                sources.forEach { source ->
-//                    val stations = radioRepository.getStationsWithStreams(source.stationName).first()
-//                    allStations.addAll(stations)
-//                }
-//                _stations.value = allStations
-//            }
-//        }
-//    }
     fun loadStations() {
         viewModelScope.launch {
             radioRepository.getStationSources().collect { sources ->
@@ -162,6 +149,7 @@ class RadioViewModel @Inject constructor(
         }
     }
 
+    fun sendStations() = radioRepository.sendCommand(OutgoingMessage.SendSources)
     fun <T : Comparable<T>> sortStations(
         stations: List<StationWithStreams>,
         ascending: Boolean,

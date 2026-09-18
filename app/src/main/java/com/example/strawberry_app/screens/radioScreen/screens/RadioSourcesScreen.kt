@@ -52,7 +52,7 @@ fun RadioSourceScreen(
             if (deviceState.showTopBar){
                 TopBar(
                     heading = R.string.blank,
-                    onClick = { onNavigateToSettings()},
+                    onClick = { onNavigateToSettings() },
                     showMoreOptions = true
                 )
             }

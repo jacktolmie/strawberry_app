@@ -136,6 +136,7 @@ class MessageRepository @Inject constructor(
                             playState = PlayState.PAUSED
                         )
                     )
+                    is EventType.RadioSources -> radioRepository.makeStationSources(message.radioSources)
                     is EventType.RadioStations -> radioRepository.makeAllStations(
                         radioStations = message.stationList,
                         stationSource = message.sourceName,

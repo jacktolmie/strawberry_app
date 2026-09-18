@@ -12,7 +12,7 @@ import kotlinx.serialization.json.JsonClassDiscriminator
 @JsonClassDiscriminator("command")
 sealed class OutgoingMessage {
 
-    // Playlist commands
+    // Playlist commands.
     @Serializable
     @SerialName("clear_playlist")
     data class ClearPlaylist(val id: Long): OutgoingMessage()
@@ -29,7 +29,7 @@ sealed class OutgoingMessage {
     @SerialName("favourite_playlist")
     data class FavouritePlaylist(val id: Long, val favourite: Boolean): OutgoingMessage()
 
-    // Send currently selected playlist id and song index to server
+    // Send currently selected playlist id and song index to server.
     @Serializable
     @SerialName("remote_sent_active")
     data class RemoteSentActive(
@@ -110,7 +110,7 @@ sealed class OutgoingMessage {
         val shuffleMode: String
     ): OutgoingMessage()
 
-    // Player controls
+    // Player controls.
     @Serializable
     @SerialName("mute")
     data object Mute: OutgoingMessage()
@@ -165,4 +165,9 @@ sealed class OutgoingMessage {
     @Serializable
     @SerialName("volume_up")
     data object VolumeUp: OutgoingMessage()
+
+    // Radio Commands.
+    @Serializable
+    @SerialName("send_sources")
+    data object SendSources: OutgoingMessage()
 }

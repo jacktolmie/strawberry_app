@@ -1,6 +1,7 @@
 package com.example.strawberry_app.screens.radioScreen
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -24,7 +25,8 @@ data class RadioCallbacks(
             ) -> Unit = {_,_->},
     val getAlbumArtFile: (coverArt: String) -> File? = {null},
     val loadFilterValues: () -> Unit = {},
-    val createPlaylist: (streams: List<StationWithStreams>) -> Unit = {}
+    val createPlaylist: (streams: List<StationWithStreams>) -> Unit = {},
+    val sendSources: () -> Unit = {}
 
 )
 
@@ -40,6 +42,7 @@ fun RadioRoute(
     val filteredRadioData by radioViewModel.filterState.collectAsStateWithLifecycle()
 
     val callbacks = RadioCallbacks(
+        sendSources = radioViewModel::sendStations,
         sortStationsByType = radioViewModel::sortStationsByType,
         sortStationsByGenre = radioViewModel::getStationGenre,
         getAlbumArtFile = radioViewModel::getAlbumArtFile,
@@ -47,6 +50,11 @@ fun RadioRoute(
         createPlaylist = radioViewModel::createPlaylist,
 
     )
+
+    LaunchedEffect(Unit) {
+        radioViewModel.sendStations()
+    }
+
 
     RadioSourceScreen(
         callbacks = callbacks,

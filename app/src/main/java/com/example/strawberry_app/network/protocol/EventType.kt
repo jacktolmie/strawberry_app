@@ -2,6 +2,7 @@ package com.example.strawberry_app.network.protocol
 
 import com.example.strawberry_app.music.Playlist
 import com.example.strawberry_app.music.RadioStation
+import com.example.strawberry_app.screens.radioScreen.classes.RadioSourcesList
 import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
@@ -28,6 +29,7 @@ object EventTypeSerializer : JsonContentPolymorphicSerializer<EventType>(EventTy
             "pause" -> EventType.Pause.serializer()
             "play" -> EventType.Play.serializer()
             "previous" -> EventType.Previous.serializer()
+            "radio_sources_list" -> EventType.RadioSources.serializer()
             "radio_stations" -> EventType.RadioStations.serializer()
             "rename_playlist" -> EventType.RenamePlaylist.serializer()
             "repeat_mode" -> EventType.RepeatMode.serializer()
@@ -137,6 +139,12 @@ sealed class EventType: IncomingMessage() {
         val totalSongs: Int
     ): EventType()
 
+    @Serializable
+    @SerialName("radio_sources_list")
+    data class RadioSources(
+        @SerialName("sources_list")
+        val radioSources: List<RadioSourcesList>
+    ): EventType()
     @Serializable
     @JsonIgnoreUnknownKeys
     @SerialName("radio_stations")

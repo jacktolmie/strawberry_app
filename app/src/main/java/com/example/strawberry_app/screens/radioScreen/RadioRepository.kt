@@ -11,6 +11,7 @@ import com.example.strawberry_app.network.ApplicationScope
 import com.example.strawberry_app.network.NetworkManager
 import com.example.strawberry_app.network.protocol.OutgoingMessage
 import com.example.strawberry_app.screens.radioScreen.classes.RadioSource
+import com.example.strawberry_app.screens.radioScreen.classes.RadioSourcesList
 import com.example.strawberry_app.screens.repositories.AlbumArtRepository
 import jakarta.inject.Inject
 import jakarta.inject.Singleton
@@ -124,6 +125,10 @@ class RadioRepository @Inject constructor(
             }
         }
         println("RadioStations: ${radioDao.getStationCount()} and streams ${radioDao.getStreamCount()}")
+    }
+
+    suspend fun makeStationSources(sources: List<RadioSourcesList>){
+
     }
 
     fun getAlbumArtFile(name: String): File? = albumArtRepository.getAlbumArtFile(name )
